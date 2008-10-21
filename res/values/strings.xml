@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2008, Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+
+<resources>
+
+    <string name="ringdroid_app_name">Ringdroid</string>
+
+    <!--
+     Main / media select activity
+     -->
+
+    <string name="main_activity_label">Ringdroid</string>
+    <string name="rotate_to_type">Slide out to search by typing...</string>
+
+    <string name="button_start_record_activity">Record New</string>
+
+    <string name="sdcard_readonly">Sorry, the SD Card is mounted as read-only and Ringdroid requires it to be writable.</string>
+    <string name="no_sdcard">Sorry, Ringdroid can't run unless you have an SD Card inserted.</string>
+    <string name="sdcard_shared">Sorry, Ringdroid can't run while your handset is mounted as a USB device.</string>
+
+    <!--
+     Edit activity
+     -->
+
+    <!-- Labels next to the start and end time edit boxes -->
+    <string name="start_label">Start:</string>
+    <string name="end_label">End:</string>
+
+    <string name="edit_intent">Edit</string>
+
+    <string name="set_default_ringtone">Saved!  Make this your default ringtone?</string>
+    <string name="set_default_notification">Saved!  Make this your default notification?</string>
+
+    <!--
+     Edit activity menu
+     -->
+
+    <string name="menu_save">Save</string>
+    <string name="menu_reset">Reset</string>
+    <string name="menu_about">About</string>
+
+    <!--
+     File Save dialog
+     -->
+
+    <string name="file_save_title">Save As:</string>
+    <string name="file_save_button_save">Save</string>
+    <string name="file_save_button_cancel">Cancel</string>
+
+    <string name="ringtone_type_label">Type:</string>
+
+    <string name="type_music">Music</string>
+    <string name="type_alarm">Alarm</string>
+    <string name="type_notification">Notification</string>
+    <string name="type_ringtone">Ringtone</string>
+
+    <string name="ringtone_name_label">Name:</string>
+
+    <string name="artist_name">Ringdroid</string>
+
+    <!--
+     Success and error messages
+     -->
+
+    <string name="alert_title_success">Success</string>
+    <string name="alert_title_failure">Error</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_yes_button">Yes, please!</string>
+    <string name="alert_no_button">No, thanks.</string>
+
+    <string name="save_success_message">Saved!</string>
+    <string name="play_error">Unable to play this media file</string>
+    <string name="no_unique_filename">Unable to find unique filename</string>
+    <string name="write_error">Error writing file</string>
+    <string name="delete_tmp_error">Error deleting temporary file</string>
+    <string name="record_error">Error launching Sound Recorder</string>
+    <string name="too_small_error">Can't save a file that small, try making it longer.</string>
+
+    <!--
+     About
+     -->
+
+    <string name="about_title">About Ringdroid</string>
+    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: tap anywhere on the waveform to start playing at that position.  More below...\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
+
+</resources>
