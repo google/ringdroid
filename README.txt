@@ -1,6 +1,6 @@
  ***************************************************************************
  *
- * Copyright (C) 2008 Google Inc.
+ * Copyright (C) 2008, 2009 Google Inc.
  *
  * Ringdroid is licensed under the Apache License, Version 2.0.
  * You may not use this source code except in compliance with the License.
@@ -23,7 +23,7 @@
  *
  ***************************************************************************
 
-A sound editor and ringtone creator for Android handsets.
+A sound editor and ringtone creator for the Android operating system.
 
 Questions, comments, feedback?  Email ringdroid@google.com
 
@@ -36,13 +36,18 @@ in your path.  Then run:
 
 rm build.xml
 rm -rf bin/ 
-activitycreator -o . com.ringdroid.RingdroidSelectActivity
+
+With the 1.0 or 1.1 SDK:
+  activitycreator -o . com.ringdroid.RingdroidSelectActivity
+
+With the 1.5 (Cupcake) SDK and higher:
+  android update project -n ringdroid -t 1 -p .
 
 Then, to build:
-ant
+  ant debug
 
 To install the debug version:
-adb install -r bin/RingdroidSelectActivity-debug.apk
+  adb install -r bin/RingdroidSelectActivity-debug.apk
 
 ### Release mode
 

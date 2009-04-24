@@ -26,7 +26,6 @@
      -->
 
     <string name="main_activity_label">Ringdroid</string>
-    <string name="rotate_to_type">Slide out to search by typing...</string>
 
     <string name="button_start_record_activity">Record New</string>
 
@@ -75,6 +74,32 @@
     <string name="artist_name">Ringdroid</string>
 
     <!--
+     Context menu
+     -->
+
+    <string name="context_edit">Edit</string>
+    <string name="context_delete">Delete</string>
+
+    <!--
+     Delete confirmation dialog
+     -->
+
+    <string name="delete_ringtone">Delete Ringtone</string>
+    <string name="delete_alarm">Delete Alarm</string>
+    <string name="delete_notification">Delete Notification</string>
+    <string name="delete_music">Delete Music</string>
+    <string name="delete_audio">Delete Audio</string>
+
+    <string name="confirm_delete_ringdroid">Are you sure?</string>
+    <string name="confirm_delete_non_ringdroid"
+    >Are you sure?  This file was not created using Ringdroid!</string>
+
+    <string name="delete_ok_button">Delete</string>
+    <string name="delete_cancel_button">Cancel</string>
+
+    <string name="delete_failed">Unable to delete file</string>
+
+    <!--
      Success and error messages
      -->
 
@@ -97,6 +122,6 @@
      -->
 
     <string name="about_title">About Ringdroid</string>
-    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: tap anywhere on the waveform to start playing at that position.  More below...\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 1.1\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
 
 </resources>

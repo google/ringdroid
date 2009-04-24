@@ -18,8 +18,8 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="300sp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="10px"
     android:layout_marginRight="10px"
     android:orientation="vertical">
@@ -34,7 +34,7 @@
 
     <Spinner android:id="@+id/ringtone_type"
        android:layout_marginLeft="10px"
-       android:layout_width="fill_parent" 
+       android:layout_width="wrap_content"
        android:layout_height="wrap_content" />
 
     <TextView
@@ -47,7 +47,7 @@
 
     <EditText android:id="@+id/filename"
        android:layout_marginLeft="10px"
-       android:layout_width="fill_parent" 
+       android:layout_width="280sp" 
        android:layout_height="wrap_content" />
 
     <LinearLayout

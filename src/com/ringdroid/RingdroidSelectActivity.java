@@ -29,9 +29,12 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -41,6 +44,7 @@ import android.widget.TextView;
 
 import com.ringdroid.soundfile.CheapSoundFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,7 +53,7 @@ import java.util.Arrays;
  * an audio file or using an intent to record a new one, and then
  * launches RingdroidEditActivity from here.
  */
-class RingdroidSelectActivity
+public class RingdroidSelectActivity
     extends ListActivity
     implements TextWatcher
 {
@@ -62,6 +66,10 @@ class RingdroidSelectActivity
 
     // Menu commands
     private static final int CMD_ABOUT = 1;
+
+    // Context menu
+    private static final int CMD_EDIT = 2;
+    private static final int CMD_DELETE = 3;
 
     public RingdroidSelectActivity() {
     }
@@ -120,19 +128,13 @@ class RingdroidSelectActivity
                     R.id.row_title });
             setListAdapter(mAdapter);
 
+            // Normal click - open the editor
             getListView().setOnItemClickListener(new OnItemClickListener() {
                     public void onItemClick(AdapterView parent,
                                             View view,
                                             int position,
                                             long id) {
-
-                        Cursor c = mAdapter.getCursor();
-                        int dataIndex = c.getColumnIndexOrThrow(
-                            MediaStore.Audio.Media.DATA);
-                        int titleIndex = c.getColumnIndexOrThrow(
-                            MediaStore.Audio.Media.TITLE);
-                        String filename = c.getString(dataIndex);
-                        startRingdroidEditor(filename);
+                        startRingdroidEditor();
                     }
                 });
 
@@ -140,6 +142,9 @@ class RingdroidSelectActivity
             // No permission to retrieve audio?
             Log.e("Ringdroid", e.toString());
         }
+
+        // Long-press opens a context menu
+        registerForContextMenu(getListView());
 
         mFilter = (TextView) findViewById(R.id.search_filter);
         if (mFilter != null) {
@@ -192,6 +197,121 @@ class RingdroidSelectActivity
         }
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu,
+                                    View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        Cursor c = mAdapter.getCursor();
+        String title = c.getString(c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.TITLE));
+        menu.setHeaderTitle(title);
+
+        menu.add(0, CMD_EDIT, 0, "Edit");
+        menu.add(0, CMD_DELETE, 0,  "Delete");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info =
+            (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+        case CMD_EDIT:
+            startRingdroidEditor();
+            return true;
+        case CMD_DELETE:
+            confirmDelete();
+            return true;
+        default:
+            return super.onContextItemSelected(item);
+        }
+    }
+
+    private void confirmDelete() {
+        // See if the selected list item was created by Ringdroid to
+        // determine which alert message to show
+        Cursor c = mAdapter.getCursor();
+        int artistIndex = c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.ARTIST);
+        String artist = c.getString(c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.ARTIST));
+        CharSequence ringdroidArtist =
+            getResources().getText(R.string.artist_name);
+
+        CharSequence message;
+        if (artist.equals(ringdroidArtist)) {
+            message = getResources().getText(
+                R.string.confirm_delete_ringdroid);
+        } else {
+            message = getResources().getText(
+                R.string.confirm_delete_non_ringdroid);
+        }
+
+        CharSequence title;
+        if (0 != c.getInt(c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.IS_RINGTONE))) {
+            title = getResources().getText(R.string.delete_ringtone);
+        } else if (0 != c.getInt(c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.IS_ALARM))) {
+            title = getResources().getText(R.string.delete_alarm);
+        } else if (0 != c.getInt(c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.IS_NOTIFICATION))) {
+            title = getResources().getText(R.string.delete_notification);
+        } else if (0 != c.getInt(c.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.IS_MUSIC))) {
+            title = getResources().getText(R.string.delete_music);
+        } else {
+            title = getResources().getText(R.string.delete_audio);
+        }
+
+        new AlertDialog.Builder(RingdroidSelectActivity.this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(
+                R.string.delete_ok_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int whichButton) {
+                        onDelete();
+                    }
+                })
+            .setNegativeButton(
+                R.string.delete_cancel_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int whichButton) {
+                    }
+                })
+            .setCancelable(true)
+            .show();
+    }
+
+    private void onDelete() {
+        Cursor c = mAdapter.getCursor();
+        int dataIndex = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        String filename = c.getString(dataIndex);
+
+        int uriIndex = c.getColumnIndex(
+            "\"" + MediaStore.Audio.Media.INTERNAL_CONTENT_URI + "\"");
+        if (uriIndex == -1) {
+            uriIndex = c.getColumnIndex(
+                "\"" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "\"");
+        }
+        if (uriIndex == -1) {
+            showFinalAlert(getResources().getText(R.string.delete_failed));
+            return;
+        }
+
+        if (!new File(filename).delete()) {
+            showFinalAlert(getResources().getText(R.string.delete_failed));
+        }
+
+        String itemUri = c.getString(uriIndex) + "/" +
+            c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+        getContentResolver().delete(Uri.parse(itemUri), null, null);
+    }
+
     private void showFinalAlert(CharSequence message) {
         new AlertDialog.Builder(RingdroidSelectActivity.this)
             .setTitle(getResources().getText(R.string.alert_title_failure))
@@ -223,7 +343,10 @@ class RingdroidSelectActivity
         }
     }
 
-    private void startRingdroidEditor(String filename) {
+    private void startRingdroidEditor() {
+        Cursor c = mAdapter.getCursor();
+        int dataIndex = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        String filename = c.getString(dataIndex);
         try {
             Intent intent = new Intent(Intent.ACTION_EDIT,
                                        Uri.parse(filename));
@@ -305,14 +428,16 @@ class RingdroidSelectActivity
         mAdapter.changeCursor(createCursor(filterStr));
     }
 
-    public static final String KEY_TITLE = "title";
-
     private static final String[] INTERNAL_COLUMNS = new String[] {
         MediaStore.Audio.Media._ID,
         MediaStore.Audio.Media.DATA,
         MediaStore.Audio.Media.TITLE,
         MediaStore.Audio.Media.ARTIST,
         MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.IS_RINGTONE,
+        MediaStore.Audio.Media.IS_ALARM,
+        MediaStore.Audio.Media.IS_NOTIFICATION,
+        MediaStore.Audio.Media.IS_MUSIC,
         "\"" + MediaStore.Audio.Media.INTERNAL_CONTENT_URI + "\""
     };
 
@@ -322,6 +447,10 @@ class RingdroidSelectActivity
         MediaStore.Audio.Media.TITLE,
         MediaStore.Audio.Media.ARTIST,
         MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.IS_RINGTONE,
+        MediaStore.Audio.Media.IS_ALARM,
+        MediaStore.Audio.Media.IS_NOTIFICATION,
+        MediaStore.Audio.Media.IS_MUSIC,
         "\"" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "\""
     };
 }

@@ -41,8 +41,6 @@
      android:layout_height="wrap_content"
      android:layout_weight="1">
 
-      <requestFocus/>
-
     </EditText>
 
     <LinearLayout style="@style/VerticalDividerLeft" />

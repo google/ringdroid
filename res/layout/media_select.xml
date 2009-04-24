@@ -28,23 +28,28 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-     <TextView
-      android:text="@string/rotate_to_type"
-      android:textColor="#ffffff"
-      android:textSize="12sp"
-      android:layout_margin="5px"
-      android:layout_width="0px"
-      android:layout_weight="1"
-      android:layout_height="wrap_content" />
+    <ImageView
+     android:src="@drawable/search"
+     android:layout_marginLeft="8px"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content" />
 
-      <LinearLayout style="@style/VerticalDividerLeft" />
-      <LinearLayout style="@style/VerticalDividerRight" />
+    <EditText android:id="@+id/search_filter"
+     android:textSize="18sp"
+     android:layout_margin="8px"
+     android:layout_width="0px"
+     android:layout_height="wrap_content"
+     android:layout_weight="1">
 
-      <Button android:id="@+id/record"
-        android:text="@string/button_start_record_activity"
-	android:layout_margin="5px"
-        android:layout_height="wrap_content"
-        android:layout_width="120sp" />
+    </EditText>
+
+    <LinearLayout style="@style/VerticalDividerLeft" />
+    <LinearLayout style="@style/VerticalDividerRight" />
+
+    <Button android:id="@+id/record"
+      android:text="@string/button_start_record_activity"
+      android:layout_height="wrap_content"
+      android:layout_width="120sp" />
 
   </LinearLayout>
 
