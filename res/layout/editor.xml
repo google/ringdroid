@@ -47,13 +47,13 @@
         android:layout_height="wrap_content"
         android:src="@drawable/marker_right" />
 
+    </AbsoluteLayout>
+
     <TextView android:id="@+id/info"
        android:layout_width="fill_parent"
        android:layout_height="wrap_content"
        style="@style/AudioFileInfoOverlayText"
        android:gravity="center" />
-
-    </AbsoluteLayout>
 
     <LinearLayout
      style="@style/ToolbarBackground"

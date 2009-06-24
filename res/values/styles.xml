@@ -34,6 +34,10 @@
     <item name="android:background">#222233</item>
   </style>
 
+  <style name="ChooseContactBackground">
+    <item name="android:background">#cc9933</item>
+  </style>
+
   <style name="VerticalDividerLeft">
     <item name="android:layout_width">1px</item>
     <item name="android:layout_height">fill_parent</item>

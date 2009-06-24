@@ -31,6 +31,13 @@ import java.util.HashMap;
 
 public class FileSaveDialog extends Dialog {
 
+    // File types - these should correspond to the order in which
+    // they're presented in the spinner control
+    public static final int FILE_TYPE_MUSIC = 0;
+    public static final int FILE_TYPE_ALARM = 1;
+    public static final int FILE_TYPE_NOTIFICATION = 2;
+    public static final int FILE_TYPE_RINGTONE = 3;
+
     private Spinner mTypeSpinner;
     private EditText mFilename;
     private Message mResponse;
@@ -44,7 +51,7 @@ public class FileSaveDialog extends Dialog {
 
         setTitle(resources.getString(R.string.file_save_title));
 
-        ArrayList<String> typeArray = new ArrayList<String>(0);
+        ArrayList<String> typeArray = new ArrayList<String>();
         typeArray.add(resources.getString(R.string.type_music));
         typeArray.add(resources.getString(R.string.type_alarm));
         typeArray.add(resources.getString(R.string.type_notification));
@@ -56,7 +63,7 @@ public class FileSaveDialog extends Dialog {
             android.R.layout.simple_spinner_dropdown_item);
         mTypeSpinner = (Spinner) findViewById(R.id.ringtone_type);
         mTypeSpinner.setAdapter(adapter);
-        mTypeSpinner.setSelection(3);
+        mTypeSpinner.setSelection(FILE_TYPE_RINGTONE);
 
         Button save = (Button)findViewById(R.id.save);
         save.setOnClickListener(saveListener);

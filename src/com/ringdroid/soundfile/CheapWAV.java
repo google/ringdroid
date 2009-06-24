@@ -27,6 +27,17 @@ import java.io.InputStream;
  * get an approximation of the waveform contour.
  */
 public class CheapWAV extends CheapSoundFile {
+    public static Factory getFactory() {
+        return new Factory() {
+            public CheapSoundFile create() {
+                return new CheapWAV();
+            }
+            public String[] getSupportedExtensions() {
+                return new String[] { "wav" };
+            }
+        };
+    }
+
     // Member variables containing frame info
     private int mNumFrames;
     private int[] mFrameOffsets;
@@ -40,11 +51,7 @@ public class CheapWAV extends CheapSoundFile {
     private File mInputFile;
     private int mOffset;
 
-    public CheapWAV(File mInputFile)
-            throws java.io.FileNotFoundException,
-                   java.io.IOException {
-        this.mInputFile = mInputFile;
-        ReadFile();
+    public CheapWAV() {
     }
 
     public int getNumFrames() {
@@ -83,9 +90,14 @@ public class CheapWAV extends CheapSoundFile {
         return mChannels;
     }
 
-    private void ReadFile()
+    public String getFiletype() {
+        return "WAV";
+    }
+
+    public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
             java.io.IOException {
+        mInputFile = inputFile;
         mFileSize = (int)mInputFile.length();
 
         if (mFileSize < 128) {
@@ -194,6 +206,14 @@ public class CheapWAV extends CheapSoundFile {
                     frameIndex++;
                     mOffset += oneFrameBytes;
                     i += oneFrameBytes;
+
+                    if (mProgressListener != null) {
+                        boolean keepGoing = mProgressListener.reportProgress(
+                            i * 1.0 / chunkLen);
+                        if (!keepGoing) {
+                            break;
+                        }
+                    }
                 }
 
             } else {
@@ -203,15 +223,15 @@ public class CheapWAV extends CheapSoundFile {
         }
     }
 
-    public void WriteFile(File outputFile, int startFrame, int mNumFrames)
+    public void WriteFile(File outputFile, int startFrame, int numFrames)
             throws java.io.IOException {
         outputFile.createNewFile();
         FileInputStream in = new FileInputStream(mInputFile);
         FileOutputStream out = new FileOutputStream(outputFile);
 
         long totalAudioLen = 0;
-        for (int i = 0; i < mNumFrames; i++) {
-            totalAudioLen += mFrameLens[i];
+        for (int i = 0; i < numFrames; i++) {
+            totalAudioLen += mFrameLens[startFrame + i];
         }
 
         long totalDataLen = totalAudioLen + 36;
@@ -267,7 +287,7 @@ public class CheapWAV extends CheapSoundFile {
 
         byte[] buffer = new byte[mFrameBytes];
         int pos = 0;
-        for (int i = 0; i < mNumFrames; i++) {
+        for (int i = 0; i < numFrames; i++) {
             int skip = mFrameOffsets[startFrame + i] - pos;
             int len = mFrameLens[startFrame + i];
             if (skip < 0) {

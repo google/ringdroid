@@ -43,8 +43,17 @@
 
     <string name="edit_intent">Edit</string>
 
-    <string name="set_default_ringtone">Saved!  Make this your default ringtone?</string>
+    <!-- After you save a notification or ringtone and have more options
+	 for what to do with them -->
+    <string name="what_to_do_with_ringtone">Saved!  Make this your default ringtone or assign it to a contact?</string>
     <string name="set_default_notification">Saved!  Make this your default notification?</string>
+
+    <string name="make_default_ringtone_button">Make Default</string>
+    <string name="choose_contact_ringtone_button">Assign to Contact</string>
+    <string name="do_nothing_with_ringtone_button">Close</string>
+
+    <!-- Progress dialog while loading a sound -->
+    <string name="progress_dialog_loading">Loading...</string>
 
     <!--
      Edit activity menu
@@ -110,12 +119,20 @@
     <string name="alert_no_button">No, thanks.</string>
 
     <string name="save_success_message">Saved!</string>
+    <string name="default_ringtone_success_message">Changed default ringtone</string>
     <string name="play_error">Unable to play this media file</string>
     <string name="no_unique_filename">Unable to find unique filename</string>
     <string name="write_error">Error writing file</string>
     <string name="delete_tmp_error">Error deleting temporary file</string>
     <string name="record_error">Error launching Sound Recorder</string>
     <string name="too_small_error">Can't save a file that small, try making it longer.</string>
+
+    <!--
+     Choose Contact Activity
+     -->
+
+    <string name="choose_contact_title">Assign ringtone to which contact?</string>
+    <string name="success_contact_ringtone">Successfully assigned ringtone to:</string>
 
     <!--
      About

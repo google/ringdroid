@@ -18,9 +18,12 @@ package com.ringdroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -33,6 +36,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Contacts.People;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
@@ -47,6 +51,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ringdroid.soundfile.CheapSoundFile;
 
@@ -67,6 +72,10 @@ public class RingdroidEditActivity extends Activity
     implements MarkerView.MarkerListener,
                WaveformView.WaveformListener
 {
+    private long mLoadingStartTime;
+    private long mLoadingLastUpdateTime;
+    private boolean mLoadingKeepGoing;
+    private ProgressDialog mProgressDialog;
     private CheapSoundFile mSoundFile;
     private File mFile;
     private String mFilename;
@@ -121,12 +130,18 @@ public class RingdroidEditActivity extends Activity
 
     // Result codes
     private static final int REQUEST_CODE_RECORD = 1;
+    private static final int REQUEST_CODE_CHOOSE_CONTACT = 2;
 
     /**
      * This is a special intent action that means "edit a sound file".
      */
     public static final String EDIT =
         "com.ringdroid.action.EDIT";
+
+    /**
+     * Preference names
+     */
+    public static final String PREF_SUCCESS_COUNT = "success_count";
 
     //
     // Public methods and protected overrides
@@ -197,8 +212,17 @@ public class RingdroidEditActivity extends Activity
 
     /** Called with an Activity we started with an Intent returns. */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
                                     Intent dataIntent) {
+        if (requestCode == REQUEST_CODE_CHOOSE_CONTACT) {
+            // The user finished saving their ringtone and they're
+            // just applying it to a contact.  When they return here,
+            // they're done.
+            finish();
+            return;
+        }
+
         if (requestCode != REQUEST_CODE_RECORD) {
             return;
         }
@@ -543,14 +567,67 @@ public class RingdroidEditActivity extends Activity
         }
         setTitle(titleLabel);
 
-        try {
-            mSoundFile = CheapSoundFile.create(mFile.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-            mInfo.setText(e.toString());
-            return;
-        }
+        mLoadingStartTime = System.currentTimeMillis();
+        mLoadingLastUpdateTime = System.currentTimeMillis();
+        mLoadingKeepGoing = true;
+        mProgressDialog = new ProgressDialog(RingdroidEditActivity.this);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setTitle(R.string.progress_dialog_loading);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setOnCancelListener(
+            new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                    mLoadingKeepGoing = false;
+                }
+            });
+        mProgressDialog.show();
 
+        final CheapSoundFile.ProgressListener listener =
+            new CheapSoundFile.ProgressListener() {
+                public boolean reportProgress(double fractionComplete) {
+                    long now = System.currentTimeMillis();
+                    if (now - mLoadingLastUpdateTime > 100) {
+                        mProgressDialog.setProgress(
+                            (int)(mProgressDialog.getMax() *
+                                  fractionComplete));
+                        mLoadingLastUpdateTime = now;
+                    }
+                    return mLoadingKeepGoing;
+                }
+            };
+
+        // Load the sound file in a background thread
+        new Thread() { 
+            public void run() { 
+                try {
+                    System.out.println("Thread run");
+                    mSoundFile = CheapSoundFile.create(mFile.getAbsolutePath(),
+                                                       listener);
+                    System.out.println("Created sound file " + mSoundFile);
+                } catch (Exception e) {
+                    mProgressDialog.dismiss();
+                    e.printStackTrace();
+                    mInfo.setText(e.toString());
+                    return;
+                }
+                System.out.println("Thread done");
+                mProgressDialog.dismiss(); 
+                if (mLoadingKeepGoing) {
+                    System.out.println("Finish opening " + mSoundFile);
+                    Runnable runnable = new Runnable() {
+                            public void run() {
+                                finishOpeningSoundFile();
+                            }
+                        };
+                    mHandler.post(runnable);
+                } else {
+                    RingdroidEditActivity.this.finish();
+                }
+            } 
+        }.start();
+    }
+
+    private void finishOpeningSoundFile() {
         mWaveformView.setSoundFile(mSoundFile);
         mMaxPos = mWaveformView.maxPos();
         mLastDisplayedStartPos = -1;
@@ -565,6 +642,7 @@ public class RingdroidEditActivity extends Activity
             mEndPos = mMaxPos;
 
         mCaption = 
+            mSoundFile.getFiletype() + ", " +
             mSoundFile.getSampleRate() + " Hz, " +
             mSoundFile.getAvgBitrateKbps() + " kbps, " +
             formatTime(mMaxPos) + " seconds";
@@ -574,13 +652,6 @@ public class RingdroidEditActivity extends Activity
     }
 
     private synchronized void updateDisplay() {
-        mInfo.setLayoutParams(
-            new AbsoluteLayout.LayoutParams(
-                AbsoluteLayout.LayoutParams.FILL_PARENT,
-                AbsoluteLayout.LayoutParams.WRAP_CONTENT,
-                0,
-                mWaveformView.getHeight() - mInfo.getHeight()));
-
         if (mPlayer != null) {
             int now = mPlayer.getCurrentPosition();
             int frames = mWaveformView.millisecsToPixels(now);
@@ -821,16 +892,16 @@ public class RingdroidEditActivity extends Activity
         String parentdir;
         switch(fileType) {
         default:
-        case 0:
+        case FileSaveDialog.FILE_TYPE_MUSIC:
             parentdir = "/sdcard/media/audio/music";
             break;
-        case 1:
+        case FileSaveDialog.FILE_TYPE_ALARM:
             parentdir = "/sdcard/media/audio/alarms";
             break;
-        case 2:
+        case FileSaveDialog.FILE_TYPE_NOTIFICATION:
             parentdir = "/sdcard/media/audio/notifications";
             break;
-        case 3:
+        case FileSaveDialog.FILE_TYPE_RINGTONE:
             parentdir = "/sdcard/media/audio/ringtones";
             break;
         }
@@ -922,15 +993,27 @@ public class RingdroidEditActivity extends Activity
         values.put(MediaStore.Audio.Media.ARTIST, artist);
         values.put(MediaStore.Audio.Media.DURATION, duration);
 
-        values.put(MediaStore.Audio.Media.IS_RINGTONE, fileType == 3);
-        values.put(MediaStore.Audio.Media.IS_NOTIFICATION, fileType == 2);
-        values.put(MediaStore.Audio.Media.IS_ALARM, fileType == 1);
-        values.put(MediaStore.Audio.Media.IS_MUSIC, fileType == 0);
+        values.put(MediaStore.Audio.Media.IS_RINGTONE,
+                   fileType == FileSaveDialog.FILE_TYPE_RINGTONE);
+        values.put(MediaStore.Audio.Media.IS_NOTIFICATION,
+                   fileType == FileSaveDialog.FILE_TYPE_NOTIFICATION);
+        values.put(MediaStore.Audio.Media.IS_ALARM,
+                   fileType == FileSaveDialog.FILE_TYPE_ALARM);
+        values.put(MediaStore.Audio.Media.IS_MUSIC,
+                   fileType == FileSaveDialog.FILE_TYPE_MUSIC);
 
         // Insert it into the database
         Uri uri = MediaStore.Audio.Media.getContentUriForPath(path);
         final Uri newUri = getContentResolver().insert(uri, values);
         setResult(RESULT_OK, new Intent().setData(newUri));
+
+        // Update a preference that counts how many times we've
+        // successfully saved a ringtone or other audio
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putInt(PREF_SUCCESS_COUNT, successCount + 1);
+        prefsEditor.commit();
 
         // If Ringdroid was launched to get content, just return
         if (mWasGetContentIntent) {
@@ -938,47 +1021,94 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
-        CharSequence setDefaultQuestion;
-        int ringtoneType;
-        if (fileType == 2) {
-            setDefaultQuestion = getResources().getText(
-                R.string.set_default_notification);
-            ringtoneType = RingtoneManager.TYPE_NOTIFICATION;
-        } else if (fileType == 3) {
-            setDefaultQuestion = getResources().getText(
-                R.string.set_default_ringtone);
-            ringtoneType = RingtoneManager.TYPE_RINGTONE;
-        } else {
-            showFinalAlert(null, R.string.save_success_message);
+        // There's nothing more to do with music or an alarm.  Show a
+        // success message and then quit.
+        if (fileType == FileSaveDialog.FILE_TYPE_MUSIC ||
+            fileType == FileSaveDialog.FILE_TYPE_ALARM) {
+            Toast.makeText(this,
+                           R.string.save_success_message,
+                           Toast.LENGTH_SHORT)
+                .show();
+            finish();
             return;
         }
-        final int finalRingtoneType = ringtoneType;
 
-        new AlertDialog.Builder(RingdroidEditActivity.this)
-            .setTitle(R.string.alert_title_success)
-            .setMessage(setDefaultQuestion)
-            .setPositiveButton(
-                R.string.alert_yes_button,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
+        // If it's a notification, give the user the option of making
+        // this their default notification.  If they say no, we're finished.
+        if (fileType == FileSaveDialog.FILE_TYPE_NOTIFICATION) {
+            new AlertDialog.Builder(RingdroidEditActivity.this)
+                .setTitle(R.string.alert_title_success)
+                .setMessage(R.string.set_default_notification)
+                .setPositiveButton(R.string.alert_yes_button,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                            RingtoneManager.setActualDefaultRingtoneUri(
+                                RingdroidEditActivity.this,
+                                RingtoneManager.TYPE_NOTIFICATION,
+                                newUri);
+                            finish();
+                        }
+                    })
+                .setNegativeButton(
+                    R.string.alert_no_button,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                            finish();
+                        }
+                    })
+                .setCancelable(false)
+                .show();
+            return;
+        }
+
+        // If we get here, that means the type is a ringtone.  There are
+        // three choices: make this your default ringtone, assign it to a
+        // contact, or do nothing.
+
+        final Handler handler = new Handler() {
+                public void handleMessage(Message response) {
+                    int actionId = response.arg1;
+                    switch (actionId) {
+                    case R.id.button_make_default:
                         RingtoneManager.setActualDefaultRingtoneUri(
                             RingdroidEditActivity.this,
-                            finalRingtoneType,
+                            RingtoneManager.TYPE_RINGTONE,
                             newUri);
+                        Toast.makeText(
+                            RingdroidEditActivity.this,
+                            R.string.default_ringtone_success_message,
+                            Toast.LENGTH_SHORT)
+                            .show();
                         finish();
-                    }
-                })
-            .setNegativeButton(
-                R.string.alert_no_button,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
+                        break;
+                    case R.id.button_choose_contact:
+                        chooseContactForRingtone(newUri);
+                        break;
+                    default:
+                    case R.id.button_do_nothing:
                         finish();
+                        break;
                     }
-                })
-            .setCancelable(false)
-            .show();
+                }
+            };
+        Message message = Message.obtain(handler);
+        AfterSaveActionDialog dlog = new AfterSaveActionDialog(
+            this, message);
+        dlog.show();
+    }
+
+    private void chooseContactForRingtone(Uri uri) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_EDIT, uri);
+            intent.setClassName(
+                "com.ringdroid",
+                "com.ringdroid.ChooseContactActivity");
+            startActivityForResult(intent, REQUEST_CODE_CHOOSE_CONTACT);
+        } catch (Exception e) {
+            Log.e("Ringdroid", "Couldn't open Choose Contact window");
+        }
     }
 
     private void onSave() {

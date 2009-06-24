@@ -38,6 +38,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -120,12 +121,14 @@ public class RingdroidSelectActivity
                 new String[] {
                     MediaStore.Audio.Media.ARTIST,
                     MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.TITLE },
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media._ID },
                 // To widget ids in the row layout...
                 new int[] {
                     R.id.row_artist,
                     R.id.row_album,
-                    R.id.row_title });
+                    R.id.row_title,
+                    R.id.row_icon });
             setListAdapter(mAdapter);
 
             // Normal click - open the editor
@@ -143,12 +146,48 @@ public class RingdroidSelectActivity
             Log.e("Ringdroid", e.toString());
         }
 
+        mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+                public boolean setViewValue(View view,
+                                            Cursor cursor,
+                                            int columnIndex) {
+                    if (view.getId() == R.id.row_icon) {
+                        setSoundIconFromCursor((ImageView) view, cursor);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
         // Long-press opens a context menu
         registerForContextMenu(getListView());
 
         mFilter = (TextView) findViewById(R.id.search_filter);
         if (mFilter != null) {
             mFilter.addTextChangedListener(this);
+        }
+    }
+
+    private void setSoundIconFromCursor(ImageView view, Cursor cursor) {
+        if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
+                MediaStore.Audio.Media.IS_RINGTONE))) {
+            view.setImageResource(R.drawable.type_ringtone);
+            ((View) view.getParent()).setBackgroundColor(
+                getResources().getColor(R.drawable.type_bkgnd_ringtone));
+        } else if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
+                MediaStore.Audio.Media.IS_ALARM))) {
+            view.setImageResource(R.drawable.type_alarm);
+            ((View) view.getParent()).setBackgroundColor(
+                getResources().getColor(R.drawable.type_bkgnd_alarm));
+        } else if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
+                MediaStore.Audio.Media.IS_NOTIFICATION))) {
+            view.setImageResource(R.drawable.type_notification);
+            ((View) view.getParent()).setBackgroundColor(
+                getResources().getColor(R.drawable.type_bkgnd_notification));
+        } else if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
+                MediaStore.Audio.Media.IS_MUSIC))) {
+            view.setImageResource(R.drawable.type_music);
+            ((View) view.getParent()).setBackgroundColor(
+                getResources().getColor(R.drawable.type_bkgnd_music));
         }
     }
 
@@ -392,6 +431,9 @@ public class RingdroidSelectActivity
             selection += "(_DATA LIKE ?)";
         }
         selection += ")";
+
+        selection = "(" + selection + ") AND (_DATA NOT LIKE ?)";
+        args.add("%espeak-data/scratch%");
 
         if (filter != null && filter.length() > 0) {
             filter = "%" + filter + "%";

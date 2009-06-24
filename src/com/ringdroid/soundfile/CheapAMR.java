@@ -33,11 +33,22 @@ import java.io.InputStream;
  * phones.  In the future it may be necessary to support other bitrates.
  */
 public class CheapAMR extends CheapSoundFile {
+    public static Factory getFactory() {
+        return new Factory() {
+            public CheapSoundFile create() {
+                return new CheapAMR();
+            }
+            public String[] getSupportedExtensions() {
+                return new String[] { "3gpp", "3gp", "amr" };
+            }
+        };
+    }
+
     // Member variables containing frame info
     private int mNumFrames;
     private int[] mFrameOffsets;
     private int[] mFrameLens;
-    private int[] frameGains;
+    private int[] mFrameGains;
     private int mFileSize;
 
     // Member variables used only while initially parsing the file
@@ -47,11 +58,7 @@ public class CheapAMR extends CheapSoundFile {
     private int mMinGain;
     private int mMaxGain;
 
-    public CheapAMR(File mInputFile)
-            throws java.io.FileNotFoundException,
-                   java.io.IOException {
-        this.mInputFile = mInputFile;
-        ReadFile();
+    public CheapAMR() {
     }
 
     public int getNumFrames() {
@@ -71,7 +78,7 @@ public class CheapAMR extends CheapSoundFile {
     }
 
     public int[] getFrameGains() {
-        return frameGains;
+        return mFrameGains;
     }
 
     public int getFileSizeBytes() {
@@ -91,14 +98,19 @@ public class CheapAMR extends CheapSoundFile {
         return 1;
     }
 
-    private void ReadFile()
+    public String getFiletype() {
+        return "AMR";
+    }
+
+    public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
             java.io.IOException {
+        mInputFile = inputFile;
         mNumFrames = 0;
         mMaxFrames = 64;  // This will grow as needed
         mFrameOffsets = new int[mMaxFrames];
         mFrameLens = new int[mMaxFrames];
-        frameGains = new int[mMaxFrames];
+        mFrameGains = new int[mMaxFrames];
         mMinGain = 1000000000;
         mMaxGain = 0;
         mOffset = 0;
@@ -186,9 +198,20 @@ public class CheapAMR extends CheapSoundFile {
             prevEner[i] = 0;
         }
 
+        int originalMaxLen = maxLen;
+        int bytesTotal = 0;
         while (maxLen > 0) {
             int bytesConsumed = parseAMRFrame(stream, maxLen, prevEner);
+            bytesTotal += bytesConsumed;
             maxLen -= bytesConsumed;
+
+            if (mProgressListener != null) {
+                boolean keepGoing = mProgressListener.reportProgress(
+                    bytesTotal * 1.0 / originalMaxLen);
+                if (!keepGoing) {
+                    break;
+                }
+            }
         }
     }
 
@@ -294,7 +317,7 @@ public class CheapAMR extends CheapSoundFile {
     void addFrame(int offset, int frameSize, int gain) {
         mFrameOffsets[mNumFrames] = offset;
         mFrameLens[mNumFrames] = frameSize;
-        frameGains[mNumFrames] = gain;
+        mFrameGains[mNumFrames] = gain;
         if (gain < mMinGain)
             mMinGain = gain;
         if (gain > mMaxGain)
@@ -310,16 +333,16 @@ public class CheapAMR extends CheapSoundFile {
             for (int i = 0; i < mNumFrames; i++) {
                 newOffsets[i] = mFrameOffsets[i];
                 newLens[i] = mFrameLens[i];
-                newGains[i] = frameGains[i];
+                newGains[i] = mFrameGains[i];
             }
             mFrameOffsets = newOffsets;
             mFrameLens = newLens;
-            frameGains = newGains;
+            mFrameGains = newGains;
             mMaxFrames = newMaxFrames;
         }
     }
 
-    public void WriteFile(File outputFile, int startFrame, int mNumFrames)
+    public void WriteFile(File outputFile, int startFrame, int numFrames)
             throws java.io.IOException {
         outputFile.createNewFile();
         FileInputStream in = new FileInputStream(mInputFile);
@@ -335,13 +358,13 @@ public class CheapAMR extends CheapSoundFile {
         out.write(header, 0, 6);
 
         int maxFrameLen = 0;
-        for (int i = 0; i < mNumFrames; i++) {
-            if (mFrameLens[i] > maxFrameLen)
-                maxFrameLen = mFrameLens[i];
+        for (int i = 0; i < numFrames; i++) {
+            if (mFrameLens[startFrame + i] > maxFrameLen)
+                maxFrameLen = mFrameLens[startFrame + i];
         }
         byte[] buffer = new byte[maxFrameLen];
         int pos = 0;
-        for (int i = 0; i < mNumFrames; i++) {
+        for (int i = 0; i < numFrames; i++) {
             int skip = mFrameOffsets[startFrame + i] - pos;
             int len = mFrameLens[startFrame + i];
             if (skip < 0) {

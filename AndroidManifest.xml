@@ -27,6 +27,8 @@
     <uses-sdk minSdkVersion="1" />
 
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <application android:label="@string/ringdroid_app_name"
                  android:icon="@drawable/ringdroidlogo">
@@ -59,6 +61,11 @@
                 <action android:name="android.intent.action.EDIT" />
                 <type android:value="audio/*" />
             </intent-filter>
+        </activity>
+
+	<!-- Activity for choosing a contact to assign a ringtone to. -->
+        <activity android:name="ChooseContactActivity"
+                  android:configChanges="orientation|keyboardHidden">
         </activity>
 
     </application>

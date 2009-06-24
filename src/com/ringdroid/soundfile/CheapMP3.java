@@ -34,6 +34,17 @@ import java.io.FileOutputStream;
  * ([ 00 ] * 13) FF FA
  */
 public class CheapMP3 extends CheapSoundFile {
+    public static Factory getFactory() {
+        return new Factory() {
+            public CheapSoundFile create() {
+                return new CheapMP3();
+            }
+            public String[] getSupportedExtensions() {
+                return new String[] { "mp3" };
+            }
+        };
+    }
+
     // Member variables representing frame data
     private int mNumFrames;
     private int[] mFrameOffsets;
@@ -51,11 +62,7 @@ public class CheapMP3 extends CheapSoundFile {
     private int mMinGain;
     private int mMaxGain;
 
-    public CheapMP3(File mInputFile)
-            throws java.io.FileNotFoundException,
-                   java.io.IOException {
-        this.mInputFile = mInputFile;
-        ReadFile();
+    public CheapMP3() {
     }
 
     public int getNumFrames() {
@@ -94,9 +101,14 @@ public class CheapMP3 extends CheapSoundFile {
         return mGlobalChannels;
     }
 
-    private void ReadFile()
+    public String getFiletype() {
+        return "MP3";
+    }
+
+    public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
             java.io.IOException {
+        mInputFile = inputFile;
         mNumFrames = 0;
         mMaxFrames = 64;  // This will grow as needed
         mFrameOffsets = new int[mMaxFrames];
@@ -123,6 +135,15 @@ public class CheapMP3 extends CheapSoundFile {
             while (bufferOffset < 12 &&
                     buffer[bufferOffset] != -1)
                 bufferOffset++;
+
+            if (mProgressListener != null) {
+                boolean keepGoing = mProgressListener.reportProgress(
+                    pos * 1.0 / mFileSize);
+                if (!keepGoing) {
+                    break;
+                }
+            }
+
             if (bufferOffset > 0) {
                 // We didn't find a sync code (0xFF) at position 0;
                 // shift the buffer over and try again
@@ -249,19 +270,19 @@ public class CheapMP3 extends CheapSoundFile {
             mAvgBitRate = 0;
     }
 
-    public void WriteFile(File outputFile, int startFrame, int mNumFrames)
+    public void WriteFile(File outputFile, int startFrame, int numFrames)
             throws java.io.IOException {
         outputFile.createNewFile();
         FileInputStream in = new FileInputStream(mInputFile);
         FileOutputStream out = new FileOutputStream(outputFile);
         int maxFrameLen = 0;
-        for (int i = 0; i < mNumFrames; i++) {
-            if (mFrameLens[i] > maxFrameLen)
-                maxFrameLen = mFrameLens[i];
+        for (int i = 0; i < numFrames; i++) {
+            if (mFrameLens[startFrame + i] > maxFrameLen)
+                maxFrameLen = mFrameLens[startFrame + i];
         }
         byte[] buffer = new byte[maxFrameLen];
         int pos = 0;
-        for (int i = 0; i < mNumFrames; i++) {
+        for (int i = 0; i < numFrames; i++) {
             int skip = mFrameOffsets[startFrame + i] - pos;
             int len = mFrameLens[startFrame + i];
             if (skip > 0) {

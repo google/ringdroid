@@ -17,6 +17,8 @@
 package com.ringdroid.soundfile;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * CheapSoundFile is the parent class of several subclasses that each
@@ -35,13 +37,48 @@ import java.io.File;
  * frames in that size range.
  */
 public class CheapSoundFile {
+    public interface ProgressListener {
+        /**
+         * Will be called by the CheapSoundFile subclass periodically
+         * with values between 0.0 and 1.0.  Return true to continue
+         * loading the file, and false to cancel.
+         */
+        boolean reportProgress(double fractionComplete);
+    }
+
+    public interface Factory {
+        public CheapSoundFile create();
+        public String[] getSupportedExtensions();
+    }
+
+    static Factory[] sSubclassFactories = new Factory[] {
+        CheapAAC.getFactory(),
+        CheapAMR.getFactory(),
+        CheapMP3.getFactory(),
+        CheapWAV.getFactory(),
+    };
+
+    static ArrayList<String> sSupportedExtensions = new ArrayList<String>();
+    static HashMap<String, Factory> sExtensionMap =
+        new HashMap<String, Factory>();
+
+    static {
+        for (Factory f : sSubclassFactories) {
+            for (String extension : f.getSupportedExtensions()) {
+                sSupportedExtensions.add(extension);
+                sExtensionMap.put(extension, f);
+            }
+        }
+    }
+
 	/**
 	 * Static method to create the appropriate CheapSoundFile subclass
 	 * given a filename.
 	 *
 	 * TODO: make this more modular rather than hardcoding the logic
 	 */
-    public static CheapSoundFile create(String fileName)
+    public static CheapSoundFile create(String fileName,
+                                        ProgressListener progressListener)
         throws java.io.FileNotFoundException,
                java.io.IOException {
         File f = new File(fileName);
@@ -49,31 +86,41 @@ public class CheapSoundFile {
             throw new java.io.FileNotFoundException(fileName);
         }
         String name = f.getName().toLowerCase();
-        if (name.endsWith(".3gpp") ||
-            name.endsWith(".3gp") ||
-            name.endsWith(".amr")) {
-            return new CheapAMR(f);
-        } else if (name.endsWith(".mp3")) {
-            return new CheapMP3(f);
-        } else if (name.endsWith(".wav")) {
-            return new CheapWAV(f);
-        }
-        else {
+        String[] components = name.split("\\.");
+        if (components.length < 2) {
             return null;
         }
+        Factory factory = sExtensionMap.get(components[components.length - 1]);
+        if (factory == null) {
+            return null;
+        }
+        CheapSoundFile soundFile = factory.create();
+        soundFile.setProgressListener(progressListener);
+        soundFile.ReadFile(f);
+        return soundFile;
     }
 
 	/**
 	 * Return the filename extensions that are recognized by one of
 	 * our subclasses.
-	 *
-	 * TODO: share this logic with create().
 	 */
     public static String[] getSupportedExtensions() {
-        return new String[] { "3gpp", "3gp", "amr", "mp3", "wav" };
+        return sSupportedExtensions.toArray(
+            new String[sSupportedExtensions.size()]);
     }
 
+    ProgressListener mProgressListener = null;
+
     protected CheapSoundFile() {
+    }
+
+    public void ReadFile(File inputFile)
+        throws java.io.FileNotFoundException,
+               java.io.IOException {
+    }
+
+    public void setProgressListener(ProgressListener progressListener) {
+        mProgressListener = progressListener;
     }
 
     public int getNumFrames() {
@@ -110,6 +157,10 @@ public class CheapSoundFile {
 
     public int getChannels() {
         return 0;
+    }
+
+    public String getFiletype() {
+        return "Unknown";
     }
 
     public void WriteFile(File outputFile, int startFrame, int numFrames)

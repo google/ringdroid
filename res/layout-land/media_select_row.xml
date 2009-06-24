@@ -6,48 +6,53 @@
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8px"
-    android:layout_marginBottom="8px"
-    android:layout_marginLeft="12px"
-    android:layout_marginRight="12px">
+    android:layout_height="wrap_content">
+
+    <ImageView android:id="@+id/row_icon"
+       android:gravity="center_vertical"
+       android:scaleType="center"
+       android:layout_marginLeft="8px"
+       android:layout_width="40px"
+       android:layout_height="32px" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:gravity="center_vertical"
       android:layout_width="0px"
-      android:layout_height="wrap_content"
+      android:layout_height="fill_parent"
       android:layout_weight="1">
 
     <TextView android:id="@+id/row_title"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:gravity="center_vertical"
         android:textColor="#ffffff"
         android:textSize="14sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_weight="1"/>
 
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="0px"
-      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:layout_height="fill_parent"
       android:layout_weight="1">
 
       <TextView android:id="@+id/row_artist"
-         xmlns:android="http://schemas.android.com/apk/res/android"
+         android:gravity="center_vertical"
          android:textColor="#ff99ff"
          android:textSize="12sp"
          android:layout_marginLeft="8px"
          android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_height="fill_parent"
          android:layout_weight="1"/>
 
       <TextView android:id="@+id/row_album"
-         xmlns:android="http://schemas.android.com/apk/res/android"
+         android:gravity="center_vertical"
          android:textColor="#ffff99"
          android:textSize="12sp"
          android:layout_marginLeft="12px"
          android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_height="fill_parent"
          android:layout_weight="1"/>
 
     </LinearLayout>
