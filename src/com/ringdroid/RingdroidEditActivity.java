@@ -798,6 +798,15 @@ public class RingdroidEditActivity extends Activity
     private String formatDecimal(double x) {
         int xWhole = (int)x;
         int xFrac = (int)(100 * (x - xWhole) + 0.5);
+
+        if (xFrac >= 100) {
+            xWhole++; //Round up
+            xFrac -= 100; //Now we need the remainder after the round up
+            if (xFrac < 10) {
+                xFrac *= 10; //we need a fraction that is 2 digits long
+            }
+        }
+
         if (xFrac < 10)
             return xWhole + ".0" + xFrac;
         else
