@@ -56,7 +56,6 @@ public class CheapMP3 extends CheapSoundFile {
     private int mGlobalChannels;
 
     // Member variables used during initialization
-    private File mInputFile;
     private int mMaxFrames;
     private int mBitrateSum;
     private int mMinGain;
@@ -108,7 +107,7 @@ public class CheapMP3 extends CheapSoundFile {
     public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
             java.io.IOException {
-        mInputFile = inputFile;
+        super.ReadFile(inputFile);
         mNumFrames = 0;
         mMaxFrames = 64;  // This will grow as needed
         mFrameOffsets = new int[mMaxFrames];

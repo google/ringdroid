@@ -135,6 +135,15 @@
     <string name="success_contact_ringtone">Successfully assigned ringtone to:</string>
 
     <!--
+     Sending information to server
+     -->
+    <string name="server_title">Share your data!</string>
+    <string name="server_prompt">Okay to send anonymous data about the ringtones and other sounds you create to Ringdroid.com so we can collect statistics?</string>
+    <string name="server_yes">OK to send</string>
+    <string name="server_later">Ask later</string>
+    <string name="server_never">Never</string>
+
+    <!--
      About
      -->
 

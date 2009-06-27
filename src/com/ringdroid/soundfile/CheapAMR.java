@@ -52,7 +52,6 @@ public class CheapAMR extends CheapSoundFile {
     private int mFileSize;
 
     // Member variables used only while initially parsing the file
-    private File mInputFile;
     private int mOffset;
     private int mMaxFrames;
     private int mMinGain;
@@ -105,7 +104,7 @@ public class CheapAMR extends CheapSoundFile {
     public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
             java.io.IOException {
-        mInputFile = inputFile;
+        super.ReadFile(inputFile);
         mNumFrames = 0;
         mMaxFrames = 64;  // This will grow as needed
         mFrameOffsets = new int[mMaxFrames];

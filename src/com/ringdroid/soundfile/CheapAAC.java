@@ -109,7 +109,6 @@ public class CheapAAC extends CheapSoundFile {
     private int mSamplesPerFrame;
 
     // Member variables used only while initially parsing the file
-    private File mInputFile;
     private int mOffset;
     private int mMinGain;
     private int mMaxGain;
@@ -169,7 +168,7 @@ public class CheapAAC extends CheapSoundFile {
     public void ReadFile(File inputFile)
         throws java.io.FileNotFoundException,
                java.io.IOException {
-        mInputFile = inputFile;
+        super.ReadFile(inputFile);
         mChannels = 0;
         mSampleRate = 0;
         mBitrate = 0;

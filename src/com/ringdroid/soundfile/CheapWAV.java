@@ -48,7 +48,6 @@ public class CheapWAV extends CheapSoundFile {
     private int mSampleRate;
     private int mChannels;
     // Member variables used during initialization
-    private File mInputFile;
     private int mOffset;
 
     public CheapWAV() {
@@ -96,8 +95,8 @@ public class CheapWAV extends CheapSoundFile {
 
     public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
-            java.io.IOException {
-        mInputFile = inputFile;
+                   java.io.IOException {
+        super.ReadFile(inputFile);
         mFileSize = (int)mInputFile.length();
 
         if (mFileSize < 128) {
