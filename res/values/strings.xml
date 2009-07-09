@@ -52,16 +52,25 @@
     <string name="choose_contact_ringtone_button">Assign to Contact</string>
     <string name="do_nothing_with_ringtone_button">Close</string>
 
-    <!-- Progress dialog while loading a sound -->
+    <!-- Progress dialog text for loading or saving... -->
     <string name="progress_dialog_loading">Loading...</string>
+    <string name="progress_dialog_saving">Saving...</string>
 
     <!--
-     Edit activity menu
+     Menu items
      -->
 
     <string name="menu_save">Save</string>
     <string name="menu_reset">Reset</string>
     <string name="menu_about">About</string>
+    <string name="menu_show_all_audio">Show All Audio</string>
+
+    <!--
+     Context menu items
+     -->
+
+    <string name="context_menu_edit">Edit</string>
+    <string name="context_menu_delete">Delete</string>
 
     <!--
      File Save dialog
@@ -122,10 +131,14 @@
     <string name="default_ringtone_success_message">Changed default ringtone</string>
     <string name="play_error">Unable to play this media file</string>
     <string name="no_unique_filename">Unable to find unique filename</string>
-    <string name="write_error">Error writing file</string>
     <string name="delete_tmp_error">Error deleting temporary file</string>
     <string name="record_error">Error launching Sound Recorder</string>
     <string name="too_small_error">Can't save a file that small, try making it longer.</string>
+    <string name="write_error">Error writing file</string>
+    <string name="read_error">Error reading file</string>
+
+    <string name="bad_extension_error">Sorry, Ringdroid is not yet able to edit files of type</string>
+    <string name="no_extension_error">Sorry, Ringdroid can't edit a file if it doesn't have an extension like .mp3 or .wav</string>
 
     <!--
      Choose Contact Activity
@@ -143,11 +156,13 @@
     <string name="server_later">Ask later</string>
     <string name="server_never">Never</string>
 
+    <string name="error_server_prompt">Okay to send anonymous data about this error to Ringdroid.com so we can try to fix this problem in the future?</string>
+
     <!--
      About
      -->
 
     <string name="about_title">About Ringdroid</string>
-    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 1.1\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, AAC, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 2.0\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport and evangelizing: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
 
 </resources>

@@ -62,16 +62,18 @@ public class RingdroidSelectActivity
     private TextView mFilter;
     private SimpleCursorAdapter mAdapter;
     private boolean mWasGetContentIntent;
+    private boolean mShowAll;
 
     // Result codes
     private static final int REQUEST_CODE_EDIT = 1;
 
     // Menu commands
     private static final int CMD_ABOUT = 1;
+    private static final int CMD_SHOW_ALL = 2;
 
     // Context menu
-    private static final int CMD_EDIT = 2;
-    private static final int CMD_DELETE = 3;
+    private static final int CMD_EDIT = 3;
+    private static final int CMD_DELETE = 4;
 
     public RingdroidSelectActivity() {
     }
@@ -82,6 +84,8 @@ public class RingdroidSelectActivity
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        mShowAll = false;
 
         String status = Environment.getExternalStorageState();
         if (status.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
@@ -190,6 +194,13 @@ public class RingdroidSelectActivity
             ((View) view.getParent()).setBackgroundColor(
                 getResources().getColor(R.drawable.type_bkgnd_music));
         }
+
+        String filename = cursor.getString(cursor.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.DATA));
+        if (!CheapSoundFile.isFilenameSupported(filename)) {
+            ((View) view.getParent()).setBackgroundColor(
+                getResources().getColor(R.drawable.type_bkgnd_unsupported));
+        }
     }
 
     /** Called with an Activity we started with an Intent returns. */
@@ -216,6 +227,9 @@ public class RingdroidSelectActivity
         item = menu.add(0, CMD_ABOUT, 0, R.string.menu_about);
         item.setIcon(R.drawable.menu_about);
 
+        item = menu.add(0, CMD_SHOW_ALL, 0, R.string.menu_show_all_audio);
+        item.setIcon(R.drawable.menu_show_all_audio);
+
         return true;
     }
 
@@ -223,6 +237,8 @@ public class RingdroidSelectActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(CMD_ABOUT).setVisible(true);
+        menu.findItem(CMD_SHOW_ALL).setVisible(true);
+        menu.findItem(CMD_SHOW_ALL).setEnabled(!mShowAll);
         return true;
     }
 
@@ -231,6 +247,10 @@ public class RingdroidSelectActivity
         switch (item.getItemId()) {
         case CMD_ABOUT:
             RingdroidEditActivity.onAbout(this);
+            return true;
+        case CMD_SHOW_ALL:
+            mShowAll = true;
+            refreshListView();
             return true;
         default:
             return false;
@@ -248,8 +268,8 @@ public class RingdroidSelectActivity
             MediaStore.Audio.Media.TITLE));
         menu.setHeaderTitle(title);
 
-        menu.add(0, CMD_EDIT, 0, "Edit");
-        menu.add(0, CMD_DELETE, 0,  "Delete");
+        menu.add(0, CMD_EDIT, 0, R.string.context_menu_edit);
+        menu.add(0, CMD_DELETE, 0, R.string.context_menu_delete);
     }
 
     @Override
@@ -423,18 +443,25 @@ public class RingdroidSelectActivity
 
     Cursor createCursor(String filter) {
         ArrayList<String> args = new ArrayList<String>();
-        String selection = "(";
-        for (String extension : CheapSoundFile.getSupportedExtensions()) {
-            args.add("%." + extension);
-            if (selection.length() > 1) {
-                selection += " OR ";
-            }
-            selection += "(_DATA LIKE ?)";
-        }
-        selection += ")";
+        String selection;
 
-        selection = "(" + selection + ") AND (_DATA NOT LIKE ?)";
-        args.add("%espeak-data/scratch%");
+        if (mShowAll) {
+            selection = "(_DATA LIKE ?)";
+            args.add("%");
+        } else {
+            selection = "(";
+            for (String extension : CheapSoundFile.getSupportedExtensions()) {
+                args.add("%." + extension);
+                if (selection.length() > 1) {
+                    selection += " OR ";
+                }
+                selection += "(_DATA LIKE ?)";
+            }
+            selection += ")";
+
+            selection = "(" + selection + ") AND (_DATA NOT LIKE ?)";
+            args.add("%espeak-data/scratch%");
+        }
 
         if (filter != null && filter.length() > 0) {
             filter = "%" + filter + "%";
@@ -467,6 +494,10 @@ public class RingdroidSelectActivity
     }
 
     public void afterTextChanged(Editable s) {
+        refreshListView();
+    }
+
+    private void refreshListView() {
         String filterStr = mFilter.getText().toString();
         mAdapter.changeCursor(createCursor(filterStr));
     }

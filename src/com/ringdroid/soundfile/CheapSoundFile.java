@@ -101,6 +101,14 @@ public class CheapSoundFile {
         return soundFile;
     }
 
+    public static boolean isFilenameSupported(String filename) {
+        String[] components = filename.toLowerCase().split("\\.");
+        if (components.length < 2) {
+            return false;
+        }
+        return sExtensionMap.containsKey(components[components.length - 1]);
+    }
+
 	/**
 	 * Return the filename extensions that are recognized by one of
 	 * our subclasses.

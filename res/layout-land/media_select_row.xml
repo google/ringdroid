@@ -6,14 +6,14 @@
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="48px">
 
     <ImageView android:id="@+id/row_icon"
        android:gravity="center_vertical"
        android:scaleType="center"
        android:layout_marginLeft="8px"
        android:layout_width="40px"
-       android:layout_height="32px" />
+       android:layout_height="48px" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:gravity="center_vertical"

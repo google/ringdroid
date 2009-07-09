@@ -392,12 +392,6 @@ public class WaveformView extends View {
                 (frameGains[0] / 2.0) +
                 (frameGains[1] / 2.0));
             for (int i = 1; i < numFrames - 1; i++) {
-
-                if (i > 4190 && i < 4205) {
-                    System.out.println("Frame " + i +
-                                       ": gain=" + frameGains[i]);
-                }
-
                 smoothedGains[i] = (double)(
                     (frameGains[i - 1] / 3.0) +
                     (frameGains[i    ] / 3.0) +
@@ -432,13 +426,6 @@ public class WaveformView extends View {
             if (value > 1.0)
                 value = 1.0;
             heights[i] = value * value;
-
-            if (i > 4190 && i < 4205) {
-                System.out.println("Frame " + i +
-                                   ": smoothedGain=" + smoothedGains[i] +
-                                   ", value=" + value +
-                                   ", height=" + heights[i]);
-            }
         }
 
         mNumZoomLevels = 5;
