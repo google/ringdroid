@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2008, Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+
+<resources>
+
+    <string name="ringdroid_app_name">Ringdroid</string>
+
+    <!--
+     Main / media select activity
+     -->
+
+    <string name="main_activity_label">Ringdroid</string>
+
+    <string name="button_start_record_activity">新規録音</string>
+
+    <string name="sdcard_readonly">SD カードが読み取り専用に設定されています。ロックを解除し、書き込み可能な状態にしてください。</string>
+    <string name="no_sdcard">Ringdroid を起動するには SD カードを挿入してください。</string>
+    <string name="sdcard_shared">電話機が USB デバイスとして認識されているため、Ringdroid を起動できません。</string>
+
+    <!--
+     Edit activity
+     -->
+
+    <!-- Labels next to the start and end time edit boxes -->
+    <string name="start_label">開始::</string>
+    <string name="end_label">終了:</string>
+
+    <string name="edit_intent">編集</string>
+
+    <string name="time_seconds">seconds</string>
+
+    <!-- After you save a notification or ringtone and have more options
+	 for what to do with them -->
+    <string name="what_to_do_with_ringtone">保存しました。通常の着信音または連絡先の着信音に設定しますか？</string>
+    <string name="set_default_notification">保存しました。通常の通知音に設定しますか？</string>
+
+    <string name="make_default_ringtone_button">通常の着信音に設定する</string>
+    <string name="choose_contact_ringtone_button">連絡先着信音に設定する</string>
+    <string name="do_nothing_with_ringtone_button">閉じる</string>
+
+    <!-- Progress dialog text for loading or saving... -->
+    <string name="progress_dialog_loading">ロード中…</string>
+    <string name="progress_dialog_saving">Saving...</string>
+
+    <!--
+     Menu items
+     -->
+
+    <string name="menu_save">保存</string>
+    <string name="menu_reset">リセット</string>
+    <string name="menu_about">詳細</string>
+    <string name="menu_show_all_audio">Show All Audio</string>
+
+    <!--
+     Context menu items
+     -->
+
+    <string name="context_menu_edit">Edit</string>
+    <string name="context_menu_delete">Delete</string>
+
+    <!--
+     File Save dialog
+     -->
+
+    <string name="file_save_title">ファイル名をつけて保存する:</string>
+    <string name="file_save_button_save">保存</string>
+    <string name="file_save_button_cancel">キャンセル</string>
+
+    <string name="ringtone_type_label">タイプ:</string>
+
+    <string name="type_music">ミュージック</string>
+    <string name="type_alarm">アラーム音</string>
+    <string name="type_notification">通知音</string>
+    <string name="type_ringtone">着信音</string>
+
+    <string name="ringtone_name_label">ファイル名:</string>
+
+    <string name="artist_name">Ringdroid</string>
+
+    <!--
+     Context menu
+     -->
+
+    <string name="context_edit">編集</string>
+    <string name="context_delete">削除</string>
+
+    <!--
+     Delete confirmation dialog
+     -->
+
+    <string name="delete_ringtone">着信音を削除する</string>
+    <string name="delete_alarm">アラーム音を削除する</string>
+    <string name="delete_notification">通知音を削除する</string>
+    <string name="delete_music">音楽を削除する</string>
+    <string name="delete_audio">オーディオファイルを削除する</string>
+
+    <string name="confirm_delete_ringdroid">本当に削除しますか？</string>
+    <string name="confirm_delete_non_ringdroid"
+    >このファイルはRingdroid以外のアプリケーションを使用して作成されたものです。本当に削除しますか？</string>
+
+    <string name="delete_ok_button">削除</string>
+    <string name="delete_cancel_button">キャンセル</string>
+
+    <string name="delete_failed">ファイルを削除できません</string>
+
+    <!--
+     Success and error messages
+     -->
+
+    <string name="alert_title_success">成功</string>
+    <string name="alert_title_failure">エラー</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_yes_button">はい</string>
+    <string name="alert_no_button">いいえ</string>
+
+    <string name="save_success_message">保存しました</string>
+    <string name="default_ringtone_success_message">通常の着信音に設定しました</string>
+    <string name="play_error">メディアファイルを再生できません</string>
+    <string name="no_unique_filename">ユニーク</string>
+    <string name="delete_tmp_error">一時ファイルの削除に失敗しました</string>
+    <string name="record_error">サウンド レコーダーを起動中にエラーが発生しました</string>
+    <string name="too_small_error">ファイルが容量が小さすぎるため保存できません。もう少し長く録音してみてください。</string>
+    <string name="write_error">ファイル書き込みエラー</string>
+    <string name="read_error">Error reading file</string>
+
+    <string name="bad_extension_error">Sorry, Ringdroid is not yet able to edit files of type</string>
+    <string name="no_extension_error">Sorry, Ringdroid can't edit a file if it doesn't have an extension like .mp3 or .wav</string>
+
+    <!--
+     Choose Contact Activity
+     -->
+
+    <string name="choose_contact_title">着信音を設定する連絡先を選択してください</string>
+    <string name="success_contact_ringtone">この連絡先の着信音に設定しました:</string>
+
+    <!--
+     Sending information to server
+     -->
+    <string name="server_title">使用情報をお知らせください</string>
+    <string name="server_prompt">あなたが作成した着信音や効果音についての情報を統計するために、 Ringdroid.com に送信してもよろしいですか？個人が特定される情報は送信されません。</string>
+    <string name="server_yes">了承して送信する</string>
+    <string name="server_later">後で通知</string>
+    <string name="server_never">送信しない</string>
+
+    <string name="error_server_prompt">Okay to send anonymous data about this error to Ringdroid.com so we can try to fix this problem in the future?</string>
+
+    <!--
+     About
+     -->
+
+    <string name="about_title">Ringdroid について</string>
+    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 1.1\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
+
+</resources>

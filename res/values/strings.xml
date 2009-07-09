@@ -43,6 +43,8 @@
 
     <string name="edit_intent">Edit</string>
 
+    <string name="time_seconds">seconds</string>
+
     <!-- After you save a notification or ringtone and have more options
 	 for what to do with them -->
     <string name="what_to_do_with_ringtone">Saved!  Make this your default ringtone or assign it to a contact?</string>
