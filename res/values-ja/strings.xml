@@ -54,7 +54,7 @@
     <string name="choose_contact_ringtone_button">連絡先着信音に設定する</string>
     <string name="do_nothing_with_ringtone_button">閉じる</string>
 
-    <!-- Progress dialog text for loading or saving... -->
+    <!-- Progress dialog while loading a sound -->
     <string name="progress_dialog_loading">ロード中…</string>
     <string name="progress_dialog_saving">Saving...</string>
 
@@ -71,8 +71,8 @@
      Context menu items
      -->
 
-    <string name="context_menu_edit">Edit</string>
-    <string name="context_menu_delete">Delete</string>
+    <string name="context_menu_edit">編集</string>
+    <string name="context_menu_delete">削除</string>
 
     <!--
      File Save dialog
@@ -92,13 +92,6 @@
     <string name="ringtone_name_label">ファイル名:</string>
 
     <string name="artist_name">Ringdroid</string>
-
-    <!--
-     Context menu
-     -->
-
-    <string name="context_edit">編集</string>
-    <string name="context_delete">削除</string>
 
     <!--
      Delete confirmation dialog

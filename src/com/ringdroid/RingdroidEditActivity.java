@@ -882,7 +882,7 @@ public class RingdroidEditActivity extends Activity
     }
 
     private String formatTime(int pixels) {
-        if (mSoundFile != null) {
+        if (mSoundFile != null && mWaveformView != null) {
             return formatDecimal(mWaveformView.pixelsToSeconds(pixels));
         } else {
             return "";

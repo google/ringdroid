@@ -94,13 +94,6 @@
     <string name="artist_name">Ringdroid</string>
 
     <!--
-     Context menu
-     -->
-
-    <string name="context_edit">Edit</string>
-    <string name="context_delete">Delete</string>
-
-    <!--
      Delete confirmation dialog
      -->
 
