@@ -112,6 +112,8 @@ public class CheapAAC extends CheapSoundFile {
     private int mOffset;
     private int mMinGain;
     private int mMaxGain;
+    private int mMdatOffset;
+    private int mMdatLength;
 
     public CheapAAC() {
     }
@@ -177,6 +179,9 @@ public class CheapAAC extends CheapSoundFile {
         mMinGain = 255;
         mMaxGain = 0;
         mOffset = 0;
+        mMdatOffset = -1;
+        mMdatLength = -1;
+
         mAtomMap = new HashMap<Integer, Atom>();
 
         // No need to handle filesizes larger than can fit in a 32-bit int
@@ -203,6 +208,15 @@ public class CheapAAC extends CheapSoundFile {
             parseMp4(stream, mFileSize);
         } else {
             throw new java.io.IOException("Unknown file format");
+        }
+
+        if (mMdatOffset > 0 && mMdatLength > 0) {
+            stream = new FileInputStream(mInputFile);
+            stream.skip(mMdatOffset);
+            mOffset = mMdatOffset;
+            parseMdat(stream, mMdatLength);
+        } else {
+            throw new java.io.IOException("Didn't find mdat");
         }
 
         /*
@@ -279,7 +293,8 @@ public class CheapAAC extends CheapSoundFile {
             } else if (atomType == kSTTS) {
                 parseStts(stream, atomLen - 8);
             } else if (atomType == kMDAT) {
-                parseMdat(stream, atomLen - 8);
+                mMdatOffset = mOffset;
+                mMdatLength = atomLen - 8;
             } else {
                 for (int savedAtomType : kSaveDataAtoms) {
                     if (savedAtomType == atomType) {
@@ -519,7 +534,9 @@ public class CheapAAC extends CheapSoundFile {
 
             mFrameGains[frameIndex] = firstChannelGain;
             break;
+
         default:
+            mFrameGains[frameIndex] = 0;
             /*System.out.println("Unhandled idSynEle");*/
             break;
         }

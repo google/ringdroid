@@ -96,7 +96,9 @@ public class RingdroidEditActivity extends Activity
     private String mDstFilename;
     private String mArtist;
     private String mAlbum;
+    private String mGenre;
     private String mTitle;
+    private int mYear;
     private String mExtension;
     private String mRecordingFilename;
     private int mNewFileKind;
@@ -610,7 +612,14 @@ public class RingdroidEditActivity extends Activity
         mFile = new File(mFilename);
         mExtension = getExtensionFromFilename(mFilename);
 
-        getTitleAndArtistFromFilename(mFilename);
+        SongMetadataReader metadataReader = new SongMetadataReader(
+            this, mFilename);
+        mTitle = metadataReader.mTitle;
+        mArtist = metadataReader.mArtist;
+        mAlbum = metadataReader.mAlbum;
+        mYear = metadataReader.mYear;
+        mGenre = metadataReader.mGenre;
+
         String titleLabel = mTitle;
         if (mArtist != null && mArtist.length() > 0) {
             titleLabel += " - " + mArtist;
@@ -1005,7 +1014,14 @@ public class RingdroidEditActivity extends Activity
         }
 
         // Create the parent directory
-        (new File(parentdir)).mkdirs();
+        File parentDirFile = new File(parentdir);
+        parentDirFile.mkdirs();
+
+        // If we can't write to that special path, try just writing
+        // directly to the sdcard
+        if (!parentDirFile.isDirectory()) {
+            parentdir = "/sdcard";
+        }
 
         // Turn the title into a filename
         String filename = "";
@@ -1083,15 +1099,27 @@ public class RingdroidEditActivity extends Activity
                             }
                         };
                     CheapSoundFile.create(outPath, listener);
-                } catch (final Exception e) {
+                } catch (Exception e) {
                     mProgressDialog.dismiss();
 
+                    CharSequence errorMessage;
+                    if (e.getMessage().equals("No space left on device")) {
+                        errorMessage = getResources().getText(
+                            R.string.no_space_error);
+                        e = null;
+                    } else {
+                        errorMessage = getResources().getText(
+                            R.string.write_error);
+                    }
+
+                    final CharSequence finalErrorMessage = errorMessage;
+                    final Exception finalException = e;
                     Runnable runnable = new Runnable() {
                             public void run() {
                                 handleFatalError(
                                   "WriteError",
-                                  getResources().getText(R.string.write_error),
-                                  e);
+                                  finalErrorMessage,
+                                  finalException);
                             }
                         };
                     mHandler.post(runnable);
@@ -1522,65 +1550,12 @@ public class RingdroidEditActivity extends Activity
         return stream.toString();
     }
 
-    private String getBasename(String filename) {
-        return filename.substring(filename.lastIndexOf('/') + 1,
-                                  filename.lastIndexOf('.'));
-    }
-
     /**
      * Return extension including dot, like ".mp3"
      */
     private String getExtensionFromFilename(String filename) {
         return filename.substring(filename.lastIndexOf('.'),
                                   filename.length());
-    }
-
-    private void getTitleAndArtistFromFilename(String filename) {
-        Uri uri = MediaStore.Audio.Media.getContentUriForPath(filename);
-        Cursor c = managedQuery(
-            uri,
-            new String[] {
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.DATA },
-            MediaStore.Audio.Media.DATA + " LIKE \"" + filename + "\"",
-            null, null);
-        if (c.getCount() == 0) {
-            mTitle = getBasename(filename);
-            mArtist = null;
-            return;
-        }
-        c.moveToFirst();
-        int titleIndex = c.getColumnIndexOrThrow(
-            MediaStore.Audio.Media.TITLE);
-        String title = c.getString(titleIndex);
-        if (title != null && title.length() > 0) {
-            mTitle = title;
-        } else {
-            mTitle = getBasename(filename);
-            mArtist = null;
-            return;
-        }
-
-        int artistIndex = c.getColumnIndexOrThrow(
-            MediaStore.Audio.Media.ARTIST);
-        String artist = c.getString(artistIndex);
-        if (artist != null && artist.length() > 0) {
-            mArtist = artist;
-        } else {
-            mArtist = null;
-        }
-
-        int albumIndex = c.getColumnIndexOrThrow(
-            MediaStore.Audio.Media.ALBUM);
-        String album = c.getString(albumIndex);
-        if (album != null && album.length() > 0) {
-            mAlbum = album;
-        } else {
-            mAlbum = null;
-        }
     }
 
     private String getFilenameFromUri(Uri uri) {
@@ -1732,6 +1707,10 @@ public class RingdroidEditActivity extends Activity
             postMessage.append(URLEncoder.encode(mArtist));
             postMessage.append("&album=");
             postMessage.append(URLEncoder.encode(mAlbum));
+            postMessage.append("&genre=");
+            postMessage.append(URLEncoder.encode(mGenre));
+            postMessage.append("&year=");
+            postMessage.append(mYear);
 
             postMessage.append("&filename=");
             postMessage.append(URLEncoder.encode(mFilename));
