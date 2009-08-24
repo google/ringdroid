@@ -691,7 +691,7 @@ public class RingdroidEditActivity extends Activity
 
                     MediaPlayer player = new MediaPlayer();
                     player.setDataSource(mFile.getAbsolutePath());
-                    player.setAudioStreamType(AudioManager.STREAM_RING);
+                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     player.prepare();
                     mPlayer = player;
 
