@@ -47,6 +47,7 @@ public class WaveformView extends View {
         public void waveformTouchStart(float x);
         public void waveformTouchMove(float x);
         public void waveformTouchEnd();
+        public void waveformDraw();
     };
 
     // Colors
@@ -71,7 +72,9 @@ public class WaveformView extends View {
     private int mSelectionStart;
     private int mSelectionEnd;
     private int mPlaybackPos;
+    private float mDensity;
     private WaveformListener mListener;
+    private boolean mInitialized;
 
     public WaveformView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -123,6 +126,8 @@ public class WaveformView extends View {
         mPlaybackPos = -1;
         mSelectionStart = 0;
         mSelectionEnd = 0;
+        mDensity = 1.0f;
+        mInitialized = false;
     }
 
     @Override
@@ -147,6 +152,10 @@ public class WaveformView extends View {
         mSamplesPerFrame = mSoundFile.getSamplesPerFrame();
         computeDoublesForAllZoomLevels();
         mHeightsAtThisZoomLevel = null;
+    }
+
+    public boolean isInitialized() {
+        return mInitialized;
     }
 
     public int getZoomLevel() {
@@ -256,9 +265,36 @@ public class WaveformView extends View {
         mListener = listener;
     }
 
-    public void recomputeHeights() {
+    public void recomputeHeights(float density) {
         mHeightsAtThisZoomLevel = null;
+        mDensity = density;
+
         invalidate();
+    }
+
+    /**
+     * Our waveform is "painted" as a series of vertical lines, not
+     * anti-aliased.
+     *
+     * But, the Cupcake API only supports the standard resolution
+     * and automatically scales everything up by a factor of 1.5 on
+     * a high-resolution display, which leaves "gaps" when we try to
+     * draw one vertical line per "pixel".  (The coordinates are
+     * scaled, but the lines are drawn normally.)
+     *
+     * So, if the density is > 1.0, then we draw two vertical lines instead
+     * of one every other time.  This solves the problem for a scale
+     * factor between 1.0 and 2.0.  A future version of Ringdroid will
+     * use the 1.6 (Donut) API or later and natively support all resolutions.
+     */
+    protected void drawWaveformLine(Canvas canvas,
+                                    int x, int y0, int y1,
+                                    Paint paint) {
+        if (mDensity > 1.0 && (x % 2) == 1) {
+            canvas.drawLine(x + 0.5f, y0, x + 0.5f, y1, paint);
+        }
+
+        canvas.drawLine(x, y0, x, y1, paint);
     }
 
     @Override
@@ -301,31 +337,30 @@ public class WaveformView extends View {
         // Draw waveform
         for (i = 0; i < width; i++) {
             Paint paint;
+            if (i + start >= mSelectionStart &&
+                i + start < mSelectionEnd) {
+                paint = mSelectedLinePaint;
+            } else {
+                drawWaveformLine(canvas, i, 0, measuredHeight,
+                                 mUnselectedBkgndLinePaint);
+                paint = mUnselectedLinePaint;
+            }
+            drawWaveformLine(
+                canvas, i,
+                ctr - mHeightsAtThisZoomLevel[start + i],
+                ctr + 1 + mHeightsAtThisZoomLevel[start + i],
+                paint);
+
             if (i + start == mPlaybackPos) {
                 canvas.drawLine(i, 0, i, measuredHeight, mPlaybackLinePaint);
-            } else {
-                if (i + start >= mSelectionStart &&
-                    i + start < mSelectionEnd)
-                    paint = mSelectedLinePaint;
-                else {
-                    canvas.drawLine(i, 0, i, measuredHeight,
-                                    mUnselectedBkgndLinePaint);
-                    paint = mUnselectedLinePaint;
-                }
-                canvas.drawLine(
-                    i,
-                    ctr - mHeightsAtThisZoomLevel[start + i],
-                    i,
-                    ctr + 1 + mHeightsAtThisZoomLevel[start + i],
-                    paint);
             }
         }
 
         // If we can see the right edge of the waveform, draw the
         // non-waveform area to the right as unselected
         for (i = width; i < measuredWidth; i++) {
-            canvas.drawLine(i, 0, i, measuredHeight,
-                            mUnselectedBkgndLinePaint);            
+            drawWaveformLine(canvas, i, 0, measuredHeight,
+                             mUnselectedBkgndLinePaint);            
         }
 
         // Draw borders
@@ -372,7 +407,11 @@ public class WaveformView extends View {
                 canvas.drawText(timecodeStr, i - offset, 15,
                                 mTimecodePaint);
             }
-        }        
+        }
+
+        if (mListener != null) {
+            mListener.waveformDraw();
+        }
     }
 
     /**
@@ -405,11 +444,17 @@ public class WaveformView extends View {
         double minGain = 255;
         double maxGain = 0;
         for (int i = 0; i < numFrames; i++) {
-            gainHist[(int)smoothedGains[i]]++;
-            if (smoothedGains[i] < minGain)
-                minGain = smoothedGains[i];
-            if (smoothedGains[i] > maxGain)
-                maxGain = smoothedGains[i];
+            int smoothedGain = (int)smoothedGains[i];
+            if (smoothedGain < 0)
+                smoothedGain = 0;
+            if (smoothedGain > 255)
+                smoothedGain = 255;
+
+            gainHist[smoothedGain]++;
+            if (smoothedGain < minGain)
+                minGain = smoothedGain;
+            if (smoothedGain > maxGain)
+                maxGain = smoothedGain;
         }
         minGain = 0;
         int sum = 0;
@@ -473,6 +518,8 @@ public class WaveformView extends View {
         } else {
             mZoomLevel = 0;
         }
+
+        mInitialized = true;
     }
 
     /**

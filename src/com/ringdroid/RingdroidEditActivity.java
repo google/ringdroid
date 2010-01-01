@@ -31,6 +31,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -44,6 +45,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,14 +60,16 @@ import android.widget.Toast;
 
 import com.ringdroid.soundfile.CheapSoundFile;
 
-import java.io.File;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -127,6 +131,7 @@ public class RingdroidEditActivity extends Activity
     private int mOffset;
     private int mOffsetGoal;
     private int mPlayStartMsec;
+    private int mPlayStartOffset;
     private int mPlayEndMsec;
     private Handler mHandler;
     private boolean mIsPlaying;
@@ -137,6 +142,7 @@ public class RingdroidEditActivity extends Activity
     private int mTouchInitialStartPos;
     private int mTouchInitialEndPos;
     private long mWaveformTouchStartMsec;
+    private float mDensity;
 
     private static final int kMarkerLeftInset = 46;
     private static final int kMarkerRightInset = 48;
@@ -174,6 +180,8 @@ public class RingdroidEditActivity extends Activity
         "err_server_check";
     public static final String PREF_ERR_SERVER_ALLOWED =
         "err_server_allowed";
+
+    public static final String PREF_UNIQUE_ID = "unique_id";
 
     /**
      * Possible codes for PREF_*_SERVER_ALLOWED
@@ -318,7 +326,7 @@ public class RingdroidEditActivity extends Activity
                     markerFocus(mStartMarker);
 
                     mWaveformView.setZoomLevel(saveZoomLevel);
-                    mWaveformView.recomputeHeights();
+                    mWaveformView.recomputeHeights(mDensity);
 
                     updateDisplay();
                 }
@@ -374,6 +382,19 @@ public class RingdroidEditActivity extends Activity
     // WaveformListener
     //
 
+    /**
+     * Every time we get a message that our waveform drew, see if we need to
+     * animate and trigger another redraw.
+     */
+    public void waveformDraw() {
+        mWidth = mWaveformView.getMeasuredWidth();
+        if (mOffsetGoal != mOffset && !mKeyDown)
+            updateDisplay();
+        else if (mIsPlaying) {
+            updateDisplay();
+        }
+    }
+
     public void waveformTouchStart(float x) {
         mTouchDragging = true;
         mTouchStart = x;
@@ -396,7 +417,12 @@ public class RingdroidEditActivity extends Activity
             if (mIsPlaying) {
                 int seekMsec = mWaveformView.pixelsToMillisecs(
                     (int)(mTouchStart + mOffset));
-                mPlayer.seekTo(seekMsec);
+                if (seekMsec >= mPlayStartMsec &&
+                    seekMsec < mPlayEndMsec) {
+                    mPlayer.seekTo(seekMsec - mPlayStartOffset);
+                } else {
+                    handlePause();
+                }
             } else {
                 onPlay((int)(mTouchStart + mOffset));
             }
@@ -407,17 +433,7 @@ public class RingdroidEditActivity extends Activity
     // MarkerListener
     //
 
-    /**
-     * Every time we get a message that our marker drew, see if we need to
-     * animate and trigger another redraw.
-     */
     public void markerDraw() {
-        mWidth = mWaveformView.getMeasuredWidth();
-        if (mOffsetGoal != mOffset && !mKeyDown)
-            updateDisplay();
-        else if (mIsPlaying) {
-            updateDisplay();
-        }
     }
 
     public void markerTouchStart(MarkerView marker, float x) {
@@ -552,6 +568,10 @@ public class RingdroidEditActivity extends Activity
         // Inflate our UI from its XML layout description.
         setContentView(R.layout.editor);
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        mDensity = metrics.density;
+
         mStartText = (TextView)findViewById(R.id.starttext);
         mStartText.addTextChangedListener(mTextWatcher);
         mEndText = (TextView)findViewById(R.id.endtext);
@@ -589,7 +609,7 @@ public class RingdroidEditActivity extends Activity
 
         if (mSoundFile != null) {
             mWaveformView.setSoundFile(mSoundFile);
-            mWaveformView.recomputeHeights();
+            mWaveformView.recomputeHeights(mDensity);
             mMaxPos = mWaveformView.maxPos();
         }
 
@@ -659,7 +679,6 @@ public class RingdroidEditActivity extends Activity
         new Thread() { 
             public void run() { 
                 try {
-                    System.out.println("Thread run");
                     mSoundFile = CheapSoundFile.create(mFile.getAbsolutePath(),
                                                        listener);
 
@@ -694,8 +713,6 @@ public class RingdroidEditActivity extends Activity
                     player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     player.prepare();
                     mPlayer = player;
-
-                    System.out.println("Created sound file " + mSoundFile);
                 } catch (final Exception e) {
                     mProgressDialog.dismiss();
                     e.printStackTrace();
@@ -712,10 +729,8 @@ public class RingdroidEditActivity extends Activity
                     mHandler.post(runnable);
                     return;
                 }
-                System.out.println("Thread done");
                 mProgressDialog.dismiss(); 
                 if (mLoadingKeepGoing) {
-                    System.out.println("Finish opening " + mSoundFile);
                     Runnable runnable = new Runnable() {
                             public void run() {
                                 finishOpeningSoundFile();
@@ -731,6 +746,8 @@ public class RingdroidEditActivity extends Activity
 
     private void finishOpeningSoundFile() {
         mWaveformView.setSoundFile(mSoundFile);
+        mWaveformView.recomputeHeights(mDensity);
+
         mMaxPos = mWaveformView.maxPos();
         mLastDisplayedStartPos = -1;
         mLastDisplayedEndPos = -1;
@@ -756,7 +773,7 @@ public class RingdroidEditActivity extends Activity
 
     private synchronized void updateDisplay() {
         if (mIsPlaying) {
-            int now = mPlayer.getCurrentPosition();
+            int now = mPlayer.getCurrentPosition() + mPlayStartOffset;
             int frames = mWaveformView.millisecsToPixels(now);
             mWaveformView.setPlayback(frames);
             setOffsetGoalNoUpdate(frames - mWidth / 2);
@@ -767,6 +784,7 @@ public class RingdroidEditActivity extends Activity
 
         if (!mTouchDragging) {
             int offsetDelta = mOffsetGoal - mOffset;
+
             if (offsetDelta > 10)
                 offsetDelta = offsetDelta / 10;
             else if (offsetDelta > 0)
@@ -777,11 +795,15 @@ public class RingdroidEditActivity extends Activity
                 offsetDelta = -1;
             else
                 offsetDelta = 0;
+
             mOffset += offsetDelta;
         }
 
         mWaveformView.setParameters(mStartPos, mEndPos, mOffset);
         mWaveformView.invalidate();
+
+        boolean startVisible = true;
+        boolean endVisible = true;
 
         int startX = mStartPos - mOffset - kMarkerLeftInset;
         if (startX + mStartMarker.getWidth() >= 0) {
@@ -789,6 +811,7 @@ public class RingdroidEditActivity extends Activity
         } else {
             mStartMarker.setAlpha(0);
             startX = 0;
+            startVisible = false;
         }
 
         int endX = mEndPos - mOffset - mEndMarker.getWidth() +
@@ -798,6 +821,7 @@ public class RingdroidEditActivity extends Activity
         } else {
             mEndMarker.setAlpha(0);
             endX = 0;
+            startVisible = false;
         }
 
         mStartMarker.setLayoutParams(
@@ -891,7 +915,7 @@ public class RingdroidEditActivity extends Activity
     }
 
     private String formatTime(int pixels) {
-        if (mSoundFile != null && mWaveformView != null) {
+        if (mWaveformView != null && mWaveformView.isInitialized()) {
             return formatDecimal(mWaveformView.pixelsToSeconds(pixels));
         } else {
             return "";
@@ -941,14 +965,55 @@ public class RingdroidEditActivity extends Activity
                 mPlayEndMsec = mWaveformView.pixelsToMillisecs(mEndPos);
             }
 
-            mPlayer.seekTo(mPlayStartMsec);
+            mPlayStartOffset = 0;
+
+            int startFrame = mWaveformView.secondsToFrames(
+                mPlayStartMsec * 0.001);
+            int endFrame = mWaveformView.secondsToFrames(
+                mPlayEndMsec * 0.001);
+            int startByte = mSoundFile.getSeekableFrameOffset(startFrame);
+            int endByte = mSoundFile.getSeekableFrameOffset(endFrame);
+            if (startByte >= 0 && endByte >= 0) {
+                try {
+                    mPlayer.reset();
+                    mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    FileInputStream subsetInputStream = new FileInputStream(
+                        mFile.getAbsolutePath());
+                    mPlayer.setDataSource(subsetInputStream.getFD(),
+                                          startByte, endByte - startByte);
+                    mPlayer.prepare();
+                    mPlayStartOffset = mPlayStartMsec;
+                } catch (Exception e) {
+                    System.out.println(
+                        "Exception trying to play file subset");
+                    mPlayer.reset();
+                    mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    mPlayer.setDataSource(mFile.getAbsolutePath());
+                    mPlayer.prepare();
+                    mPlayStartOffset = 0;
+                }
+            }
+
             mPlayer.setOnCompletionListener(new OnCompletionListener() {
                     public synchronized void onCompletion(MediaPlayer arg0) {
                         handlePause();
                     }
                 });
             mIsPlaying = true;
-            mPlayer.start();
+            if (mPlayStartOffset > 0) {
+                mPlayer.start();
+            } else {
+                mPlayer.setOnSeekCompleteListener(
+                    new OnSeekCompleteListener() {
+                        public synchronized void onSeekComplete(
+                            MediaPlayer arg0) {
+                            if (mIsPlaying) {
+                                mPlayer.start();
+                            }
+                        }
+                    });
+                mPlayer.seekTo(mPlayStartMsec);
+            }
             updateDisplay();
             enableDisableButtons();
         } catch (Exception e) {
@@ -1677,6 +1742,25 @@ public class RingdroidEditActivity extends Activity
     }
 
     /**
+     * Nothing nefarious about this; the purpose is just to
+     * uniquely identify each user so we don't double-count the same
+     * ringtone - without actually identifying the actual user.
+     */
+    long getUniqueId() {
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        long uniqueId = prefs.getLong(PREF_UNIQUE_ID, 0);
+        if (uniqueId == 0) {
+            uniqueId = new Random().nextLong();
+
+            SharedPreferences.Editor prefsEditor = prefs.edit();
+            prefsEditor.putLong(PREF_UNIQUE_ID, uniqueId);
+            prefsEditor.commit();
+        }
+
+        return uniqueId;
+    }
+
+    /**
      * If the exception is not null, will send the stack trace.
      */
     void sendToServer(String serverUrl,
@@ -1699,6 +1783,9 @@ public class RingdroidEditActivity extends Activity
 
         postMessage.append("&android_version=");
         postMessage.append(URLEncoder.encode(Build.VERSION.RELEASE));
+
+        postMessage.append("&unique_id=");
+        postMessage.append(getUniqueId());
 
         if (isSuccess) {
             postMessage.append("&title=");

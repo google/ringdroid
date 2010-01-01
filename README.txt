@@ -36,25 +36,20 @@ in your path.  Then run:
 
 rm build.xml
 rm -rf bin/ 
-
-With the 1.0 or 1.1 SDK:
-  activitycreator -o . com.ringdroid.RingdroidSelectActivity
-
-With the 1.5 (Cupcake) SDK and higher:
-  android update project -n ringdroid -t 1 -p .
+android update project -n ringdroid -t 2 -p .
 
 Then, to build:
   ant debug
 
 To install the debug version:
-  adb install -r bin/RingdroidSelectActivity-debug.apk
+  adb install -r bin/ringdroid-debug.apk
 
 ### Release mode
 
 http://code.google.com/android/intro/develop-and-debug.html
 
 ant release
-cp bin/RingdroidSelectActivity-unsigned.apk bin/Ringdroid.apk
+cp bin/ringdroid-unsigned.apk bin/Ringdroid.apk
 jarsigner -keystore ~/ringdroid.keystore bin/Ringdroid.apk ringdroid
 
 # Initial key generated with:

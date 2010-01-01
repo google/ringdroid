@@ -174,6 +174,16 @@ public class CheapSoundFile {
         return "Unknown";
     }
 
+    /**
+     * If and only if this particular file format supports seeking
+     * directly into the middle of the file without reading the rest of
+     * the header, this returns the byte offset of the given frame,
+     * otherwise returns -1.
+     */
+    public int getSeekableFrameOffset(int frame) {
+        return -1;
+    }
+
     private static final char[] HEX_CHARS = {
         '0', '1', '2', '3', '4', '5', '6', '7',
         '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };

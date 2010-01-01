@@ -104,6 +104,21 @@ public class CheapMP3 extends CheapSoundFile {
         return "MP3";
     }
 
+    /**
+     * MP3 supports seeking into the middle of the file, no header needed,
+     * so this method is supported to hear exactly what a "cut" of the file
+     * sounds like without needing to actually save a file to disk first.
+     */
+    public int getSeekableFrameOffset(int frame) {
+        if (frame <= 0) {
+            return 0;
+        } else if (frame >= mNumFrames) {
+            return mFileSize;
+        } else {
+            return mFrameOffsets[frame];
+        }
+    }
+
     public void ReadFile(File inputFile)
             throws java.io.FileNotFoundException,
             java.io.IOException {
