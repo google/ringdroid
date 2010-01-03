@@ -49,8 +49,9 @@ To install the debug version:
 http://code.google.com/android/intro/develop-and-debug.html
 
 ant release
-cp bin/ringdroid-unsigned.apk bin/Ringdroid.apk
-jarsigner -keystore ~/ringdroid.keystore bin/Ringdroid.apk ringdroid
+cp bin/ringdroid-unsigned.apk bin/ringdroid-signed.apk
+jarsigner -keystore ~/ringdroid.keystore bin/ringdroid-signed.apk ringdroid
+zipalign -f 4 bin/ringdroid-signed.apk bin/Ringdroid.apk
 
 # Initial key generated with:
 # keytool -genkey -keystore ringdroid.keystore -alias ringdroid -validity 10000
