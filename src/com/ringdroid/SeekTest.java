@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,15 +50,16 @@ public class SeekTest {
     static long after;
 
     static boolean CanSeekAccurately(SharedPreferences prefs) {
-        System.out.println("CanSeekAccurately\n");
+        Log.i("Ringdroid", "Running CanSeekAccurately");
         boolean result = false;
 
         result = prefs.getBoolean(PREF_SEEK_TEST_RESULT, false);
         long testDate = prefs.getLong(PREF_SEEK_TEST_DATE, 0);
         long now = (new Date()).getTime();
         long oneWeekMS = 1000 * 60 * 60 * 24 * 7;
+
         if (now - testDate < oneWeekMS) {
-            System.out.println("Fast MP3 seek result cached: " + result);
+            Log.i("Ringdroid", "Fast MP3 seek result cached: " + result);
             return result;
         }
 
@@ -72,17 +74,17 @@ public class SeekTest {
         }
 
         if (!ok) {
-            System.out.println("Couldn't find temporary filename");
+            Log.i("Ringdroid", "Couldn't find temporary filename");
             return false;
         }
 
-        System.out.println("Writing " + filename);
+        Log.i("Ringdroid", "Writing " + filename);
 
         try {
             file.createNewFile();
         } catch (Exception e) {
             // Darn, couldn't output for writing
-            System.out.println("Couldn't output for writing");
+            Log.i("Ringdroid", "Couldn't output for writing");
             return false;
         }
 
@@ -92,7 +94,7 @@ public class SeekTest {
                 out.write(SILENCE_MP3_FRAME, 0, SILENCE_MP3_FRAME.length);
             }
         } catch (Exception e) {
-            System.out.println("Couldn't write temp silence file");
+            Log.i("Ringdroid", "Couldn't write temp silence file");
             try {
                 file.delete();
             } catch (Exception e2) {}
@@ -100,36 +102,71 @@ public class SeekTest {
         }
 
         try {
+            Log.i("Ringdroid", "File written, starting to play");
             MediaPlayer player = new MediaPlayer();
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             FileInputStream subsetInputStream = new FileInputStream(filename);
-            long start = 74 * SILENCE_MP3_FRAME.length;
-            long len = 6 * SILENCE_MP3_FRAME.length;
+            long start = 70 * SILENCE_MP3_FRAME.length;
+            long len = 10 * SILENCE_MP3_FRAME.length;
             player.setDataSource(subsetInputStream.getFD(),
                                  start,
                                  len);
+            Log.i("Ringdroid", "Preparing");
             player.prepare();
-            before = System.currentTimeMillis();
+            before = 0;
             after = 0;
             player.setOnCompletionListener(new OnCompletionListener() {
                     public synchronized void onCompletion(MediaPlayer arg0) {
+                        Log.i("Ringdroid", "Got callback");
                         after = System.currentTimeMillis();
                     }
                 });
+
+            Log.i("Ringdroid", "Starting");
             player.start();
-            Thread.sleep(2000);
+
+            for (int i = 0; i < 200 && before == 0; i++) {
+                if (player.getCurrentPosition() > 0) {
+                    Log.i("Ringdroid", "Started playing after " + (i * 10) +
+                          " ms");
+                    before = System.currentTimeMillis();
+                }
+                Thread.sleep(10);
+            }
+            if (before == 0) {
+                Log.i("Ringdroid", "Never started playing.");
+                Log.i("Ringdroid", "Fast MP3 seek disabled by default");
+                try {
+                    file.delete();
+                } catch (Exception e2) {}
+
+                SharedPreferences.Editor prefsEditor = prefs.edit();
+                prefsEditor.putLong(PREF_SEEK_TEST_DATE, now);
+                prefsEditor.putBoolean(PREF_SEEK_TEST_RESULT, result);
+                prefsEditor.commit();
+
+                return false;
+            }
+
+            Log.i("Ringdroid", "Sleeping");
+            for (int i = 0; i < 300 && after == 0; i++) {
+                Log.i("Ringdroid", "Pos: " + player.getCurrentPosition());
+                Thread.sleep(10);
+            }
+
+            Log.i("Ringdroid", "Result: " + before + ", " + after);
 
             if (after > before && after < before + 2000) {
                 long delta = after > before? after - before: -1;
-                System.out.println("Fast MP3 seek enabled: " + delta);
+                Log.i("Ringdroid", "Fast MP3 seek enabled: " + delta);
                 result = true;
             } else {
-                System.out.println("Fast MP3 seek disabled");
+                Log.i("Ringdroid", "Fast MP3 seek disabled");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Couldn't play: " + e.toString());
-            System.out.println("Fast MP3 seek disabled by default");
+            Log.i("Ringdroid", "Couldn't play: " + e.toString());
+            Log.i("Ringdroid", "Fast MP3 seek disabled by default");
             try {
                 file.delete();
             } catch (Exception e2) {}
