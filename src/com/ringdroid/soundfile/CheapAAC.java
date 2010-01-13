@@ -750,4 +750,13 @@ public class CheapAAC extends CheapSoundFile {
         in.close();
         out.close();
     }
+
+    /** For debugging
+    public static void main(String[] argv) throws Exception {
+        File f = new File("");
+        CheapAAC c = new CheapAAC();
+        c.ReadFile(f);
+        c.WriteFile(new File(""),
+                    0, c.getNumFrames());
+    } **/
 };

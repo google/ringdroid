@@ -188,12 +188,11 @@ public class CheapAMR extends CheapSoundFile {
             return;
         }
 
-        parse3gpp(stream, boxLen);
+        parse3gpp(stream, maxLen - boxLen);
     }
 
     void parseAMR(InputStream stream, int maxLen)
             throws java.io.IOException {
-
         int[] prevEner = new int[4];
         for (int i = 0; i < 4; i++) {
             prevEner[i] = 0;
@@ -428,7 +427,7 @@ public class CheapAMR extends CheapSoundFile {
                     gainCode = 32767;
                 }
 
-                int frameGainEstimate = gainCode / 4;
+                int frameGainEstimate = gainCode;
 
                 addFrame(frameOffset, blockSize + 1, frameGainEstimate);
 

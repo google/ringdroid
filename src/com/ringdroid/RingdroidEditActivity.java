@@ -27,8 +27,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
@@ -136,6 +134,7 @@ public class RingdroidEditActivity extends Activity
     private Handler mHandler;
     private boolean mIsPlaying;
     private MediaPlayer mPlayer;
+    private boolean mCanSeekAccurately;
     private boolean mTouchDragging;
     private float mTouchStart;
     private int mTouchInitialOffset;
@@ -675,6 +674,34 @@ public class RingdroidEditActivity extends Activity
                 }
             };
 
+        // Create the MediaPlayer in a background thread
+        mCanSeekAccurately = false;
+        new Thread() {
+            public void run() {
+                mCanSeekAccurately = SeekTest.CanSeekAccurately(
+                    getPreferences(Context.MODE_PRIVATE));
+
+                System.out.println("Seek test done, creating media player.");
+                try {
+                    MediaPlayer player = new MediaPlayer();
+                    player.setDataSource(mFile.getAbsolutePath());
+                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    player.prepare();
+                    mPlayer = player;
+                } catch (final java.io.IOException e) {
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            handleFatalError(
+                                "ReadError",
+                                getResources().getText(R.string.read_error),
+                                e);
+                        }
+                    };
+                    mHandler.post(runnable);
+                };
+            }
+        }.start();
+
         // Load the sound file in a background thread
         new Thread() { 
             public void run() { 
@@ -707,12 +734,6 @@ public class RingdroidEditActivity extends Activity
                         mHandler.post(runnable);
                         return;
                     }
-
-                    MediaPlayer player = new MediaPlayer();
-                    player.setDataSource(mFile.getAbsolutePath());
-                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    player.prepare();
-                    mPlayer = player;
                 } catch (final Exception e) {
                     mProgressDialog.dismiss();
                     e.printStackTrace();
@@ -955,6 +976,11 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
+        if (mPlayer == null) {
+            // Not initialized yet
+            return;
+        }
+
         try {
             mPlayStartMsec = mWaveformView.pixelsToMillisecs(startPosition);
             if (startPosition < mStartPos) {
@@ -973,7 +999,7 @@ public class RingdroidEditActivity extends Activity
                 mPlayEndMsec * 0.001);
             int startByte = mSoundFile.getSeekableFrameOffset(startFrame);
             int endByte = mSoundFile.getSeekableFrameOffset(endFrame);
-            if (startByte >= 0 && endByte >= 0) {
+            if (mCanSeekAccurately && startByte >= 0 && endByte >= 0) {
                 try {
                     mPlayer.reset();
                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -984,8 +1010,7 @@ public class RingdroidEditActivity extends Activity
                     mPlayer.prepare();
                     mPlayStartOffset = mPlayStartMsec;
                 } catch (Exception e) {
-                    System.out.println(
-                        "Exception trying to play file subset");
+                    System.out.println("Exception trying to play file subset");
                     mPlayer.reset();
                     mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     mPlayer.setDataSource(mFile.getAbsolutePath());
@@ -1000,20 +1025,11 @@ public class RingdroidEditActivity extends Activity
                     }
                 });
             mIsPlaying = true;
-            if (mPlayStartOffset > 0) {
-                mPlayer.start();
-            } else {
-                mPlayer.setOnSeekCompleteListener(
-                    new OnSeekCompleteListener() {
-                        public synchronized void onSeekComplete(
-                            MediaPlayer arg0) {
-                            if (mIsPlaying) {
-                                mPlayer.start();
-                            }
-                        }
-                    });
+
+            if (mPlayStartOffset == 0 && mPlayStartMsec > 0) {
                 mPlayer.seekTo(mPlayStartMsec);
             }
+            mPlayer.start();
             updateDisplay();
             enableDisableButtons();
         } catch (Exception e) {
@@ -1560,7 +1576,7 @@ public class RingdroidEditActivity extends Activity
             public void onClick(View sender) {
                 if (mIsPlaying) {
                     mStartPos = mWaveformView.millisecsToPixels(
-                        mPlayer.getCurrentPosition());
+                        mPlayer.getCurrentPosition() + mPlayStartOffset);
                     updateDisplay();
                 }
             }
@@ -1570,7 +1586,7 @@ public class RingdroidEditActivity extends Activity
             public void onClick(View sender) {
                 if (mIsPlaying) {
                     mEndPos = mWaveformView.millisecsToPixels(
-                        mPlayer.getCurrentPosition());
+                        mPlayer.getCurrentPosition() + mPlayStartOffset);
                     updateDisplay();
                     handlePause();
                 }
@@ -1787,6 +1803,9 @@ public class RingdroidEditActivity extends Activity
         postMessage.append("&unique_id=");
         postMessage.append(getUniqueId());
 
+        postMessage.append("&accurate_seek=");
+        postMessage.append(mCanSeekAccurately);
+
         if (isSuccess) {
             postMessage.append("&title=");
             postMessage.append(URLEncoder.encode(mTitle));
@@ -1802,25 +1821,10 @@ public class RingdroidEditActivity extends Activity
             postMessage.append("&filename=");
             postMessage.append(URLEncoder.encode(mFilename));
 
+            // The user's real location is not actually sent, this is just
+            // vestigial code from an old experiment.
             double latitude = 0.0;
             double longitude = 0.0;
-            try {
-                LocationManager locationManager =
-                    (LocationManager)getSystemService(
-                        Context.LOCATION_SERVICE);
-                for (String provider : locationManager.getProviders(true)) {
-                    Location loc = locationManager.getLastKnownLocation(
-                        provider);
-                    if (loc != null &&
-                        loc.getLatitude() != 0.0 &&
-                        loc.getLongitude() != 0.0) {
-                        latitude = loc.getLatitude();
-                        longitude = loc.getLongitude();
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-            }
             postMessage.append("&user_lat=");
             postMessage.append(URLEncoder.encode("" + latitude));
             postMessage.append("&user_lon=");
