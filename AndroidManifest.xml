@@ -60,7 +60,7 @@
                   android:configChanges="orientation|keyboardHidden">
             <intent-filter android:label="@string/edit_intent">
                 <action android:name="android.intent.action.EDIT" />
-                <type android:value="audio/*" />
+                <data android:mimeType="audio/*" />
             </intent-filter>
         </activity>
 

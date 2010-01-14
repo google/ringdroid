@@ -1026,7 +1026,7 @@ public class RingdroidEditActivity extends Activity
                 });
             mIsPlaying = true;
 
-            if (mPlayStartOffset == 0 && mPlayStartMsec > 0) {
+            if (mPlayStartOffset == 0) {
                 mPlayer.seekTo(mPlayStartMsec);
             }
             mPlayer.start();
