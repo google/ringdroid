@@ -19,11 +19,13 @@ package com.ringdroid;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Contacts;
@@ -46,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -147,6 +150,19 @@ public class ChooseContactActivity
         }
     }
 
+    private boolean isEclairOrLater() {
+	return Build.VERSION.SDK_INT >= 5;
+    }
+
+    private Uri getContactContentUri() {
+	if (isEclairOrLater()) {
+	    // ContactsContract.Contacts.CONTENT_URI
+	    return Uri.parse("content://com.android.contacts/contacts");
+	} else {
+	    return Contacts.People.CONTENT_URI;
+	}
+    }
+
     private void assignRingtoneToContact() {
         Cursor c = mAdapter.getCursor();
         int dataIndex = c.getColumnIndexOrThrow(People._ID);
@@ -155,7 +171,7 @@ public class ChooseContactActivity
         dataIndex = c.getColumnIndexOrThrow(People.DISPLAY_NAME);
         String displayName = c.getString(dataIndex);
 
-        Uri uri = Uri.withAppendedPath(People.CONTENT_URI, contactId);
+        Uri uri = Uri.withAppendedPath(getContactContentUri(), contactId);
 
         ContentValues values = new ContentValues();
         values.put(People.CUSTOM_RINGTONE, mRingtoneUri.toString());
@@ -180,18 +196,20 @@ public class ChooseContactActivity
             selection = null;
         }
         Cursor cursor = managedQuery(
-            People.CONTENT_URI,
+            getContactContentUri(),
             new String[] {
                 People._ID,
                 People.CUSTOM_RINGTONE,
                 People.DISPLAY_NAME,
                 People.LAST_TIME_CONTACTED,
-                People.NAME,
                 People.STARRED,
                 People.TIMES_CONTACTED },
             selection,
             null,
-            "STARRED DESC, TIMES_CONTACTED DESC, LAST_TIME_CONTACTED DESC");
+            "STARRED DESC, " +
+	    "TIMES_CONTACTED DESC, " +
+	    "LAST_TIME_CONTACTED DESC, " +
+	    "DISPLAY_NAME ASC");
 
         Log.i("Ringdroid", cursor.getCount() + " contacts");
 

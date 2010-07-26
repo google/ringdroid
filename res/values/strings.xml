@@ -27,6 +27,8 @@
 
     <string name="main_activity_label">Ringdroid</string>
 
+    <string name="search_edit_box">Search</string>
+
     <string name="button_start_record_activity">Record New</string>
 
     <string name="sdcard_readonly">Sorry, the SD Card is mounted as read-only and Ringdroid requires it to be writable.</string>
@@ -57,6 +59,18 @@
     <!-- Progress dialog text for loading or saving... -->
     <string name="progress_dialog_loading">Loading...</string>
     <string name="progress_dialog_saving">Saving...</string>
+
+    <!-- Image button descriptions for accessibility -->
+
+    <string name="start_marker">Start marker</string>
+    <string name="end_marker">End marker</string>
+    <string name="rewind">Rewind</string>
+    <string name="play">Play</string>
+    <string name="stop">Stop</string>
+    <string name="ffwd">Fast forward</string>
+    <string name="zoom_in">Zoom In</string>
+    <string name="zoom_out">Zoom Out</string>
+    <string name="save_button">Save</string>
 
     <!--
      Menu items

@@ -28,6 +28,7 @@
     <item name="android:shadowDx">1</item>
     <item name="android:shadowDy">1</item>
     <item name="android:shadowRadius">1</item>
+    <item name="android:focusable">true</item>
   </style>
 
   <style name="ToolbarBackground">

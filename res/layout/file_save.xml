@@ -20,20 +20,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300sp"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10px"
-    android:layout_marginRight="10px"
+    android:layout_marginBottom="10dip"
+    android:layout_marginRight="10dip"
     android:orientation="vertical">
 
     <TextView
        android:text="@string/ringtone_type_label"
        android:textColor="#ffffffff"
        android:textSize="12sp"
-       android:layout_marginLeft="15px"
+       android:layout_marginLeft="15dip"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content" />
 
     <Spinner android:id="@+id/ringtone_type"
-       android:layout_marginLeft="10px"
+       android:layout_marginLeft="10dip"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content" />
 
@@ -41,18 +41,18 @@
        android:text="@string/ringtone_name_label"
        android:textColor="#ffffffff"
        android:textSize="12sp"
-       android:layout_marginLeft="15px"
+       android:layout_marginLeft="15dip"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content" />
 
     <EditText android:id="@+id/filename"
-       android:layout_marginLeft="10px"
+       android:layout_marginLeft="10dip"
        android:layout_width="280sp" 
        android:layout_height="wrap_content" />
 
     <LinearLayout
-       android:layout_marginTop="5px"
-       android:layout_marginLeft="10px"
+       android:layout_marginTop="5dip"
+       android:layout_marginLeft="10dip"
        android:layout_width="fill_parent" 
        android:layout_height="wrap_content"
        android:gravity="center_horizontal">
@@ -61,13 +61,13 @@
          android:text="@string/file_save_button_save"
          android:layout_width="100sp" 
          android:layout_height="wrap_content"
-         android:layout_marginBottom="10px" />
+         android:layout_marginBottom="10dip" />
 
       <Button android:id="@+id/cancel"
          android:text="@string/file_save_button_cancel"
          android:layout_width="100sp" 
          android:layout_height="wrap_content"
-         android:layout_marginBottom="10px" />
+         android:layout_marginBottom="10dip" />
 
     </LinearLayout>
 

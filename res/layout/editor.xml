@@ -38,18 +38,25 @@
        android:layout_height="fill_parent" />
 
       <com.ringdroid.MarkerView android:id="@+id/startmarker"
+        android:nextFocusDown="@+id/endmarker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/marker_left" />
+        android:src="@drawable/marker_left"
+        android:contentDescription="@string/start_marker" />
 
       <com.ringdroid.MarkerView android:id="@+id/endmarker"
+        android:nextFocusUp="@+id/startmarker"
+        android:nextFocusDown="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/marker_right" />
+        android:src="@drawable/marker_right"
+        android:contentDescription="@string/end_marker" />
 
     </AbsoluteLayout>
 
     <TextView android:id="@+id/info"
+       android:nextFocusUp="@+id/endmarker"
+       android:nextFocusDown="@+id/play"
        android:layout_width="fill_parent"
        android:layout_height="wrap_content"
        style="@style/AudioFileInfoOverlayText"
@@ -58,40 +65,45 @@
     <LinearLayout
      style="@style/ToolbarBackground"
      android:layout_width="fill_parent" 
-     android:layout_height="62px"
+     android:layout_height="62dip"
      android:gravity="center" >
 
       <ImageButton android:id="@+id/rew"
-       android:layout_width="64px"
-       android:layout_height="52px"
+       android:layout_width="64dip"
+       android:layout_height="52dip"
        style="@android:style/MediaButton"
+       android:contentDescription="@string/rewind"
        android:src="@drawable/ic_media_rew" />
 
       <ImageButton android:id="@+id/play"
-       android:layout_width="71px"
-       android:layout_height="52px"
+       android:layout_width="71dip"
+       android:layout_height="52dip"
        style="@android:style/MediaButton"
+       android:contentDescription="@string/play"
        android:src="@drawable/ic_media_play" />
 
       <ImageButton android:id="@+id/ffwd"
-       android:layout_width="64px"
-       android:layout_height="52px"
-       android:layout_marginRight="5px"
+       android:layout_width="64dip"
+       android:layout_height="52dip"
+       android:layout_marginRight="5dip"
        style="@android:style/MediaButton"
+       android:contentDescription="@string/ffwd"
        android:src="@drawable/ic_media_ff" />
 
       <LinearLayout style="@style/VerticalDividerLeft" />
       <LinearLayout style="@style/VerticalDividerRight" />
 
       <ImageButton android:id="@+id/zoom_in"
-       android:layout_width="52px"
-       android:layout_height="52px"
-       android:layout_marginLeft="5px"
+       android:layout_width="52dip"
+       android:layout_height="52dip"
+       android:layout_marginLeft="5dip"
+       android:contentDescription="@string/zoom_in"
        android:src="@drawable/button_zoom_in" />
 
       <ImageButton android:id="@+id/zoom_out"
-       android:layout_width="52px"
-       android:layout_height="52px"
+       android:layout_width="52dip"
+       android:layout_height="52dip"
+       android:contentDescription="@string/zoom_out"
        android:src="@drawable/button_zoom_out" />
 
     </LinearLayout>
@@ -102,15 +114,15 @@
     <LinearLayout
      style="@style/ToolbarBackground"
      android:layout_width="fill_parent" 
-     android:layout_height="62px"
+     android:layout_height="62dip"
      android:gravity="center_vertical" >
 
       <LinearLayout
          android:layout_width="wrap_content" 
          android:layout_height="fill_parent"
-         android:layout_marginTop="6px"
-         android:layout_marginLeft="5px"
-         android:layout_marginRight="5px"
+         android:layout_marginTop="6dip"
+         android:layout_marginLeft="5dip"
+         android:layout_marginRight="5dip"
          android:gravity="center"
          android:orientation="vertical">
 
@@ -122,7 +134,7 @@
            android:textStyle="bold"
            android:clickable="true"
            android:layout_width="wrap_content" 
-           android:layout_height="31px" />
+           android:layout_height="31dip" />
 
         <TextView
            android:id="@+id/mark_end"
@@ -132,26 +144,29 @@
            android:textStyle="bold"
            android:clickable="true"
            android:layout_width="wrap_content" 
-           android:layout_height="31px" />
+           android:layout_height="31dip" />
 
       </LinearLayout>
 
       <LinearLayout
          android:layout_width="wrap_content" 
          android:layout_height="fill_parent"
-	 android:layout_marginRight="5px"
+	 android:layout_marginRight="5dip"
          android:gravity="center"
          android:orientation="vertical">
 
         <EditText android:id="@+id/starttext"
            android:textSize="11sp"
-           android:layout_width="70px"
-           android:layout_height="31px" />
+	   android:layout_marginTop="5dip"
+           android:layout_width="70dip"
+           android:layout_height="31dip"
+           android:contentDescription="@string/start_label" />
 
         <EditText android:id="@+id/endtext"
            android:textSize="11sp"
-           android:layout_width="70px"
-           android:layout_height="31px" />
+           android:layout_width="70dip"
+           android:layout_height="31dip"
+           android:contentDescription="@string/end_label" />
 
       </LinearLayout>
 
@@ -161,14 +176,16 @@
       <LinearLayout
          android:layout_width="wrap_content"
          android:layout_height="fill_parent"
-         android:layout_marginLeft="5px"
-         android:layout_marginRight="5px"
+         android:layout_marginLeft="5dip"
+         android:layout_marginRight="5dip"
          android:gravity="center">
 
         <ImageButton android:id="@+id/save"
-         android:layout_width="52px"
-         android:layout_height="52px"
-         android:src="@drawable/menu_save" />
+         android:layout_width="52dip"
+         android:layout_height="52dip"
+         android:layout_marginTop="5dip"
+         android:src="@drawable/menu_save"
+         android:contentDescription="@string/save_button" />
 
       </LinearLayout>
 

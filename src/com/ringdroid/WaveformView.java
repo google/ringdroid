@@ -111,6 +111,7 @@ public class WaveformView extends View {
         mPlaybackLinePaint.setColor(
             getResources().getColor(R.drawable.playback_indicator));
         mTimecodePaint = new Paint();
+        mTimecodePaint.setTextSize(12);
         mTimecodePaint.setAntiAlias(true);
         mTimecodePaint.setColor(
             getResources().getColor(R.drawable.timecode));
@@ -268,6 +269,7 @@ public class WaveformView extends View {
     public void recomputeHeights(float density) {
         mHeightsAtThisZoomLevel = null;
         mDensity = density;
+        mTimecodePaint.setTextSize((int)(12 * density));
 
         invalidate();
     }
@@ -404,7 +406,9 @@ public class WaveformView extends View {
                 String timecodeStr = timecodeMinutes + ":" + timecodeSeconds;
                 float offset = (float) (
                     0.5 * mTimecodePaint.measureText(timecodeStr));
-                canvas.drawText(timecodeStr, i - offset, 15,
+                canvas.drawText(timecodeStr,
+                                i - offset,
+                                (int)(12 * mDensity),
                                 mTimecodePaint);
             }
         }

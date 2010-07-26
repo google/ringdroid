@@ -45,6 +45,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -142,11 +143,10 @@ public class RingdroidEditActivity extends Activity
     private int mTouchInitialEndPos;
     private long mWaveformTouchStartMsec;
     private float mDensity;
-
-    private static final int kMarkerLeftInset = 46;
-    private static final int kMarkerRightInset = 48;
-    private static final int kMarkerTopOffset = 10;
-    private static final int kMarkerBottomOffset = 10;
+    private int mMarkerLeftInset;
+    private int mMarkerRightInset;
+    private int mMarkerTopOffset;
+    private int mMarkerBottomOffset;
 
     // Menu commands
     private static final int CMD_SAVE = 1;
@@ -377,6 +377,16 @@ public class RingdroidEditActivity extends Activity
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SPACE) {
+            onPlay(mStartPos);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
     //
     // WaveformListener
     //
@@ -570,6 +580,11 @@ public class RingdroidEditActivity extends Activity
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         mDensity = metrics.density;
+
+        mMarkerLeftInset = (int)(46 * mDensity);
+        mMarkerRightInset = (int)(48 * mDensity);
+        mMarkerTopOffset = (int)(10 * mDensity);
+        mMarkerBottomOffset = (int)(10 * mDensity);
 
         mStartText = (TextView)findViewById(R.id.starttext);
         mStartText.addTextChangedListener(mTextWatcher);
@@ -823,10 +838,17 @@ public class RingdroidEditActivity extends Activity
         mWaveformView.setParameters(mStartPos, mEndPos, mOffset);
         mWaveformView.invalidate();
 
+        mStartMarker.setContentDescription(
+            getResources().getText(R.string.start_marker) + " " +
+            formatTime(mStartPos));
+        mEndMarker.setContentDescription(
+            getResources().getText(R.string.end_marker) + " " +
+            formatTime(mEndPos));
+
         boolean startVisible = true;
         boolean endVisible = true;
 
-        int startX = mStartPos - mOffset - kMarkerLeftInset;
+        int startX = mStartPos - mOffset - mMarkerLeftInset;
         if (startX + mStartMarker.getWidth() >= 0) {
             mStartMarker.setAlpha(255);
         } else {
@@ -836,7 +858,7 @@ public class RingdroidEditActivity extends Activity
         }
 
         int endX = mEndPos - mOffset - mEndMarker.getWidth() +
-            kMarkerRightInset;
+            mMarkerRightInset;
         if (endX + mEndMarker.getWidth() >= 0) {
             mEndMarker.setAlpha(255);
         } else {
@@ -850,7 +872,7 @@ public class RingdroidEditActivity extends Activity
                 AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                 AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                 startX,
-                kMarkerTopOffset));
+                mMarkerTopOffset));
 
         mEndMarker.setLayoutParams(
             new AbsoluteLayout.LayoutParams(
@@ -858,7 +880,7 @@ public class RingdroidEditActivity extends Activity
                 AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                 endX,
                 mWaveformView.getMeasuredHeight() -
-                mEndMarker.getHeight() - kMarkerBottomOffset));
+                mEndMarker.getHeight() - mMarkerBottomOffset));
     }
 
     private Runnable mTimerRunnable = new Runnable() {
@@ -884,8 +906,10 @@ public class RingdroidEditActivity extends Activity
     private void enableDisableButtons() {
         if (mIsPlaying) {
             mPlayButton.setImageResource(android.R.drawable.ic_media_pause);
+            mPlayButton.setContentDescription(getResources().getText(R.string.stop));
         } else {
             mPlayButton.setImageResource(android.R.drawable.ic_media_play);
+            mPlayButton.setContentDescription(getResources().getText(R.string.play));
         }
     }
 
@@ -1782,6 +1806,9 @@ public class RingdroidEditActivity extends Activity
     void sendToServer(String serverUrl,
                       CharSequence errType,
                       Exception exception) {
+        if (mTitle == null)
+            return;
+
         Log.i("Ringdroid", "sendStatsToServer");
 
         boolean isSuccess = (exception == null);
@@ -1809,12 +1836,18 @@ public class RingdroidEditActivity extends Activity
         if (isSuccess) {
             postMessage.append("&title=");
             postMessage.append(URLEncoder.encode(mTitle));
-            postMessage.append("&artist=");
-            postMessage.append(URLEncoder.encode(mArtist));
-            postMessage.append("&album=");
-            postMessage.append(URLEncoder.encode(mAlbum));
-            postMessage.append("&genre=");
-            postMessage.append(URLEncoder.encode(mGenre));
+            if (mArtist != null) {
+                postMessage.append("&artist=");
+                postMessage.append(URLEncoder.encode(mArtist));
+            }
+            if (mAlbum != null) {
+                postMessage.append("&album=");
+                postMessage.append(URLEncoder.encode(mAlbum));
+            }
+            if (mGenre != null) {
+                postMessage.append("&genre=");
+                postMessage.append(URLEncoder.encode(mGenre));
+            }
             postMessage.append("&year=");
             postMessage.append(mYear);
 

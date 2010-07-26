@@ -36,7 +36,7 @@ in your path.  Then run:
 
 rm build.xml
 rm -rf bin/ 
-android update project -n ringdroid -t 2 -p .
+android update project -n ringdroid -t android-4 -p .
 
 Then, to build:
   ant debug

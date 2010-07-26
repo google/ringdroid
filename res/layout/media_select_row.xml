@@ -24,18 +24,18 @@
   <ImageView android:id="@+id/row_icon"
      android:gravity="center_vertical"
      android:scaleType="center"
-     android:layout_marginLeft="8px"
-     android:layout_width="40px"
+     android:layout_marginLeft="8dip"
+     android:layout_width="40dip"
      android:layout_height="fill_parent" />
 
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8px"
-    android:layout_marginBottom="8px"
-    android:layout_marginLeft="12px"
-    android:layout_marginRight="12px">
+    android:layout_marginTop="8dip"
+    android:layout_marginBottom="8dip"
+    android:layout_marginLeft="12dip"
+    android:layout_marginRight="12dip">
 
      <LinearLayout
       android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
       <TextView android:id="@+id/row_artist"
          android:textColor="#ff99ff"
          android:textSize="12sp"
-         android:layout_marginLeft="1px"
+         android:layout_marginLeft="1dip"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_weight="1"/>
@@ -52,7 +52,7 @@
       <TextView android:id="@+id/row_album"
          android:textColor="#ffff99"
          android:textSize="12sp"
-         android:layout_marginLeft="12px"
+         android:layout_marginLeft="12dip"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_weight="1"/>

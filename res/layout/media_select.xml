@@ -30,26 +30,36 @@
 
     <ImageView
      android:src="@drawable/search"
-     android:layout_marginLeft="8px"
+     android:layout_marginLeft="8dip"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content" />
 
     <EditText android:id="@+id/search_filter"
      android:textSize="18sp"
-     android:layout_margin="8px"
+     android:layout_margin="8dip"
      android:layout_width="0px"
      android:layout_height="wrap_content"
-     android:layout_weight="1">
+     android:layout_weight="1"
+     android:contentDescription="@string/search_edit_box">
 
     </EditText>
 
     <LinearLayout style="@style/VerticalDividerLeft" />
     <LinearLayout style="@style/VerticalDividerRight" />
 
-    <Button android:id="@+id/record"
-      android:text="@string/button_start_record_activity"
-      android:layout_height="wrap_content"
-      android:layout_width="120sp" />
+    <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="fill_parent"
+       android:layout_marginLeft="5dip"
+       android:layout_marginRight="5dip"
+       android:gravity="center">
+
+      <Button android:id="@+id/record"
+        android:text="@string/button_start_record_activity"
+        android:layout_height="wrap_content"
+        android:layout_width="120sp" />
+
+    </LinearLayout>
 
   </LinearLayout>
 
