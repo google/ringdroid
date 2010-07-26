@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2008, Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+
+<resources>
+
+    <string name="ringdroid_app_name">Ringdroid</string>
+
+    <!--
+     Main / media select activity
+     -->
+
+    <string name="main_activity_label">Ringdroid</string>
+
+    <string name="button_start_record_activity">Nouvel enregistrement</string>
+
+    <string name="sdcard_readonly">Désolé mais votre carte mémoire SD est en lecture seule et Ringdroid nécessite de l'écriture.</string>
+    <string name="no_sdcard">Désolé mais Ringdroid nécessite une carte mémoire SD pour fonctionner.</string>
+    <string name="sdcard_shared">Désolé mais Ringdroid ne peut fonctionner quand le téléphone est utilisé comme mémoire USB sur un ordinateur.</string>
+
+    <!--
+     Edit activity
+     -->
+
+    <!-- Labels next to the start and end time edit boxes -->
+    <string name="start_label">Début:</string>
+    <string name="end_label">Fin:</string>
+
+    <string name="edit_intent">Modifier</string>
+
+    <string name="time_seconds">secondes</string>
+
+    <!-- After you save a notification or ringtone and have more options
+	 for what to do with them -->
+    <string name="what_to_do_with_ringtone">Sauvegardé!  En faire votre sonnerie ou l'utiliser pour un contact?</string>
+    <string name="set_default_notification">Sauvegardé!  En faire votre notification par défaut?</string>
+
+    <string name="make_default_ringtone_button">Utiliser comme défaut</string>
+    <string name="choose_contact_ringtone_button">Utiliser pour un Contact</string>
+    <string name="do_nothing_with_ringtone_button">Fermer</string>
+
+    <!-- Progress dialog text for loading or saving... -->
+    <string name="progress_dialog_loading">Chargement...</string>
+    <string name="progress_dialog_saving">Sauvegarde...</string>
+
+    <!--
+     Menu items
+     -->
+
+    <string name="menu_save">Sauver</string>
+    <string name="menu_reset">Mise à 0</string>
+    <string name="menu_about">A propos</string>
+    <string name="menu_show_all_audio">Afficher tous les audio</string>
+
+    <!--
+     Context menu items
+     -->
+
+    <string name="context_menu_edit">Modifier</string>
+    <string name="context_menu_delete">Efface</string>
+
+    <!--
+     File Save dialog
+     -->
+
+    <string name="file_save_title">Sauver comme:</string>
+    <string name="file_save_button_save">Sauver</string>
+    <string name="file_save_button_cancel">Annuler</string>
+
+    <string name="ringtone_type_label">Type:</string>
+
+    <string name="type_music">Musique</string>
+    <string name="type_alarm">Alarme</string>
+    <string name="type_notification">Notification</string>
+    <string name="type_ringtone">Sonnerie</string>
+
+    <string name="ringtone_name_label">Nom:</string>
+
+    <string name="artist_name">Ringdroid</string>
+
+    <!--
+     Delete confirmation dialog
+     -->
+
+    <string name="delete_ringtone">Effacer sonnerie</string>
+    <string name="delete_alarm">Effacer alarme</string>
+    <string name="delete_notification">Effacer notification</string>
+    <string name="delete_music">Effacer musique</string>
+    <string name="delete_audio">Effacer audio</string>
+
+    <string name="confirm_delete_ringdroid">Etes vous sûr?</string>
+    <string name="confirm_delete_non_ringdroid"
+    >Etes vous sûr? Ce fichier n'a pas été créé en utilisant Ringdroid!</string>
+
+    <string name="delete_ok_button">Effacer</string>
+    <string name="delete_cancel_button">Annuler</string>
+
+    <string name="delete_failed">Impossible d'effacer le fichier</string>
+
+    <!--
+     Success and error messages
+     -->
+
+    <string name="alert_title_success">Succès</string>
+    <string name="alert_title_failure">Erreur</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_yes_button">Oui, SVP!</string>
+    <string name="alert_no_button">Non merci.</string>
+
+    <string name="save_success_message">Sauvegardé!</string>
+    <string name="default_ringtone_success_message">Sonnerie par défaut modifiée</string>
+    <string name="play_error">Impossible de jouer ce fichier</string>
+    <string name="no_unique_filename">Impossible de trouver un nom unique</string>
+    <string name="delete_tmp_error">Erreur d'effacement de fichier temporaire</string>
+    <string name="record_error">Erreur au démarrage de l'enregistrement sonore</string>
+    <string name="too_small_error">Impossible de sauver un fichier si court, essayez de le faire plus long.</string>
+    <string name="write_error">Erreur d'écriture fichier</string>
+    <string name="read_error">Erreur lecture fichier</string>
+
+    <string name="no_space_error">Votre carte mémoire SD est pleine, il n'y a plus assez de place pour sauver le fichier.</string>
+
+    <string name="bad_extension_error">Désolé mais Ringdroid n'est pas encore capable de modifier ce type de fichier</string>
+    <string name="no_extension_error">Désolé mais Ringdroid n'est pas encore capable de modifier si il n'a pas d'extension comme .mp3 or .wav</string>
+
+    <!--
+     Choose Contact Activity
+     -->
+
+    <string name="choose_contact_title">Utilser comme sonnerie pour quel contact?</string>
+    <string name="success_contact_ringtone">La sonnerie est bien utilisée pour:</string>
+
+    <!--
+     Sending information to server
+     -->
+    <string name="server_title">Partager vos donnes!</string>
+    <string name="server_prompt">Etes vous d'accord pour partager anonymement vos données sur les sonneries et autres sons créés avec Ringdroid.com de façon a ce que nous ayons des statistiques?</string>
+    <string name="server_yes">OK pour envoer</string>
+    <string name="server_later">Demander plus tard</string>
+    <string name="server_never">Jamais</string>
+
+    <string name="error_server_prompt">Etes vous d'accord pour envoyer anonymement des donnés à propos de cette erreur à Ringdroid.com afin que nous puissions essayer de la corriger dans le futur?</string>
+
+    <!--
+     About
+     -->
+
+    <string name="about_title">A propos Ringdroid</string>
+    <string name="about_text"><![CDATA[Utiliser Ringdroid pour modifier les fichiers audio MP3, WAV, AAC, et AMR et créer sonneries, alarmes, et notifications.\n\nAstuce: copier des fichiers audio dans votre carte mémoire SD en utilisant un câble usb, ou obtenez des MP3s en utilisant l'application Amazon MP3.\n\nAstuce: appuis long sur un fichier audio depuis l'écran principal pour l'effacer. Plus en dessous...\n\nAstuce: touchez n'importe quelle zone de la courbe sonore pour commencer à jouer à partir de cette position.\n\nAstuce: pendant la lecture touchez le mot Début ou Fin pour choisir rapidement le début et la fin à ce point de lecture.\n\nAstuce: utiliser la touche de navigation pour plus de précision si elle est disponible.\n\nVersion 2.3\n\nDéveloppeur: Dominic Mazzoni\nGraphismes: Joseph Wain\nSupport et évangélisation: Eugene Koh\n\nRingdroid est un logiciel gratuit distribué sous licence Apache 2.0. Le code source est disponible sur code.google.com\n]]></string>
+
+</resources>

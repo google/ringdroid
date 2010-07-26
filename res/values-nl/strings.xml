@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2008, Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+
+<resources>
+
+    <string name="ringdroid_app_name">Ringdroid</string>
+
+    <!--
+     Main / media select activity
+     -->
+
+    <string name="main_activity_label">Ringdroid</string>
+
+    <string name="button_start_record_activity">Nieuwe opname</string>
+
+    <string name="sdcard_readonly">De SD-kaart is gekoppeld als alleen-lezen en Ringdroid moet naar de kaart kunnen schrijven.</string>
+    <string name="no_sdcard">Ringdroid kan niet worden uitgevoerd tenzij u een SD-kaart hebt geplaatst.</string>
+    <string name="sdcard_shared">Ringdroid kan niet worden uitgevoerd terwijl uw handset is gekoppeld als USB-apparaat.</string>
+
+    <!--
+     Edit activity
+     -->
+
+    <!-- Labels next to the start and end time edit boxes -->
+    <string name="start_label">Start:</string>
+    <string name="end_label">Eind:</string>
+
+    <string name="edit_intent">Bewerken</string>
+
+    <string name="time_seconds">seconden</string>
+
+    <!-- After you save a notification or ringtone and have more options
+	 for what to do with them -->
+    <string name="what_to_do_with_ringtone">Opgeslagen. Instellen als standaardbeltoon of toewijzen aan een contact?</string>
+    <string name="set_default_notification">Opgeslagen. Instellen als standaardmelding?</string>
+
+    <string name="make_default_ringtone_button">Instellen als standaard</string>
+    <string name="choose_contact_ringtone_button">Toewijzen aan contact</string>
+    <string name="do_nothing_with_ringtone_button">Sluiten</string>
+
+    <!-- Progress dialog text for loading or saving... -->
+    <string name="progress_dialog_loading">Laden...</string>
+    <string name="progress_dialog_saving">Opslaan...</string>
+
+    <!--
+     Menu items
+     -->
+
+    <string name="menu_save">Opslaan</string>
+    <string name="menu_reset">Opnieuw instellen</string>
+    <string name="menu_about">Over</string>
+    <string name="menu_show_all_audio">Alle audio weergeven</string>
+
+    <!--
+     Context menu items
+     -->
+
+    <string name="context_menu_edit">Bewerken</string>
+    <string name="context_menu_delete">Verwijderen</string>
+
+    <!--
+     File Save dialog
+     -->
+
+    <string name="file_save_title">Opslaan als:</string>
+    <string name="file_save_button_save">Opslaan</string>
+    <string name="file_save_button_cancel">Annuleren</string>
+
+    <string name="ringtone_type_label">Type:</string>
+
+    <string name="type_music">Muziek</string>
+    <string name="type_alarm">Alarm</string>
+    <string name="type_notification">Melding</string>
+    <string name="type_ringtone">Beltoon</string>
+
+    <string name="ringtone_name_label">Naam:</string>
+
+    <string name="artist_name">Ringdroid</string>
+
+    <!--
+     Delete confirmation dialog
+     -->
+
+    <string name="delete_ringtone">Beltoon verwijderen</string>
+    <string name="delete_alarm">Alarm verwijderen</string>
+    <string name="delete_notification">Melding verwijderen</string>
+    <string name="delete_music">Muziek verwijderen</string>
+    <string name="delete_audio">Audio verwijderen</string>
+
+    <string name="confirm_delete_ringdroid">Weet u het zeker?</string>
+    <string name="confirm_delete_non_ringdroid">Weet u het zeker? Dit bestand is niet gemaakt met Ringdroid.</string>
+
+    <string name="delete_ok_button">Verwijderen</string>
+    <string name="delete_cancel_button">Annuleren</string>
+
+    <string name="delete_failed">Kan bestand niet verwijderen</string>
+
+    <!--
+     Success and error messages
+     -->
+
+    <string name="alert_title_success">Succes</string>
+    <string name="alert_title_failure">Fout</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_yes_button">Ja, graag.</string>
+    <string name="alert_no_button">Nee, bedankt.</string>
+
+    <string name="save_success_message">Opgeslagen.</string>
+    <string name="default_ringtone_success_message">Standaardbeltoon gewijzigd</string>
+    <string name="play_error">Kan dit mediabestand niet afspelen</string>
+    <string name="no_unique_filename">Kan unieke bestandsnaam niet vinden</string>
+    <string name="delete_tmp_error">Fout bij verwijderen van tijdelijk bestand</string>
+    <string name="record_error">Fout bij starten van geluidsrecorder</string>
+    <string name="too_small_error">Kan een bestand dat zo kort is, niet opslaan. Maak het langer.</string>
+    <string name="write_error">Fout bij schrijven van bestand</string>
+    <string name="read_error">Fout bij lezen van bestand</string>
+
+    <string name="no_space_error">De SD-kaart is vol. Onvoldoende ruimte om dit bestand op te slaan.</string>
+
+    <string name="bad_extension_error">Ringdroid kan bestanden van dit type niet bewerken</string>
+    <string name="no_extension_error">Ringdroid kan een bestand niet bewerken als het geen extensie zoals .mp3 of .wav heeft</string>
+
+    <!--
+     Choose Contact Activity
+     -->
+
+    <string name="choose_contact_title">Beltoon toewijzen aan welk contact?</string>
+    <string name="success_contact_ringtone">Beltoon toegewezen aan:</string>
+
+    <!--
+     Sending information to server
+     -->
+    <string name="server_title">Deel uw gegevens.</string>
+    <string name="server_prompt">Mogen anonieme gegevens over de beltonen en andere geluiden die u maakt, worden verzonden naar Ringdroid.com zodat we statistieken kunnen verzamelen?</string>
+    <string name="server_yes">Verzenden is toegestaan</string>
+    <string name="server_later">Later vragen</string>
+    <string name="server_never">Nooit</string>
+
+    <string name="error_server_prompt">Mogen anonieme gegevens over deze fout worden verzonden naar Ringdroid.com zodat we dit probleem kunnen oplossen?</string>
+
+    <!--
+     About
+     -->
+
+    <string name="about_title">Over Ringdroid</string>
+    <string name="about_text"><![CDATA[Met Ringdroid kunt u MP3-, WAV-, AAC- en AMR-audiobestanden bewerken en beltonen, alarmen en meldingen van deze bestanden maken.\n\nTip: kopieer audiobestanden naar uw SD-kaart met een USB-kabel of download MP3's met de Amazon MP3-toepassing.\n\nTip: druk lang op een audiobestand in het hoofdscherm om het te verwijderen. Meer hieronder...\n\nTip: tik ergens op de golfvorm om het afspelen te starten vanaf die positie.\n\nTip: tik tijdens het afspelen op het woord Start of Eind om snel de start- en eindmarkeringen in te stellen op de huidige afspeeltijd.\n\nTip: gebruik de draaiknop voor nauwkeurigere aanpassingen.\n\nVersie 2.3\n\nOntwikkelaar: Dominic Mazzoni\nGraphics: Joseph Wain\nOndersteuning en evangelisatie: Eugene Koh\n\nRingdroid is gratis software, gedistribueerd onder de Apache 2.0-licentie. Broncode is beschikbaar op code.google.com\n]]></string>
+
+</resources>

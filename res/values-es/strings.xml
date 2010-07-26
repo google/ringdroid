@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2008, Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+<resources>
+  <string name="ringdroid_app_name">Ringdroid</string>
+  <!--
+     Actividad principal/selección multimedia
+     -->
+  <string name="main_activity_label">Ringdroid</string>
+  <string name="button_start_record_activity">Registro nuevo</string>
+  <string name="sdcard_readonly">La tarjeta SD es de sólo lectura y Ringdroid precisa que sea de escritura.</string>
+  <string name="no_sdcard">Ringdroid sólo puede funcionar con una arjeta SD insertada.</string>
+  <string name="sdcard_shared">Ringdroid no funciona si el aparato está montado en un dispositivo USB.</string>
+  <!--
+     Editar actividad
+     -->
+  <!-- Etiquetas junto a los cuadros de hora de inicio y fin -->
+  <string name="start_label">Inicio:</string>
+  <string name="end_label">Fin:</string>
+  <string name="edit_intent">Editar</string>
+  <string name="time_seconds">segundos</string>
+  <!-- Una vez guardada una notificación o un tono de llamada y tienes más opciones de configuración-->
+  <string name="what_to_do_with_ringtone">Guardado. ¿Quieres que sea el tono por defecto o para un contacto?</string>
+  <string name="set_default_notification">Guardado. ¿Quieres que sea tu notificación por defecto?</string>
+  <string name="make_default_ringtone_button">Por defecto</string>
+  <string name="choose_contact_ringtone_button">Asignar a contacto</string>
+  <string name="do_nothing_with_ringtone_button">Cerrar</string>
+  <!-- Cuadro de progreso de carga o guardado... -->
+  <string name="progress_dialog_loading">Cargando...</string>
+  <string name="progress_dialog_saving">Guardando...</string>
+  <!--
+     Elementos de menú
+     -->
+  <string name="menu_save">Guardar</string>
+  <string name="menu_reset">Reiniciar</string>
+  <string name="menu_about">Acerca de</string>
+  <string name="menu_show_all_audio">Mostrar sonidos</string>
+  <!--
+     Elementos del menú de contexto
+     -->
+  <string name="context_menu_edit">Editar</string>
+  <string name="context_menu_delete">Eliminar</string>
+  <!--
+     Cuadro Guardar archivo
+     -->
+  <string name="file_save_title">Guardar como:</string>
+  <string name="file_save_button_save">Guardar</string>
+  <string name="file_save_button_cancel">Cancelar</string>
+  <string name="ringtone_type_label">Tipo:</string>
+  <string name="type_music">Música</string>
+  <string name="type_alarm">Alarma</string>
+  <string name="type_notification">Notificación</string>
+  <string name="type_ringtone">Tono llamada</string>
+  <string name="ringtone_name_label">Nombre:</string>
+  <string name="artist_name">Ringdroid</string>
+  <!--
+     Cuadro confirmación eliminación
+     -->
+  <string name="delete_ringtone">Eliminar tono</string>
+  <string name="delete_alarm">Eliminar alarma</string>
+  <string name="delete_notification">Eliminar notificación</string>
+  <string name="delete_music">Eliminar música</string>
+  <string name="delete_audio">Eliminar sonido</string>
+  <string name="confirm_delete_ringdroid">¿Seguro?</string>
+  <string name="confirm_delete_non_ringdroid">¿Seguro? Este archivo no se creó con Ringdroid.</string>
+  <string name="delete_ok_button">Eliminar</string>
+  <string name="delete_cancel_button">Cancelar</string>
+  <string name="delete_failed">Imposible eliminar archivo</string>
+  <!--
+     Mensajes de éxito y error
+     -->
+  <string name="alert_title_success">Éxito</string>
+  <string name="alert_title_failure">Error</string>
+  <string name="alert_ok_button">Aceptar</string>
+  <string name="alert_yes_button">Sí, por favor.</string>
+  <string name="alert_no_button">No, gracias.</string>
+  <string name="save_success_message">Guardado</string>
+  <string name="default_ringtone_success_message">Tono por defecto cambiado</string>
+  <string name="play_error">Imposible reproducir este archivo multimedia</string>
+  <string name="no_unique_filename">Imposible encontrar un nombre de archivo único</string>
+  <string name="delete_tmp_error">Error al eliminar el archivo temporal</string>
+  <string name="record_error">Error al iniciar el grabador de sonido</string>
+  <string name="too_small_error">Imposible guardar un archivo tan corto, amplíalo.</string>
+  <string name="write_error">Error al escribir archivo</string>
+  <string name="read_error">Error al leer archivo</string>
+  <string name="no_space_error">La tarjeta SD está llena, no hay espacio para guardar este archivo.</string>
+  <string name="bad_extension_error">Ringdroid aún no puede editar este tipo de archivos.</string>
+  <string name="no_extension_error">Ringdroid no puede editar un archivo si no tiene extensión .mp3 o .wav.</string>
+  <!--
+     Elegir actividad de contacto
+     -->
+  <string name="choose_contact_title">¿A qué contacto se asignar este tono?</string>
+  <string name="success_contact_ringtone">Tono asignado correctamente a:</string>
+  <!--
+     Enviando información a servidor
+     -->
+  <string name="server_title">Comparte datos.</string>
+  <string name="server_prompt">¿Puedes enviar datos anónimos sobre tonos y sonidos para crear a Ringdroid.com para recopilar estadísticas?</string>
+  <string name="server_yes">Sí</string>
+  <string name="server_later">Más tarde</string>
+  <string name="server_never">Nunca</string>
+  <string name="error_server_prompt">¿Puedes enviar datos anónimos de este error a Ringdroid.com para intentar solucionar este problema en el futuro?</string>
+  <!--
+     Acerca de
+     -->
+  <string name="about_title">Acerca de Ringdroid</string>
+  <string name="about_text"><![CDATA[Usa Ringdroid para editar archivos de sonido MP3, WAV, AAC y AMR y crear tonos, alarmas y notificaciones.\n\nTruco: copia archivos de sonido en la tarjeta SD con un cable USB o consigue MP3s con la aplicación Amazon MP3.\n\nTruco: para eliminar un archivo de sonido, púlsalo durante unos segundos en la pantalla principal. Más...\n\nTruco: toca en cualquier parte de la onda para empezar a reproducir desde ese punto.\n\nTruco: durante la reproducción, toca la palabra Inicio o Fin para definir rápidamente los marcadores de inicio y fin.\n\nTruco: usa el botón para ajustes más precisos.\n\nVersión 2.3\n\nDesarrollador: Dominic Mazzoni\nGráficos: Joseph Wain\nSoporte y textos: Eugene Koh\n\nRingdroid es software gratuito distribuido con la licencia Apache 2.0. El código fuente está en code.google.com\n]]></string>
+</resources>

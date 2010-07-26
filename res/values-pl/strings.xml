@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- /**  * Copyright (c) 2008, Google Inc.  *  * Licensed under the Apache License, Version 2.0 (the "License");   * you may not use this file except in compliance with the License.   * You may obtain a copy of the License at   *  *     http://www.apache.org/licenses/LICENSE-2.0   *  * Unless required by applicable law or agreed to in writing, software   * distributed under the License is distributed on an "AS IS" BASIS,   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   * See the License for the specific language governing permissions and   * limitations under the License.  */ -->
+
+<resources>
+
+    <string name="ringdroid_app_name">Ringdroid</string>
+
+    <!--      Main / media select activity      -->
+
+    <string name="main_activity_label">Ringdroid</string>
+
+    <string name="button_start_record_activity">Nagraj nowy</string>
+
+    <string name="sdcard_readonly">Niestety, karta SD jest kartą tylko do odczytu, Ringdroid wymaga, by była zapisywalna.</string>
+    <string name="no_sdcard">Przepraszamy, nie można uruchomić Ringdroid bez karty SD.</string>
+    <string name="sdcard_shared">Nie można uruchomić Ringdroid, jeśli słuchawki podpięto jako urządz. USB.</string>
+
+    <!--      Edit activity      -->
+
+    <!-- Labels next to the start and end time edit boxes -->
+    <string name="start_label">Start:</string>
+    <string name="end_label">Koniec:</string>
+
+    <string name="edit_intent">Edytuj</string>
+
+    <string name="time_seconds">s</string>
+
+    <!-- After you save a notification or ringtone and have more options 	 for what to do with them -->
+    <string name="what_to_do_with_ringtone">Zapisano!  Ustawić dzwonek jako domyślny czy przypisać go do kontaktu?</string>
+    <string name="set_default_notification">Zapisano!  Ustawić jako powiadomienie dom.?</string>
+
+    <string name="make_default_ringtone_button">Ustaw jako domyślny</string>
+    <string name="choose_contact_ringtone_button">Przypisz do kontaktu</string>
+    <string name="do_nothing_with_ringtone_button">Zamknij</string>
+
+    <!-- Progress dialog text for loading or saving... -->
+    <string name="progress_dialog_loading">Wczytywanie...</string>
+    <string name="progress_dialog_saving">Zapisywanie...</string>
+
+    <!--      Menu items      -->
+
+    <string name="menu_save">Zapisz</string>
+    <string name="menu_reset">Resetuj</string>
+    <string name="menu_about">O programie</string>
+    <string name="menu_show_all_audio">Pokaż wszystkie pliki audio</string>
+
+    <!--      Context menu items      -->
+
+    <string name="context_menu_edit">Edytuj</string>
+    <string name="context_menu_delete">Skasuj</string>
+
+    <!--      File Save dialog      -->
+
+    <string name="file_save_title">Zapisz jako:</string>
+    <string name="file_save_button_save">Zapisz</string>
+    <string name="file_save_button_cancel">Anuluj</string>
+
+    <string name="ringtone_type_label">Typ:</string>
+
+    <string name="type_music">Muzyka</string>
+    <string name="type_alarm">Alarm</string>
+    <string name="type_notification">Powiadomienie</string>
+    <string name="type_ringtone">Dzwonek</string>
+
+    <string name="ringtone_name_label">Nazwa:</string>
+
+    <string name="artist_name">Ringdroid</string>
+
+    <!--      Delete confirmation dialog      -->
+
+    <string name="delete_ringtone">Usuń dzwonek</string>
+    <string name="delete_alarm">Usuń alarm</string>
+    <string name="delete_notification">Usuń powiadomienie</string>
+    <string name="delete_music">Usuń muzykę</string>
+    <string name="delete_audio">Usuń plik audio</string>
+
+    <string name="confirm_delete_ringdroid">Na pewno?</string>
+    <string name="confirm_delete_non_ringdroid">Na pewno?  Ten plik nie został utworzony przez Ringdroid!</string>
+
+    <string name="delete_ok_button">Skasuj</string>
+    <string name="delete_cancel_button">Anuluj</string>
+
+    <string name="delete_failed">Nie można usunąć pliku</string>
+
+    <!--      Success and error messages      -->
+
+    <string name="alert_title_success">Gotowe</string>
+    <string name="alert_title_failure">Błąd</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_yes_button">Tak</string>
+    <string name="alert_no_button">Nie</string>
+
+    <string name="save_success_message">Zapisano!</string>
+    <string name="default_ringtone_success_message">Zmieniono dzwonek dom.</string>
+    <string name="play_error">Nie można odtworzyć tego pliku</string>
+    <string name="no_unique_filename">Nie można znaleźć unikalnej nazwy</string>
+    <string name="delete_tmp_error">Błąd podczas usuw. pliku tymcz.</string>
+    <string name="record_error">Błąd podczas uruch. dyktafonu</string>
+    <string name="too_small_error">Nie można zapisać tak małego pliku, nagraj dłuższy plik.</string>
+    <string name="write_error">Błąd zapisu pliku</string>
+    <string name="read_error">Błąd odczytu pliku</string>
+
+    <string name="no_space_error">Karta SD pełna, brak miejsca do zapisania tego pliku.</string>
+
+    <string name="bad_extension_error">Niestety, Ringdroid nie edytuje plików tego typu</string>
+    <string name="no_extension_error">Niestety, Ringdroid nie może edytować pliku o rozszerzeniu innym niż .mp3 lub .wav</string>
+
+    <!--      Choose Contact Activity      -->
+
+    <string name="choose_contact_title">Do którego kontaktu przypisać dzwonek?</string>
+    <string name="success_contact_ringtone">Przypisano dzwonek do:</string>
+
+    <!--      Sending information to server      -->
+    <string name="server_title">Udostępnij dane!</string>
+    <string name="server_prompt">Zgadzasz się na przesyłanie anonimowych informacji o utworzonych dzwonkach i dźwiękach do Ringdroid.com w celach statystycznych?</string>
+    <string name="server_yes">Zgadzam się</string>
+    <string name="server_later">Zapytaj później</string>
+    <string name="server_never">Nigdy</string>
+
+    <string name="error_server_prompt">Zgadzasz się na przesłanie anonimowych informacji o błędzie do Ringdroid.com w celu naprawienia problemu?</string>
+
+    <!--      About      -->
+
+    <string name="about_title">O Ringdroid</string>
+    <string name="about_text"><![CDATA[Edytuj pliki MP3, WAV, AAC oraz AMR i twórz z nich własne dzwonki, alarmy i powiadomienia za pomocą Ringdroid.\n\nWskazówka: kopiuj pliki audio z karty SD poprzez kabel USB lub pobierz pliki MP3 za pomocą aplikacji Amazon MP3.\n\nWskazówka: aby usunąć plik audio, dotknij go i przytrzymaj na ekranie głównym.  Więcej...\n\nWskazówka: dotknij fali w dowolnym miejscu, aby odtworzyć plik od tego miejsca.\n\nWskazówka: w czasie odtwarzania dotknij słowa Start lub Koniec, aby szybko ustawić znaczniki końca i początku czasu odtwarzania.\n\nWskazówka: Do precyzyjnej regulacji użyj manipulatora.\n\nWersja 2.3\n\nAutor: Dominic Mazzoni\nGrafika: Joseph Wain\nWsparcie i pomoc: Eugene Koh\n\nRingdroid jest bezpłatny i dostępny na licencji Apache 2.0.  Kod źródłowy można znaleźć na code.google.com\n]]></string>
+
+</resources>

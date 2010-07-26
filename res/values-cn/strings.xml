@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2008, Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+-->
+<resources>
+  <string name="ringdroid_app_name">Ringdroid</string>
+  <!--
+     Main / media select activity
+     -->
+  <string name="main_activity_label">Ringdroid</string>
+  <string name="button_start_record_activity">新录制</string>
+  <string name="sdcard_readonly">抱歉，SD卡映射为只读，而Ringdroid需要其可写入。</string>
+  <string name="no_sdcard">抱歉，Ringdroid只在插入SD卡时运行。</string>
+  <string name="sdcard_shared">抱歉，Ringdroid无法在手机映射为USB设备时运行。</string>
+  <!--
+     Edit activity
+     -->
+  <!-- Labels next to the start and end time edit boxes -->
+  <string name="start_label">开始：</string>
+  <string name="end_label">结束:</string>
+  <string name="edit_intent">编辑</string>
+  <string name="time_seconds">秒数</string>
+  <!-- After you save a notification or ringtone and have more options
+	 for what to do with them -->
+  <string name="what_to_do_with_ringtone">已保存！要将其设为默认铃声或分配到某个联系人吗？</string>
+  <string name="set_default_notification">已保存！要将其设为默认通知吗？</string>
+  <string name="make_default_ringtone_button">设为默认</string>
+  <string name="choose_contact_ringtone_button">分配到联系人</string>
+  <string name="do_nothing_with_ringtone_button">关闭</string>
+  <!-- Progress dialog text for loading or saving... -->
+  <string name="progress_dialog_loading">载入中...</string>
+  <string name="progress_dialog_saving">保持中...</string>
+  <!--
+     Menu items
+     -->
+  <string name="menu_save">保存</string>
+  <string name="menu_reset">重置</string>
+  <string name="menu_about">关于</string>
+  <string name="menu_show_all_audio">显示所有音频</string>
+  <!--
+     Context menu items
+     -->
+  <string name="context_menu_edit">编辑</string>
+  <string name="context_menu_delete">删除</string>
+  <!--
+     File Save dialog
+     -->
+  <string name="file_save_title">另存为：</string>
+  <string name="file_save_button_save">保存</string>
+  <string name="file_save_button_cancel">取消</string>
+  <string name="ringtone_type_label">类型：</string>
+  <string name="type_music">音乐</string>
+  <string name="type_alarm">闹铃</string>
+  <string name="type_notification">通知</string>
+  <string name="type_ringtone">铃声</string>
+  <string name="ringtone_name_label">名称：</string>
+  <string name="artist_name">Ringdroid</string>
+  <!--
+     Delete confirmation dialog
+     -->
+  <string name="delete_ringtone">删除铃声</string>
+  <string name="delete_alarm">删除闹铃</string>
+  <string name="delete_notification">删除通知</string>
+  <string name="delete_music">删除音乐</string>
+  <string name="delete_audio">删除音频</string>
+  <string name="confirm_delete_ringdroid">您确定要这样做吗？</string>
+  <string name="confirm_delete_non_ringdroid">是否确定？这个文件不是通过Ringdroid创建的！</string>
+  <string name="delete_ok_button">删除</string>
+  <string name="delete_cancel_button">取消</string>
+  <string name="delete_failed">无法删除文件</string>
+  <!--
+     Success and error messages
+     -->
+  <string name="alert_title_success">成功</string>
+  <string name="alert_title_failure">错误</string>
+  <string name="alert_ok_button">确定</string>
+  <string name="alert_yes_button">是的，请吧！</string>
+  <string name="alert_no_button">不，谢谢。</string>
+  <string name="save_success_message">已保存！</string>
+  <string name="default_ringtone_success_message">默认铃声已更改</string>
+  <string name="play_error">无法播放此媒体文件</string>
+  <string name="no_unique_filename">无法找到专属文件名</string>
+  <string name="delete_tmp_error">删除临时文件时出错</string>
+  <string name="record_error">启动录音机时出错</string>
+  <string name="too_small_error">无法保存过小的文件，请尝试使其更长。</string>
+  <string name="write_error">写文件时出错</string>
+  <string name="read_error">读文件时出错</string>
+  <string name="no_space_error">您的SD卡已满，没有足够空间保存此文件。</string>
+  <string name="bad_extension_error">抱歉，Ringdroid尚不能编辑有类型的文件。</string>
+  <string name="no_extension_error">抱歉，Ringdroid不能编辑无扩展名（如.mp3、.wav）的文件</string>
+  <!--
+     Choose Contact Activity
+     -->
+  <string name="choose_contact_title">分配铃声到哪个联系人？</string>
+  <string name="success_contact_ringtone">铃声成功分配到：</string>
+  <!--
+     Sending information to server
+     -->
+  <string name="server_title">分享您的数据！</string>
+  <string name="server_prompt">可以向Ringdroid.com发送您创建的铃声及其他声音的数据，允许我们收集统计资料吗？</string>
+  <string name="server_yes">可发送</string>
+  <string name="server_later">以后询问</string>
+  <string name="server_never">从不</string>
+  <string name="error_server_prompt">可以向Ringdroid.com发送有关此错误的匿名数据，我们将努力修复此问题。</string>
+  <!--
+     About
+     -->
+  <string name="about_title">关于Ringdroid</string>
+  <string name="about_text"><![CDATA[使用Ringdroid来编辑MP3、WAV、AAC和AMR音频文件，创建铃声，闹铃及通知。\n\n贴士：使用USB缆线将音频文件复制到您的SD卡，或通过Amazon MP3程序来获取MP3。\n\n贴士：长按主屏幕上的一个音频文件可以删除此文件。  更多如下...\n\n贴士：轻触波形上的任意位置来使播放由此位置开始。\n\n贴士：播放时，您可以轻触[播放]或[结束]文字来快速为当前回放时间标记开始和结束位置。\n\n贴士：精调请使用三维方向式操作按键。\n\n2.3版\n\n开发: Dominic Mazzoni\n图形：Joseph Wain\n支持及宣传：Eugene Koh\n\nRingdroid是免费软件，在Apache 2.0许可下分发。源代码位于code.google.com\n]]></string>
+</resources>

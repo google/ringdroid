@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- /**  * Copyright (c) 2008, Google Inc.  *  * Licensed under the Apache License, Version 2.0 (the "License");   * you may not use this file except in compliance with the License.   * You may obtain a copy of the License at   *  *     http://www.apache.org/licenses/LICENSE-2.0   *  * Unless required by applicable law or agreed to in writing, software   * distributed under the License is distributed on an "AS IS" BASIS,   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   * See the License for the specific language governing permissions and   * limitations under the License.  */ -->
+
+<resources>
+
+    <string name="ringdroid_app_name">Программа Ringdroid</string>
+
+    <!--      Main / media select activity      -->
+
+    <string name="main_activity_label">Программа Ringdroid</string>
+
+    <string name="button_start_record_activity">Записать новый</string>
+
+    <string name="sdcard_readonly">Извините, SD-карта только для чтения – для Ringdroid требуется записываемая карта.</string>
+    <string name="no_sdcard">Извините, пока не вставлена SD-карта, Ringdroid не работает.</string>
+    <string name="sdcard_shared">Извините, пока телефон подключен к разъему USB, Ringdroid не работает.</string>
+
+    <!--      Edit activity      -->
+
+    <!-- Labels next to the start and end time edit boxes -->
+    <string name="start_label">Начало:</string>
+    <string name="end_label">Конец:</string>
+
+    <string name="edit_intent">Изменить</string>
+
+    <string name="time_seconds">сек.</string>
+
+    <!-- After you save a notification or ringtone and have more options 	 for what to do with them -->
+    <string name="what_to_do_with_ringtone">Сохранено!  Сделать сигналом звонка по умолчанию или назначить для контакта?</string>
+    <string name="set_default_notification">Сохранено!  Сделать уведомлением по умолчанию?</string>
+
+    <string name="make_default_ringtone_button">По умолчанию</string>
+    <string name="choose_contact_ringtone_button">Назначить для контакта</string>
+    <string name="do_nothing_with_ringtone_button">Закрыть</string>
+
+    <!-- Progress dialog text for loading or saving... -->
+    <string name="progress_dialog_loading">Загрузка…</string>
+    <string name="progress_dialog_saving">Сохранение…</string>
+
+    <!--      Menu items      -->
+
+    <string name="menu_save">Сохранить</string>
+    <string name="menu_reset">Сброс</string>
+    <string name="menu_about">Сведения</string>
+    <string name="menu_show_all_audio">Показать все аудио</string>
+
+    <!--      Context menu items      -->
+
+    <string name="context_menu_edit">Изменить</string>
+    <string name="context_menu_delete">Удалить</string>
+
+    <!--      File Save dialog      -->
+
+    <string name="file_save_title">Сохранить как:</string>
+    <string name="file_save_button_save">Сохранить</string>
+    <string name="file_save_button_cancel">Отменить</string>
+
+    <string name="ringtone_type_label">Тип:</string>
+
+    <string name="type_music">Музыка</string>
+    <string name="type_alarm">Будильник</string>
+    <string name="type_notification">Уведомление</string>
+    <string name="type_ringtone">Сигнал звонка</string>
+
+    <string name="ringtone_name_label">Имя:</string>
+
+    <string name="artist_name">Программа Ringdroid</string>
+
+    <!--      Delete confirmation dialog      -->
+
+    <string name="delete_ringtone">Удалить сигнал звонка</string>
+    <string name="delete_alarm">Удалить сигнал будильника</string>
+    <string name="delete_notification">Удалить уведомление</string>
+    <string name="delete_music">Удалить музыку</string>
+    <string name="delete_audio">Удалить аудио</string>
+
+    <string name="confirm_delete_ringdroid">Вы уверены?</string>
+    <string name="confirm_delete_non_ringdroid">Вы уверены?  Файл создан не в программе Ringdroid!</string>
+
+    <string name="delete_ok_button">Удалить</string>
+    <string name="delete_cancel_button">Отменить</string>
+
+    <string name="delete_failed">Невозможно удалить файл</string>
+
+    <!--      Success and error messages      -->
+
+    <string name="alert_title_success">Готово</string>
+    <string name="alert_title_failure">Ошибка</string>
+    <string name="alert_ok_button">ОК</string>
+    <string name="alert_yes_button">Да!</string>
+    <string name="alert_no_button">Нет.</string>
+
+    <string name="save_success_message">Сохранено!</string>
+    <string name="default_ringtone_success_message">Сигнал звонка по умолчанию изменен</string>
+    <string name="play_error">Невозможно воспроизвести файл мультимедиа</string>
+    <string name="no_unique_filename">Не удается найти уникальное имя файла</string>
+    <string name="delete_tmp_error">Ошибка при удалении временного файла</string>
+    <string name="record_error">Ошибка при запуске диктофона</string>
+    <string name="too_small_error">Файл слишком короткий для сохранения, удлините его.</string>
+    <string name="write_error">Ошибка записи файла</string>
+    <string name="read_error">Ошибка чтения файла</string>
+
+    <string name="no_space_error">SD-карта заполнена, недостаточно места для сохранения этого файла.</string>
+
+    <string name="bad_extension_error">Извините, в Ringdroid пока невозможна редакция таких файлов</string>
+    <string name="no_extension_error">Извините, в Ringdroid невозможна редакция файлов с расширением отличным от .mp3 или .wav</string>
+
+    <!--      Choose Contact Activity      -->
+
+    <string name="choose_contact_title">Для которого контакта назначить сигнал звонка?</string>
+    <string name="success_contact_ringtone">Сигнал звонка успешно назначен контакту:</string>
+
+    <!--      Sending information to server      -->
+    <string name="server_title">Делитесь данными!</string>
+    <string name="server_prompt">Отправить анонимные сведения о созданных вами сигналах звонка и других сигналах на Ringdroid.com в статистических целях?</string>
+    <string name="server_yes">Отправить</string>
+    <string name="server_later">Запросить позже</string>
+    <string name="server_never">Никогда</string>
+
+    <string name="error_server_prompt">Отправить анонимные сведения об ошибке на Ringdroid.com с целью устранения нами этой неполадки в будущем?</string>
+
+    <!--      About      -->
+
+    <string name="about_title">О программе Ringdroid</string>
+    <string name="about_text"><![CDATA[Редактируйте в программе Ringdroid аудиофайлы MP3, WAV, AAC и AMR, создавайте сигналы звонка, будильника и уведомления.\n\nСовет. Копируйте аудиофайлы на SD-карту с помощью кабеля USB или MP3-файлы – через приложение Amazon MP3.\n\nСовет. Чтобы удалить файл, нажмите и удерживайте его на главном экране.  См. ниже...\n\nСовет. Коснитесь графика сигнала в любом месте, чтобы начать воспроизведение.\n\nСовет. Для быстрой установки маркеров начала или конца фрагмента коснитесь во время воспроизведения слова Начало или Конец.\n\nСовет. Для точной настройки используйте колесико мыши.\n\nВерсия 2.3\n\nРазработчик: Dominic Mazzoni\nГрафика: Joseph Wain\nПоддержка и реклама: Eugene Koh\n\nRingdroid – это открытое ПО, распространяемое по лицензии Apache 2.0.  Исходный код см. на code.google.com\n]]></string>
+
+</resources>
