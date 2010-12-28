@@ -133,7 +133,7 @@
     <string name="read_error">Error reading file</string>
 
     <string name="bad_extension_error">Sorry, Ringdroid is not yet able to edit files of type</string>
-    <string name="no_extension_error">Sorry, Ringdroid can't edit a file if it doesn't have an extension like .mp3 or .wav</string>
+    <string name="no_extension_error">Sorry, Ringdroid can\'t edit a file if it doesn\'t have an extension like .mp3 or .wav</string>
 
     <!--
      Choose Contact Activity

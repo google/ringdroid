@@ -32,8 +32,8 @@
     <string name="button_start_record_activity">Record New</string>
 
     <string name="sdcard_readonly">Sorry, the SD Card is mounted as read-only and Ringdroid requires it to be writable.</string>
-    <string name="no_sdcard">Sorry, Ringdroid can't run unless you have an SD Card inserted.</string>
-    <string name="sdcard_shared">Sorry, Ringdroid can't run while your handset is mounted as a USB device.</string>
+    <string name="no_sdcard">Sorry, Ringdroid can\'t run unless you have an SD Card inserted.</string>
+    <string name="sdcard_shared">Sorry, Ringdroid can\'t run while your handset is mounted as a USB device.</string>
 
     <!--
      Edit activity
@@ -142,14 +142,14 @@
     <string name="no_unique_filename">Unable to find unique filename</string>
     <string name="delete_tmp_error">Error deleting temporary file</string>
     <string name="record_error">Error launching Sound Recorder</string>
-    <string name="too_small_error">Can't save a file that small, try making it longer.</string>
+    <string name="too_small_error">Can\'t save a file that small, try making it longer.</string>
     <string name="write_error">Error writing file</string>
     <string name="read_error">Error reading file</string>
 
     <string name="no_space_error">Your SD card is full, there is not enough space to save this file.</string>
 
     <string name="bad_extension_error">Sorry, Ringdroid is not yet able to edit files of type</string>
-    <string name="no_extension_error">Sorry, Ringdroid can't edit a file if it doesn't have an extension like .mp3 or .wav</string>
+    <string name="no_extension_error">Sorry, Ringdroid can\'t edit a file if it doesn\'t have an extension like .mp3 or .wav</string>
 
     <!--
      Choose Contact Activity

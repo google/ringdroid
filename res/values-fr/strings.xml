@@ -29,7 +29,7 @@
 
     <string name="button_start_record_activity">Nouvel enregistrement</string>
 
-    <string name="sdcard_readonly">Désolé mais votre carte mémoire SD est en lecture seule et Ringdroid nécessite de l'écriture.</string>
+    <string name="sdcard_readonly">Désolé mais votre carte mémoire SD est en lecture seule et Ringdroid nécessite de l\'écriture.</string>
     <string name="no_sdcard">Désolé mais Ringdroid nécessite une carte mémoire SD pour fonctionner.</string>
     <string name="sdcard_shared">Désolé mais Ringdroid ne peut fonctionner quand le téléphone est utilisé comme mémoire USB sur un ordinateur.</string>
 
@@ -47,7 +47,7 @@
 
     <!-- After you save a notification or ringtone and have more options
 	 for what to do with them -->
-    <string name="what_to_do_with_ringtone">Sauvegardé!  En faire votre sonnerie ou l'utiliser pour un contact?</string>
+    <string name="what_to_do_with_ringtone">Sauvegardé!  En faire votre sonnerie ou l\'utiliser pour un contact?</string>
     <string name="set_default_notification">Sauvegardé!  En faire votre notification par défaut?</string>
 
     <string name="make_default_ringtone_button">Utiliser comme défaut</string>
@@ -105,12 +105,12 @@
 
     <string name="confirm_delete_ringdroid">Etes vous sûr?</string>
     <string name="confirm_delete_non_ringdroid"
-    >Etes vous sûr? Ce fichier n'a pas été créé en utilisant Ringdroid!</string>
+    >Etes vous sûr? Ce fichier n\'a pas été créé en utilisant Ringdroid!</string>
 
     <string name="delete_ok_button">Effacer</string>
     <string name="delete_cancel_button">Annuler</string>
 
-    <string name="delete_failed">Impossible d'effacer le fichier</string>
+    <string name="delete_failed">Impossible d\'effacer le fichier</string>
 
     <!--
      Success and error messages
@@ -126,16 +126,16 @@
     <string name="default_ringtone_success_message">Sonnerie par défaut modifiée</string>
     <string name="play_error">Impossible de jouer ce fichier</string>
     <string name="no_unique_filename">Impossible de trouver un nom unique</string>
-    <string name="delete_tmp_error">Erreur d'effacement de fichier temporaire</string>
-    <string name="record_error">Erreur au démarrage de l'enregistrement sonore</string>
+    <string name="delete_tmp_error">Erreur d\'effacement de fichier temporaire</string>
+    <string name="record_error">Erreur au démarrage de l\'enregistrement sonore</string>
     <string name="too_small_error">Impossible de sauver un fichier si court, essayez de le faire plus long.</string>
-    <string name="write_error">Erreur d'écriture fichier</string>
+    <string name="write_error">Erreur d\'écriture fichier</string>
     <string name="read_error">Erreur lecture fichier</string>
 
-    <string name="no_space_error">Votre carte mémoire SD est pleine, il n'y a plus assez de place pour sauver le fichier.</string>
+    <string name="no_space_error">Votre carte mémoire SD est pleine, il n\'y a plus assez de place pour sauver le fichier.</string>
 
-    <string name="bad_extension_error">Désolé mais Ringdroid n'est pas encore capable de modifier ce type de fichier</string>
-    <string name="no_extension_error">Désolé mais Ringdroid n'est pas encore capable de modifier si il n'a pas d'extension comme .mp3 or .wav</string>
+    <string name="bad_extension_error">Désolé mais Ringdroid n\'est pas encore capable de modifier ce type de fichier</string>
+    <string name="no_extension_error">Désolé mais Ringdroid n\'est pas encore capable de modifier si il n\'a pas d\'extension comme .mp3 or .wav</string>
 
     <!--
      Choose Contact Activity
@@ -148,18 +148,18 @@
      Sending information to server
      -->
     <string name="server_title">Partager vos donnes!</string>
-    <string name="server_prompt">Etes vous d'accord pour partager anonymement vos données sur les sonneries et autres sons créés avec Ringdroid.com de façon a ce que nous ayons des statistiques?</string>
+    <string name="server_prompt">Etes vous d\'accord pour partager anonymement vos données sur les sonneries et autres sons créés avec Ringdroid.com de façon a ce que nous ayons des statistiques?</string>
     <string name="server_yes">OK pour envoer</string>
     <string name="server_later">Demander plus tard</string>
     <string name="server_never">Jamais</string>
 
-    <string name="error_server_prompt">Etes vous d'accord pour envoyer anonymement des donnés à propos de cette erreur à Ringdroid.com afin que nous puissions essayer de la corriger dans le futur?</string>
+    <string name="error_server_prompt">Etes vous d\'accord pour envoyer anonymement des donnés à propos de cette erreur à Ringdroid.com afin que nous puissions essayer de la corriger dans le futur?</string>
 
     <!--
      About
      -->
 
     <string name="about_title">A propos Ringdroid</string>
-    <string name="about_text"><![CDATA[Utiliser Ringdroid pour modifier les fichiers audio MP3, WAV, AAC, et AMR et créer sonneries, alarmes, et notifications.\n\nAstuce: copier des fichiers audio dans votre carte mémoire SD en utilisant un câble usb, ou obtenez des MP3s en utilisant l'application Amazon MP3.\n\nAstuce: appuis long sur un fichier audio depuis l'écran principal pour l'effacer. Plus en dessous...\n\nAstuce: touchez n'importe quelle zone de la courbe sonore pour commencer à jouer à partir de cette position.\n\nAstuce: pendant la lecture touchez le mot Début ou Fin pour choisir rapidement le début et la fin à ce point de lecture.\n\nAstuce: utiliser la touche de navigation pour plus de précision si elle est disponible.\n\nVersion 2.3\n\nDéveloppeur: Dominic Mazzoni\nGraphismes: Joseph Wain\nSupport et évangélisation: Eugene Koh\n\nRingdroid est un logiciel gratuit distribué sous licence Apache 2.0. Le code source est disponible sur code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Utiliser Ringdroid pour modifier les fichiers audio MP3, WAV, AAC, et AMR et créer sonneries, alarmes, et notifications.\n\nAstuce: copier des fichiers audio dans votre carte mémoire SD en utilisant un câble usb, ou obtenez des MP3s en utilisant l\'application Amazon MP3.\n\nAstuce: appuis long sur un fichier audio depuis l\'écran principal pour l\'effacer. Plus en dessous...\n\nAstuce: touchez n\'importe quelle zone de la courbe sonore pour commencer à jouer à partir de cette position.\n\nAstuce: pendant la lecture touchez le mot Début ou Fin pour choisir rapidement le début et la fin à ce point de lecture.\n\nAstuce: utiliser la touche de navigation pour plus de précision si elle est disponible.\n\nVersion 2.3\n\nDéveloppeur: Dominic Mazzoni\nGraphismes: Joseph Wain\nSupport et évangélisation: Eugene Koh\n\nRingdroid est un logiciel gratuit distribué sous licence Apache 2.0. Le code source est disponible sur code.google.com\n]]></string>
 
 </resources>
