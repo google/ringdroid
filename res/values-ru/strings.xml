@@ -48,6 +48,9 @@
 
     <string name="context_menu_edit">Изменить</string>
     <string name="context_menu_delete">Удалить</string>
+    <string name="context_menu_contact">Назначить для контакта</string>
+    <string name="context_menu_default_ringtone">По умолчанию</string>
+    <string name="context_menu_default_notification">По умолчанию</string>
 
     <!--      File Save dialog      -->
 

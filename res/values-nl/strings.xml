@@ -73,6 +73,9 @@
 
     <string name="context_menu_edit">Bewerken</string>
     <string name="context_menu_delete">Verwijderen</string>
+    <string name="context_menu_contact">Toewijzen aan contact</string>
+    <string name="context_menu_default_ringtone">Instellen als standaard</string>
+    <string name="context_menu_default_notification">Instellen als standaard</string>
 
     <!--
      File Save dialog

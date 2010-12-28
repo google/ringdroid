@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  <LinearLayout
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="48dip">
@@ -11,11 +11,11 @@
     <ImageView android:id="@+id/row_icon"
        android:gravity="center_vertical"
        android:scaleType="center"
-       android:layout_marginLeft="8dip"
        android:layout_width="40dip"
-       android:layout_height="48dip" />
+       android:layout_height="48dip"
+       android:layout_marginLeft="4dip"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
       android:gravity="center_vertical"
       android:layout_width="0px"
       android:layout_height="fill_parent"
@@ -25,13 +25,14 @@
         android:gravity="center_vertical"
         android:textColor="#ffffff"
         android:textSize="14sp"
+        android:singleLine="true"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"/>
 
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
       android:layout_width="0px"
       android:gravity="center_vertical"
       android:layout_height="fill_parent"
@@ -42,7 +43,8 @@
          android:textColor="#ff99ff"
          android:textSize="12sp"
          android:layout_marginLeft="8dip"
-         android:layout_width="wrap_content"
+         android:singleLine="true"
+         android:layout_width="0px"
          android:layout_height="fill_parent"
          android:layout_weight="1"/>
 
@@ -50,13 +52,26 @@
          android:gravity="center_vertical"
          android:textColor="#ffff99"
          android:textSize="12sp"
+         android:singleLine="true"
          android:layout_marginLeft="12dip"
-         android:layout_width="wrap_content"
+         android:layout_width="0px"
          android:layout_height="fill_parent"
          android:layout_weight="1"/>
 
     </LinearLayout>
 
- </LinearLayout>
+    <LinearLayout style="@style/VerticalDividerForList" />
+
+    <ImageView android:id="@+id/row_options_button"
+        android:src="@drawable/button_options" 
+        android:background="@drawable/button_options_bkgnd" 
+        android:gravity="center_vertical"
+        android:scaleType="center"
+        android:layout_height="fill_parent"
+        android:layout_width="40dip"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/button_options"/>
+
+  </LinearLayout>
 
 </LinearLayout>

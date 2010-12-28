@@ -48,6 +48,9 @@
 
     <string name="context_menu_edit">Bearbeiten</string>
     <string name="context_menu_delete">Löschen</string>
+    <string name="context_menu_contact">Einem Kontakt zuweisen</string>
+    <string name="context_menu_default_ringtone">Zum Standard machen</string>
+    <string name="context_menu_default_notification">Zum Standard machen</string>
 
     <!--      File Save dialog      -->
 

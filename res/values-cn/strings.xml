@@ -56,6 +56,10 @@
      -->
   <string name="context_menu_edit">编辑</string>
   <string name="context_menu_delete">删除</string>
+  <string name="context_menu_contact">分配到联系人</string>
+  <string name="context_menu_default_ringtone">设为默认</string>
+  <string name="context_menu_default_notification">设为默认</string>
+
   <!--
      File Save dialog
      -->

@@ -73,6 +73,9 @@
 
     <string name="context_menu_edit">編集</string>
     <string name="context_menu_delete">削除</string>
+    <string name="context_menu_contact">連絡先着信音に設定する</string>
+    <string name="context_menu_default_ringtone">通常の着信音に設定する</string>
+    <string name="context_menu_default_notification">通常の着信音に設定する</string>
 
     <!--
      File Save dialog

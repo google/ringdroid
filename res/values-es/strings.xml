@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 /**
  * Copyright (c) 2008, Google Inc.
@@ -19,7 +19,7 @@
 <resources>
   <string name="ringdroid_app_name">Ringdroid</string>
   <!--
-     Actividad principal/selección multimedia
+     Actividad principal/seleccion multimedia
      -->
   <string name="main_activity_label">Ringdroid</string>
   <string name="button_start_record_activity">Registro nuevo</string>
@@ -34,7 +34,7 @@
   <string name="end_label">Fin:</string>
   <string name="edit_intent">Editar</string>
   <string name="time_seconds">segundos</string>
-  <!-- Una vez guardada una notificación o un tono de llamada y tienes más opciones de configuración-->
+  <!-- Una vez guardada una notificacion o un tono de llamada y tienes mas opciones de configuracion-->
   <string name="what_to_do_with_ringtone">Guardado. ¿Quieres que sea el tono por defecto o para un contacto?</string>
   <string name="set_default_notification">Guardado. ¿Quieres que sea tu notificación por defecto?</string>
   <string name="make_default_ringtone_button">Por defecto</string>
@@ -44,17 +44,20 @@
   <string name="progress_dialog_loading">Cargando...</string>
   <string name="progress_dialog_saving">Guardando...</string>
   <!--
-     Elementos de menú
+     Elementos de menu
      -->
   <string name="menu_save">Guardar</string>
   <string name="menu_reset">Reiniciar</string>
   <string name="menu_about">Acerca de</string>
   <string name="menu_show_all_audio">Mostrar sonidos</string>
   <!--
-     Elementos del menú de contexto
+     Elementos del menu de contexto
      -->
   <string name="context_menu_edit">Editar</string>
   <string name="context_menu_delete">Eliminar</string>
+  <string name="context_menu_contact">Asignar a contacto</string>
+  <string name="context_menu_default_ringtone">Por defecto</string>
+  <string name="context_menu_default_notification">Por defecto</string>
   <!--
      Cuadro Guardar archivo
      -->
@@ -69,7 +72,7 @@
   <string name="ringtone_name_label">Nombre:</string>
   <string name="artist_name">Ringdroid</string>
   <!--
-     Cuadro confirmación eliminación
+     Cuadro confirmacion eliminacion
      -->
   <string name="delete_ringtone">Eliminar tono</string>
   <string name="delete_alarm">Eliminar alarma</string>
@@ -82,7 +85,7 @@
   <string name="delete_cancel_button">Cancelar</string>
   <string name="delete_failed">Imposible eliminar archivo</string>
   <!--
-     Mensajes de éxito y error
+     Mensajes de exito y error
      -->
   <string name="alert_title_success">Éxito</string>
   <string name="alert_title_failure">Error</string>
@@ -107,7 +110,7 @@
   <string name="choose_contact_title">¿A qué contacto se asignar este tono?</string>
   <string name="success_contact_ringtone">Tono asignado correctamente a:</string>
   <!--
-     Enviando información a servidor
+     Enviando informacion a servidor
      -->
   <string name="server_title">Comparte datos.</string>
   <string name="server_prompt">¿Puedes enviar datos anónimos sobre tonos y sonidos para crear a Ringdroid.com para recopilar estadísticas?</string>

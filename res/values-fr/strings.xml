@@ -73,6 +73,9 @@
 
     <string name="context_menu_edit">Modifier</string>
     <string name="context_menu_delete">Efface</string>
+    <string name="context_menu_contact">Utiliser pour un Contact</string>
+    <string name="context_menu_default_ringtone">Utiliser comme défaut</string>
+    <string name="context_menu_default_notification">Utiliser comme défaut</string>
 
     <!--
      File Save dialog

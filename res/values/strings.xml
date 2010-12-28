@@ -35,6 +35,8 @@
     <string name="no_sdcard">Sorry, Ringdroid can\'t run unless you have an SD Card inserted.</string>
     <string name="sdcard_shared">Sorry, Ringdroid can\'t run while your handset is mounted as a USB device.</string>
 
+    <string name="button_options">Options</string>
+
     <!--
      Edit activity
      -->
@@ -48,7 +50,7 @@
     <string name="time_seconds">seconds</string>
 
     <!-- After you save a notification or ringtone and have more options
-	 for what to do with them -->
+         for what to do with them -->
     <string name="what_to_do_with_ringtone">Saved!  Make this your default ringtone or assign it to a contact?</string>
     <string name="set_default_notification">Saved!  Make this your default notification?</string>
 
@@ -87,6 +89,9 @@
 
     <string name="context_menu_edit">Edit</string>
     <string name="context_menu_delete">Delete</string>
+    <string name="context_menu_default_ringtone">Set as Default Ringtone</string>
+    <string name="context_menu_contact">Assign to Contact</string>
+    <string name="context_menu_default_notification">Set as Default Notification</string>
 
     <!--
      File Save dialog
@@ -138,6 +143,7 @@
 
     <string name="save_success_message">Saved!</string>
     <string name="default_ringtone_success_message">Changed default ringtone</string>
+    <string name="default_notification_success_message">Changed default notification sound</string>
     <string name="play_error">Unable to play this media file</string>
     <string name="no_unique_filename">Unable to find unique filename</string>
     <string name="delete_tmp_error">Error deleting temporary file</string>
@@ -174,6 +180,6 @@
      -->
 
     <string name="about_title">About Ringdroid</string>
-    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, AAC, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 2.3\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport and evangelizing: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, AAC, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 2.3\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport and evangelizing: Eugene Koh\nEnhancements: Dan Klufas\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
 
 </resources>

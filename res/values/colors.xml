@@ -31,7 +31,7 @@
   <drawable name="type_bkgnd_alarm">#88880000</drawable>
   <drawable name="type_bkgnd_ringtone">#88008888</drawable>
   <drawable name="type_bkgnd_notification">#88666600</drawable>
-  <drawable name="type_bkgnd_music">#00000000</drawable>
+  <drawable name="type_bkgnd_music">#88000000</drawable>
   <drawable name="type_bkgnd_unsupported">#88cccccc</drawable>
 
 </resources>

@@ -48,6 +48,9 @@
 
     <string name="context_menu_edit">Edytuj</string>
     <string name="context_menu_delete">Skasuj</string>
+    <string name="context_menu_contact">Przypisz do kontaktu</string>
+    <string name="context_menu_default_ringtone">Ustaw jako domyślny</string>
+    <string name="context_menu_default_notification">Ustaw jako domyślny</string>
 
     <!--      File Save dialog      -->
 

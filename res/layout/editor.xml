@@ -71,24 +71,30 @@
       <ImageButton android:id="@+id/rew"
        android:layout_width="64dip"
        android:layout_height="52dip"
+       android:layout_marginTop="6dip"
+       android:layout_marginBottom="6dip"
        style="@android:style/MediaButton"
        android:contentDescription="@string/rewind"
-       android:src="@drawable/ic_media_rew" />
+       android:src="@android:drawable/ic_media_previous" />
 
       <ImageButton android:id="@+id/play"
        android:layout_width="71dip"
        android:layout_height="52dip"
+       android:layout_marginTop="6dip"
+       android:layout_marginBottom="6dip"
        style="@android:style/MediaButton"
        android:contentDescription="@string/play"
-       android:src="@drawable/ic_media_play" />
+       android:src="@android:drawable/ic_media_play" />
 
       <ImageButton android:id="@+id/ffwd"
        android:layout_width="64dip"
        android:layout_height="52dip"
        android:layout_marginRight="5dip"
+       android:layout_marginTop="6dip"
+       android:layout_marginBottom="6dip"
        style="@android:style/MediaButton"
        android:contentDescription="@string/ffwd"
-       android:src="@drawable/ic_media_ff" />
+       android:src="@android:drawable/ic_media_next" />
 
       <LinearLayout style="@style/VerticalDividerLeft" />
       <LinearLayout style="@style/VerticalDividerRight" />
@@ -97,12 +103,16 @@
        android:layout_width="52dip"
        android:layout_height="52dip"
        android:layout_marginLeft="5dip"
+       android:layout_marginTop="9dip"
+       android:layout_marginBottom="8dip"
        android:contentDescription="@string/zoom_in"
        android:src="@drawable/button_zoom_in" />
 
       <ImageButton android:id="@+id/zoom_out"
        android:layout_width="52dip"
        android:layout_height="52dip"
+       android:layout_marginTop="9dip"
+       android:layout_marginBottom="8dip"
        android:contentDescription="@string/zoom_out"
        android:src="@drawable/button_zoom_out" />
 
