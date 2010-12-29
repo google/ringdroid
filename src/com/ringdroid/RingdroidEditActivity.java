@@ -42,7 +42,10 @@ import android.provider.Contacts.People;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.method.LinkMovementMethod;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -212,7 +215,11 @@ public class RingdroidEditActivity extends Activity
         mIsPlaying = false;
 
         Intent intent = getIntent();
-        mFilename = intent.getData().toString();
+
+	if (intent.getBooleanExtra("privacy", false)) {
+	    showServerPrompt(true);
+	    return;
+	}
 
         // If the Ringdroid media select activity was launched via a
         // GET_CONTENT intent, then we shouldn't display a "saved"
@@ -220,6 +227,8 @@ public class RingdroidEditActivity extends Activity
         // they create.
         mWasGetContentIntent = intent.getBooleanExtra(
             "was_get_content_intent", false);
+
+        mFilename = intent.getData().toString();
 
         mSoundFile = null;
         mKeyDown = false;
@@ -1455,10 +1464,14 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
-        new AlertDialog.Builder(this)
+	final SpannableString message = new SpannableString(
+		errorString + ". " +
+                getResources().getText(R.string.error_server_prompt));
+	Linkify.addLinks(message, Linkify.ALL);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle(R.string.alert_title_failure)
-            .setMessage(errorString + ". " +
-                        getResources().getText(R.string.error_server_prompt))
+            .setMessage(message)
             .setPositiveButton(
                 R.string.server_yes,
                 new DialogInterface.OnClickListener() {
@@ -1499,6 +1512,10 @@ public class RingdroidEditActivity extends Activity
                 })
             .setCancelable(false)
             .show();
+
+	// Make links clicky
+	((TextView)dialog.findViewById(android.R.id.message))
+	        .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void onSave() {
@@ -1506,12 +1523,6 @@ public class RingdroidEditActivity extends Activity
             handlePause();
         }
 
-        final Activity activity = this;
-        final Handler finishHandler = new Handler() {
-                public void handleMessage(Message response) {
-                    activity.finish();
-                }
-            };
         final Handler handler = new Handler() {
                 public void handleMessage(Message response) {
                     CharSequence newTitle = (CharSequence)response.obj;
@@ -1711,9 +1722,19 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
-        new AlertDialog.Builder(RingdroidEditActivity.this)
+	showServerPrompt(false);
+    }
+
+    void showServerPrompt(final boolean userInitiated) {
+        final SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+
+	final SpannableString message = new SpannableString(
+                getResources().getText(R.string.server_prompt));
+	Linkify.addLinks(message, Linkify.ALL);
+
+        final AlertDialog dialog = new AlertDialog.Builder(RingdroidEditActivity.this)
             .setTitle(R.string.server_title)
-            .setMessage(R.string.server_prompt)
+            .setMessage(message)
             .setPositiveButton(
                 R.string.server_yes,
                 new DialogInterface.OnClickListener() {
@@ -1723,7 +1744,11 @@ public class RingdroidEditActivity extends Activity
                         prefsEditor.putInt(PREF_STATS_SERVER_ALLOWED,
                                            SERVER_ALLOWED_YES);
                         prefsEditor.commit();
-                        sendStatsToServerAndFinish();
+			if (userInitiated) {
+			    finish();
+			} else {
+			    sendStatsToServerAndFinish();
+			}
                     }
                 })
             .setNeutralButton(
@@ -1731,15 +1756,20 @@ public class RingdroidEditActivity extends Activity
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int whichButton) {
+			int allowServerCheckIndex =
+			    prefs.getInt(PREF_STATS_SERVER_CHECK, 2);
+			int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
                         SharedPreferences.Editor prefsEditor = prefs.edit();
-                        prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
-                                           allowServerCheckIndex * 2);
-                        Log.i("Ringdroid",
-                              "Won't check again until " +
-                              (allowServerCheckIndex * 2) +
-                              " successes.");
+			if (userInitiated) {
+			    prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
+					       successCount + 2);
+
+			} else {
+			    prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
+					       allowServerCheckIndex * 2);
+			}
                         prefsEditor.commit();
-                        finish();
+			finish();
                     }
                 })
             .setNegativeButton(
@@ -1750,12 +1780,25 @@ public class RingdroidEditActivity extends Activity
                         SharedPreferences.Editor prefsEditor = prefs.edit();
                         prefsEditor.putInt(PREF_STATS_SERVER_ALLOWED,
                                            SERVER_ALLOWED_NO);
+			if (userInitiated) {
+			    // If the user initiated, err on the safe side and disable
+			    // sending crash reports too. There's no way to turn them
+			    // back on now aside from clearing data from this app, but
+			    // it doesn't matter, we don't need error reports from every
+			    // user ever.
+			    prefsEditor.putInt(PREF_ERR_SERVER_ALLOWED,
+					       SERVER_ALLOWED_NO);
+			}
                         prefsEditor.commit();
-                        finish();
+			finish();
                     }
                 })
             .setCancelable(false)
             .show();
+
+	// Make links clicky
+	((TextView)dialog.findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     void sendStatsToServerAndFinish() {

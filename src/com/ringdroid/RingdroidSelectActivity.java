@@ -69,13 +69,14 @@ public class RingdroidSelectActivity
 
     // Menu commands
     private static final int CMD_ABOUT = 1;
-    private static final int CMD_SHOW_ALL = 2;
+    private static final int CMD_PRIVACY = 2;
+    private static final int CMD_SHOW_ALL = 3;
 
     // Context menu
-    private static final int CMD_EDIT = 3;
-    private static final int CMD_DELETE = 4;
-    private static final int CMD_SET_AS_DEFAULT = 5;
-    private static final int CMD_SET_AS_CONTACT = 6;
+    private static final int CMD_EDIT = 4;
+    private static final int CMD_DELETE = 5;
+    private static final int CMD_SET_AS_DEFAULT = 6;
+    private static final int CMD_SET_AS_CONTACT = 7;
 
 
     public RingdroidSelectActivity() {
@@ -252,6 +253,9 @@ public class RingdroidSelectActivity
         item = menu.add(0, CMD_ABOUT, 0, R.string.menu_about);
         item.setIcon(R.drawable.menu_about);
 
+        item = menu.add(0, CMD_PRIVACY, 0, R.string.menu_privacy);
+        item.setIcon(android.R.drawable.ic_menu_share);
+
         item = menu.add(0, CMD_SHOW_ALL, 0, R.string.menu_show_all_audio);
         item.setIcon(R.drawable.menu_show_all_audio);
 
@@ -262,6 +266,7 @@ public class RingdroidSelectActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(CMD_ABOUT).setVisible(true);
+        menu.findItem(CMD_PRIVACY).setVisible(true);
         menu.findItem(CMD_SHOW_ALL).setVisible(true);
         menu.findItem(CMD_SHOW_ALL).setEnabled(!mShowAll);
         return true;
@@ -273,6 +278,9 @@ public class RingdroidSelectActivity
         case CMD_ABOUT:
             RingdroidEditActivity.onAbout(this);
             return true;
+	case CMD_PRIVACY:
+	    showPrivacyDialog();
+	    return true;
         case CMD_SHOW_ALL:
             mShowAll = true;
             refreshListView();
@@ -326,6 +334,18 @@ public class RingdroidSelectActivity
             return chooseContactForRingtone(item);
         default:
             return super.onContextItemSelected(item);
+        }
+    }
+
+    private void showPrivacyDialog() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_EDIT, Uri.parse(""));
+            intent.putExtra("privacy", true);
+            intent.setClassName("com.ringdroid",
+				"com.ringdroid.RingdroidEditActivity");
+            startActivityForResult(intent, REQUEST_CODE_EDIT);
+        } catch (Exception e) {
+            Log.e("Ringdroid", "Couldn't show privacy dialog");
         }
     }
 
