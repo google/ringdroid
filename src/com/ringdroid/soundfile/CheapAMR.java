@@ -116,8 +116,6 @@ public class CheapAMR extends CheapSoundFile {
         mBitRate = 10;
         mOffset = 0;
 
-	System.out.println("CheapAMR::ReadFile");
-
         // No need to handle filesizes larger than can fit in a 32-bit int
         mFileSize = (int)mInputFile.length();
 
@@ -167,8 +165,6 @@ public class CheapAMR extends CheapSoundFile {
 
     private void parse3gpp(InputStream stream, int maxLen)
             throws java.io.IOException {
-	System.out.println("CheapAMR::parse3gpp maxLen=" + maxLen);
-
         if (maxLen < 8)
             return;
 
@@ -181,12 +177,6 @@ public class CheapAMR extends CheapSoundFile {
             ((0xff & boxHeader[1]) << 16) |
             ((0xff & boxHeader[2]) << 8) |
             ((0xff & boxHeader[3]));
-
-	System.out.println("boxLen = " + boxLen + " type='" +
-			   (char)boxHeader[4] +
-			   (char)boxHeader[5] +
-			   (char)boxHeader[6] +
-			   (char)boxHeader[7] + "'");
 
         if (boxLen > maxLen || boxLen <= 0)
             return;
@@ -216,8 +206,6 @@ public class CheapAMR extends CheapSoundFile {
         for (int i = 0; i < 4; i++) {
             prevEnerMR122[i] = -2381;
         }
-
-	System.out.println("CheapAMR::parseAMR " + maxLen);
 
         int originalMaxLen = maxLen;
         int bytesTotal = 0;
@@ -259,15 +247,6 @@ public class CheapAMR extends CheapSoundFile {
         byte[] v = new byte[blockSize];
         stream.read(v, 0, blockSize);
         mOffset += blockSize;
-
-	System.out.print("Frame");
-	for (int i = 0; i < blockSize; i++) {
-	    int value = v[i];
-	    if (value < 0)
-		value += 256;
-	    System.out.print(" " + value);
-	}
-	System.out.println("");
 
         int[] bits = new int[blockSize * 8];
         int ii = 0;
