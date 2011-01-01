@@ -536,7 +536,11 @@ public class CheapAAC extends CheapSoundFile {
             break;
 
         default:
-            mFrameGains[frameIndex] = 0;
+            if (frameIndex > 0) {
+                mFrameGains[frameIndex] = mFrameGains[frameIndex - 1];
+            } else {
+                mFrameGains[frameIndex] = 0;
+            }
             /*System.out.println("Unhandled idSynEle");*/
             break;
         }
