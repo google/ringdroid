@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.DashPathEffect;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -47,6 +48,7 @@ public class WaveformView extends View {
         public void waveformTouchStart(float x);
         public void waveformTouchMove(float x);
         public void waveformTouchEnd();
+        public void waveformFling(float x);
         public void waveformDraw();
     };
 
@@ -74,6 +76,7 @@ public class WaveformView extends View {
     private int mPlaybackPos;
     private float mDensity;
     private WaveformListener mListener;
+    private GestureDetector mGestureDetector;
     private boolean mInitialized;
 
     public WaveformView(Context context, AttributeSet attrs) {
@@ -119,6 +122,16 @@ public class WaveformView extends View {
             2, 1, 1,
             getResources().getColor(R.drawable.timecode_shadow));
 
+	mGestureDetector = new GestureDetector(
+	        context,
+		new GestureDetector.SimpleOnGestureListener() {
+		    public boolean onFling(
+			        MotionEvent e1, MotionEvent e2, float vx, float vy) {
+			mListener.waveformFling(vx);
+			return true;
+		    }
+		});
+
         mSoundFile = null;
         mLenByZoomLevel = null;
         mValuesByZoomLevel = null;
@@ -133,6 +146,10 @@ public class WaveformView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+	if (mGestureDetector.onTouchEvent(event)) {
+	    return true;
+	}
+
         switch(event.getAction()) {
         case MotionEvent.ACTION_DOWN:
             mListener.waveformTouchStart(event.getX());
@@ -274,28 +291,9 @@ public class WaveformView extends View {
         invalidate();
     }
 
-    /**
-     * Our waveform is "painted" as a series of vertical lines, not
-     * anti-aliased.
-     *
-     * But, the Cupcake API only supports the standard resolution
-     * and automatically scales everything up by a factor of 1.5 on
-     * a high-resolution display, which leaves "gaps" when we try to
-     * draw one vertical line per "pixel".  (The coordinates are
-     * scaled, but the lines are drawn normally.)
-     *
-     * So, if the density is > 1.0, then we draw two vertical lines instead
-     * of one every other time.  This solves the problem for a scale
-     * factor between 1.0 and 2.0.  A future version of Ringdroid will
-     * use the 1.6 (Donut) API or later and natively support all resolutions.
-     */
     protected void drawWaveformLine(Canvas canvas,
                                     int x, int y0, int y1,
                                     Paint paint) {
-        if (mDensity > 1.0 && (x % 2) == 1) {
-            canvas.drawLine(x + 0.5f, y0, x + 0.5f, y1, paint);
-        }
-
         canvas.drawLine(x, y0, x, y1, paint);
     }
 

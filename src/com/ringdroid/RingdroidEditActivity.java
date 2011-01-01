@@ -128,10 +128,13 @@ public class RingdroidEditActivity extends Activity
     private int mMaxPos;
     private int mStartPos;
     private int mEndPos;
+    private boolean mStartVisible;
+    private boolean mEndVisible;
     private int mLastDisplayedStartPos;
     private int mLastDisplayedEndPos;
     private int mOffset;
     private int mOffsetGoal;
+    private int mFlingVelocity;
     private int mPlayStartMsec;
     private int mPlayStartOffset;
     private int mPlayEndMsec;
@@ -216,10 +219,10 @@ public class RingdroidEditActivity extends Activity
 
         Intent intent = getIntent();
 
-	if (intent.getBooleanExtra("privacy", false)) {
-	    showServerPrompt(true);
-	    return;
-	}
+        if (intent.getBooleanExtra("privacy", false)) {
+            showServerPrompt(true);
+            return;
+        }
 
         // If the Ringdroid media select activity was launched via a
         // GET_CONTENT intent, then we shouldn't display a "saved"
@@ -243,9 +246,10 @@ public class RingdroidEditActivity extends Activity
             }
         }
 
+        mHandler = new Handler();
+
         loadGui();
 
-        mHandler = new Handler();
         mHandler.postDelayed(mTimerRunnable, 100);
 
         if (!mFilename.equals("record")) {
@@ -328,7 +332,7 @@ public class RingdroidEditActivity extends Activity
         loadGui();
         enableZoomButtons();
 
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
                 public void run() {
                     mStartMarker.requestFocus();
                     markerFocus(mStartMarker);
@@ -410,6 +414,8 @@ public class RingdroidEditActivity extends Activity
             updateDisplay();
         else if (mIsPlaying) {
             updateDisplay();
+        } else if (mFlingVelocity != 0) {
+            updateDisplay();
         }
     }
 
@@ -417,6 +423,7 @@ public class RingdroidEditActivity extends Activity
         mTouchDragging = true;
         mTouchStart = x;
         mTouchInitialOffset = mOffset;
+        mFlingVelocity = 0;
         mWaveformTouchStartMsec = System.currentTimeMillis();
     }
 
@@ -445,6 +452,13 @@ public class RingdroidEditActivity extends Activity
                 onPlay((int)(mTouchStart + mOffset));
             }
         }
+    }
+
+    public void waveformFling(float vx) {
+        mTouchDragging = false;
+        mOffsetGoal = mOffset;
+        mFlingVelocity = (int)(-vx);
+        updateDisplay();
     }
 
     //
@@ -554,7 +568,7 @@ public class RingdroidEditActivity extends Activity
         // Delay updaing the display because if this focus was in
         // response to a touch event, we want to receive the touch
         // event too before updating the display.
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
                 public void run() {
                     updateDisplay();
                 }
@@ -641,12 +655,14 @@ public class RingdroidEditActivity extends Activity
         mStartMarker.setAlpha(255);
         mStartMarker.setFocusable(true);
         mStartMarker.setFocusableInTouchMode(true);
+	mStartVisible = true;
 
         mEndMarker = (MarkerView)findViewById(R.id.endmarker);
         mEndMarker.setListener(this);
         mEndMarker.setAlpha(255);
         mEndMarker.setFocusable(true);
         mEndMarker.setFocusableInTouchMode(true);
+	mEndVisible = true;
 
         updateDisplay();
     }
@@ -801,6 +817,7 @@ public class RingdroidEditActivity extends Activity
 
         mOffset = 0;
         mOffsetGoal = 0;
+        mFlingVelocity = 0;
         resetPositions();
         if (mEndPos > mMaxPos)
             mEndPos = mMaxPos;
@@ -828,20 +845,47 @@ public class RingdroidEditActivity extends Activity
         }
 
         if (!mTouchDragging) {
-            int offsetDelta = mOffsetGoal - mOffset;
+            int offsetDelta;
 
-            if (offsetDelta > 10)
-                offsetDelta = offsetDelta / 10;
-            else if (offsetDelta > 0)
-                offsetDelta = 1;
-            else if (offsetDelta < -10)
-                offsetDelta = offsetDelta / 10;
-            else if (offsetDelta < 0)
-                offsetDelta = -1;
-            else
-                offsetDelta = 0;
+            if (mFlingVelocity != 0) {
+                float saveVel = mFlingVelocity;
 
-            mOffset += offsetDelta;
+                offsetDelta = mFlingVelocity / 30;
+                if (mFlingVelocity > 80) {
+                    mFlingVelocity -= 80;
+                } else if (mFlingVelocity < -80) {
+                    mFlingVelocity += 80;
+                } else {
+                    mFlingVelocity = 0;
+                }
+
+                mOffset += offsetDelta;
+
+                if (mOffset + mWidth / 2 > mMaxPos) {
+                    mOffset = mMaxPos - mWidth / 2;
+                    mFlingVelocity = 0;
+                }
+                if (mOffset < 0) {
+                    mOffset = 0;
+                    mFlingVelocity = 0;
+                }
+                mOffsetGoal = mOffset;
+            } else {
+                offsetDelta = mOffsetGoal - mOffset;
+
+                if (offsetDelta > 10)
+                    offsetDelta = offsetDelta / 10;
+                else if (offsetDelta > 0)
+                    offsetDelta = 1;
+                else if (offsetDelta < -10)
+                    offsetDelta = offsetDelta / 10;
+                else if (offsetDelta < 0)
+                    offsetDelta = -1;
+                else
+                    offsetDelta = 0;
+
+                mOffset += offsetDelta;
+            }
         }
 
         mWaveformView.setParameters(mStartPos, mEndPos, mOffset);
@@ -854,26 +898,43 @@ public class RingdroidEditActivity extends Activity
             getResources().getText(R.string.end_marker) + " " +
             formatTime(mEndPos));
 
-        boolean startVisible = true;
-        boolean endVisible = true;
-
         int startX = mStartPos - mOffset - mMarkerLeftInset;
         if (startX + mStartMarker.getWidth() >= 0) {
-            mStartMarker.setAlpha(255);
-        } else {
-            mStartMarker.setAlpha(0);
+	    if (!mStartVisible) {
+		// Delay this to avoid flicker
+		mHandler.postDelayed(new Runnable() {
+			public void run() {
+			    mStartVisible = true;
+			    mStartMarker.setAlpha(255);
+			}
+		    }, 0);
+	    }
+	} else {
+	    if (mStartVisible) {
+		mStartMarker.setAlpha(0);
+		mStartVisible = false;
+	    }
             startX = 0;
-            startVisible = false;
         }
 
         int endX = mEndPos - mOffset - mEndMarker.getWidth() +
             mMarkerRightInset;
         if (endX + mEndMarker.getWidth() >= 0) {
-            mEndMarker.setAlpha(255);
-        } else {
-            mEndMarker.setAlpha(0);
+	    if (!mEndVisible) {
+		// Delay this to avoid flicker
+		mHandler.postDelayed(new Runnable() {
+			public void run() {
+			    mEndVisible = true;
+			    mEndMarker.setAlpha(255);
+			}
+		    }, 0);
+	    }
+	} else {
+	    if (mEndVisible) {
+		mEndMarker.setAlpha(0);
+		mEndVisible = false;
+	    }
             endX = 0;
-            startVisible = false;
         }
 
         mStartMarker.setLayoutParams(
@@ -1464,10 +1525,10 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
-	final SpannableString message = new SpannableString(
-		errorString + ". " +
+        final SpannableString message = new SpannableString(
+                errorString + ". " +
                 getResources().getText(R.string.error_server_prompt));
-	Linkify.addLinks(message, Linkify.ALL);
+        Linkify.addLinks(message, Linkify.ALL);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle(R.string.alert_title_failure)
@@ -1513,9 +1574,9 @@ public class RingdroidEditActivity extends Activity
             .setCancelable(false)
             .show();
 
-	// Make links clicky
-	((TextView)dialog.findViewById(android.R.id.message))
-	        .setMovementMethod(LinkMovementMethod.getInstance());
+        // Make links clicky
+        ((TextView)dialog.findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void onSave() {
@@ -1722,15 +1783,15 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
-	showServerPrompt(false);
+        showServerPrompt(false);
     }
 
     void showServerPrompt(final boolean userInitiated) {
         final SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
 
-	final SpannableString message = new SpannableString(
+        final SpannableString message = new SpannableString(
                 getResources().getText(R.string.server_prompt));
-	Linkify.addLinks(message, Linkify.ALL);
+        Linkify.addLinks(message, Linkify.ALL);
 
         final AlertDialog dialog = new AlertDialog.Builder(RingdroidEditActivity.this)
             .setTitle(R.string.server_title)
@@ -1744,11 +1805,11 @@ public class RingdroidEditActivity extends Activity
                         prefsEditor.putInt(PREF_STATS_SERVER_ALLOWED,
                                            SERVER_ALLOWED_YES);
                         prefsEditor.commit();
-			if (userInitiated) {
-			    finish();
-			} else {
-			    sendStatsToServerAndFinish();
-			}
+                        if (userInitiated) {
+                            finish();
+                        } else {
+                            sendStatsToServerAndFinish();
+                        }
                     }
                 })
             .setNeutralButton(
@@ -1756,20 +1817,20 @@ public class RingdroidEditActivity extends Activity
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int whichButton) {
-			int allowServerCheckIndex =
-			    prefs.getInt(PREF_STATS_SERVER_CHECK, 2);
-			int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
+                        int allowServerCheckIndex =
+                            prefs.getInt(PREF_STATS_SERVER_CHECK, 2);
+                        int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
                         SharedPreferences.Editor prefsEditor = prefs.edit();
-			if (userInitiated) {
-			    prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
-					       successCount + 2);
+                        if (userInitiated) {
+                            prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
+                                               successCount + 2);
 
-			} else {
-			    prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
-					       allowServerCheckIndex * 2);
-			}
+                        } else {
+                            prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
+                                               allowServerCheckIndex * 2);
+                        }
                         prefsEditor.commit();
-			finish();
+                        finish();
                     }
                 })
             .setNegativeButton(
@@ -1780,24 +1841,24 @@ public class RingdroidEditActivity extends Activity
                         SharedPreferences.Editor prefsEditor = prefs.edit();
                         prefsEditor.putInt(PREF_STATS_SERVER_ALLOWED,
                                            SERVER_ALLOWED_NO);
-			if (userInitiated) {
-			    // If the user initiated, err on the safe side and disable
-			    // sending crash reports too. There's no way to turn them
-			    // back on now aside from clearing data from this app, but
-			    // it doesn't matter, we don't need error reports from every
-			    // user ever.
-			    prefsEditor.putInt(PREF_ERR_SERVER_ALLOWED,
-					       SERVER_ALLOWED_NO);
-			}
+                        if (userInitiated) {
+                            // If the user initiated, err on the safe side and disable
+                            // sending crash reports too. There's no way to turn them
+                            // back on now aside from clearing data from this app, but
+                            // it doesn't matter, we don't need error reports from every
+                            // user ever.
+                            prefsEditor.putInt(PREF_ERR_SERVER_ALLOWED,
+                                               SERVER_ALLOWED_NO);
+                        }
                         prefsEditor.commit();
-			finish();
+                        finish();
                     }
                 })
             .setCancelable(false)
             .show();
 
-	// Make links clicky
-	((TextView)dialog.findViewById(android.R.id.message))
+        // Make links clicky
+        ((TextView)dialog.findViewById(android.R.id.message))
                 .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
