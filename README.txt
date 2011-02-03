@@ -1,6 +1,6 @@
  ***************************************************************************
  *
- * Copyright (C) 2008, 2009, 2010, 2011 Google Inc.
+ * Copyright (C) 2008 - 2011 Google Inc.
  *
  * Ringdroid is licensed under the Apache License, Version 2.0.
  * You may not use this source code except in compliance with the License.
