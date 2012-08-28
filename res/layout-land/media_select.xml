@@ -22,46 +22,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-  <LinearLayout
-    style="@style/ToolbarBackground"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical">
-
-    <ImageView
-     android:src="@drawable/search"
-     android:layout_marginLeft="8dip"
-     android:gravity="center_vertical"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content" />
-
-    <EditText android:id="@+id/search_filter"
-     android:textSize="18sp"
-     android:layout_width="0px"
-     android:layout_height="wrap_content"
-     android:layout_marginTop="6dip"
-     android:layout_marginRight="6dip"
-     android:layout_marginBottom="4dip"
-     android:layout_weight="1"
-     android:hint="@string/search_edit_box"
-     android:contentDescription="@string/search_edit_box">
-
-    </EditText>
-
-    <LinearLayout style="@style/VerticalDividerLeft" />
-    <LinearLayout style="@style/VerticalDividerRight" />
-
-    <Button android:id="@+id/record"
-      android:text="@string/button_start_record_activity"
-      android:layout_marginTop="6dip"
-      android:layout_marginLeft="4dip"
-      android:layout_marginRight="8dip"
-      android:layout_marginBottom="4dip"
-      android:layout_height="wrap_content"
-      android:layout_width="120sp" />
-
-  </LinearLayout>
-
     <ListView android:id="@+id/android:list"
       android:layout_width="fill_parent"
       android:layout_height="0px"

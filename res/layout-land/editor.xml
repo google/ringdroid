@@ -27,12 +27,6 @@
        android:layout_height="0px"
        android:layout_weight="1">
 
-      <ImageView android:id="@+id/bkgnd"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:scaleType="centerCrop"
-       android:src="@drawable/bkgnd" />
-
       <com.ringdroid.WaveformView android:id="@+id/waveform"
        android:layout_width="fill_parent"
        android:layout_height="fill_parent" />
@@ -66,13 +60,61 @@
      style="@style/ToolbarBackground"
      android:layout_width="fill_parent" 
      android:layout_height="68dip">
+     android:gravity="center_vertical">
 
-        <LinearLayout
-         android:layout_width="wrap_content" 
-         android:layout_height="fill_parent"
-         android:layout_marginLeft="5dip"
-         android:layout_marginRight="5dip"
-         android:gravity="center">
+      <LinearLayout
+       android:layout_width="fill_parent" 
+       android:layout_height="wrap_content"
+       android:gravity="center">
+
+        <TextView
+           android:id="@+id/mark_start"
+           android:nextFocusUp="@+id/info"
+           android:text="@string/start_label"
+           android:textColor="#ffffffff"
+           android:textSize="14sp"
+           android:textStyle="bold"
+           android:clickable="true"
+           android:gravity="center"
+           android:layout_marginLeft="10dip"
+           android:layout_width="wrap_content" 
+           android:layout_height="31dip" />
+
+        <EditText android:id="@+id/starttext"
+           android:nextFocusLeft="@+id/zoom_out"
+           android:nextFocusRight="@+id/endtext"
+           android:textSize="16sp"
+           android:inputType="number|numberDecimal"
+           android:layout_width="70dip"
+           android:layout_height="31dip"
+           android:layout_marginLeft="10dip"
+           android:layout_marginRight="30dip"
+           android:gravity="center"
+           android:contentDescription="@string/start_label" />
+
+        <TextView
+           android:id="@+id/mark_end"
+           android:nextFocusUp="@+id/info"
+           android:text="@string/end_label"
+           android:textColor="#ffffffff"
+           android:textSize="14sp"
+           android:inputType="number|numberDecimal"
+           android:textStyle="bold"
+           android:clickable="true"
+           android:gravity="center"
+           android:layout_width="wrap_content" 
+           android:layout_height="31dip" />
+
+        <EditText android:id="@+id/endtext"
+           android:nextFocusLeft="@+id/starttext"
+           android:nextFocusRight="@+id/save"
+           android:textSize="16sp"
+           android:layout_width="70dip"
+           android:layout_height="31dip"
+           android:layout_marginLeft="10dip"
+           android:layout_marginRight="50dip"
+           android:gravity="center"
+           android:contentDescription="@string/end_label" />
 
 	  <ImageButton android:id="@+id/rew"
            android:nextFocusUp="@+id/info"
@@ -104,118 +146,7 @@
            android:contentDescription="@string/ffwd"
 	   android:src="@android:drawable/ic_media_next" />
 
-        </LinearLayout>
-
-        <LinearLayout style="@style/VerticalDividerLeft" />
-        <LinearLayout style="@style/VerticalDividerRight" />
-
-        <LinearLayout
-         android:layout_width="wrap_content"
-         android:layout_height="fill_parent"
-         android:layout_marginLeft="5dip"
-         android:layout_marginRight="5dip"
-         android:gravity="center">
-    
-	  <ImageButton android:id="@+id/zoom_in"
-           android:nextFocusUp="@+id/info"
-	   android:layout_width="52dip"
-	   android:layout_height="52dip"
-           android:layout_marginTop="9dip"
-           android:layout_marginBottom="8dip"
-           android:contentDescription="@string/zoom_in"
-	   android:src="@drawable/button_zoom_in" />
-
-	  <ImageButton android:id="@+id/zoom_out"
-           android:nextFocusUp="@+id/info"
-           android:nextFocusRight="@+id/starttext"
-	   android:layout_width="52dip"
-	   android:layout_height="52dip"
-           android:layout_marginTop="9dip"
-           android:layout_marginBottom="8dip"
-           android:contentDescription="@string/zoom_out"
-	   android:src="@drawable/button_zoom_out" />
-
-	</LinearLayout>
-
-        <LinearLayout style="@style/VerticalDividerLeft" />
-        <LinearLayout style="@style/VerticalDividerRight" />
-
-      <LinearLayout
-         android:layout_width="wrap_content" 
-         android:layout_height="fill_parent"
-         android:layout_marginTop="6dip"
-         android:layout_marginLeft="5dip"
-         android:layout_marginRight="5dip"
-         android:gravity="center"
-         android:orientation="vertical">
-
-        <TextView
-           android:id="@+id/mark_start"
-           android:nextFocusUp="@+id/info"
-           android:text="@string/start_label"
-           android:textColor="#ffffffff"
-           android:textSize="12sp"
-           android:textStyle="bold"
-           android:clickable="true"
-           android:layout_width="wrap_content" 
-           android:layout_height="31dip" />
-
-        <TextView
-           android:id="@+id/mark_end"
-           android:nextFocusUp="@+id/info"
-           android:text="@string/end_label"
-           android:textColor="#ffffffff"
-           android:textSize="12sp"
-           android:textStyle="bold"
-           android:clickable="true"
-           android:layout_width="wrap_content" 
-           android:layout_height="31dip" />
-
-      </LinearLayout>
-
-      <LinearLayout
-         android:layout_width="wrap_content" 
-         android:layout_height="fill_parent"
-         android:gravity="center"
-         android:layout_marginRight="5dip"
-         android:orientation="vertical">
-
-        <EditText android:id="@+id/starttext"
-           android:nextFocusLeft="@+id/zoom_out"
-           android:nextFocusRight="@+id/endtext"
-           android:textSize="11sp"
-           android:layout_width="70dip"
-           android:layout_height="31dip"
-           android:contentDescription="@string/start_label" />
-
-        <EditText android:id="@+id/endtext"
-           android:nextFocusLeft="@+id/starttext"
-           android:nextFocusRight="@+id/save"
-           android:textSize="11sp"
-           android:layout_width="70dip"
-           android:layout_height="31dip"
-           android:contentDescription="@string/end_label" />
-
-      </LinearLayout>
-
-      <LinearLayout style="@style/VerticalDividerLeft" />
-      <LinearLayout style="@style/VerticalDividerRight" />
-
-      <LinearLayout
-         android:layout_width="wrap_content"
-         android:layout_height="fill_parent"
-         android:layout_marginLeft="5dip"
-         android:layout_marginRight="5dip"
-         android:gravity="center">
-
-        <ImageButton android:id="@+id/save"
-         android:nextFocusLeft="@+id/endtext"
-         android:layout_width="52dip"
-         android:layout_height="52dip"
-         android:src="@drawable/menu_save"
-         android:contentDescription="@string/save_button" />
-
-      </LinearLayout>
+     </LinearLayout>
 
    </LinearLayout>
 

@@ -50,6 +50,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -119,9 +120,6 @@ public class RingdroidEditActivity extends Activity
     private ImageButton mPlayButton;
     private ImageButton mRewindButton;
     private ImageButton mFfwdButton;
-    private ImageButton mZoomInButton;
-    private ImageButton mZoomOutButton;
-    private ImageButton mSaveButton;
     private boolean mKeyDown;
     private String mCaption = "";
     private int mWidth;
@@ -153,11 +151,6 @@ public class RingdroidEditActivity extends Activity
     private int mMarkerRightInset;
     private int mMarkerTopOffset;
     private int mMarkerBottomOffset;
-
-    // Menu commands
-    private static final int CMD_SAVE = 1;
-    private static final int CMD_RESET = 2;
-    private static final int CMD_ABOUT = 3;
 
     // Result codes
     private static final int REQUEST_CODE_RECORD = 1;
@@ -347,17 +340,8 @@ public class RingdroidEditActivity extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuItem item;
-
-        item = menu.add(0, CMD_SAVE, 0, R.string.menu_save);
-        item.setIcon(R.drawable.menu_save);
-
-        item = menu.add(0, CMD_RESET, 0, R.string.menu_reset);
-        item.setIcon(R.drawable.menu_reset);
-
-        item = menu.add(0, CMD_ABOUT, 0, R.string.menu_about);
-        item.setIcon(R.drawable.menu_about);
+        MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.edit_options, menu);
 
         return true;
     }
@@ -365,24 +349,24 @@ public class RingdroidEditActivity extends Activity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(CMD_SAVE).setVisible(true);
-        menu.findItem(CMD_RESET).setVisible(true);
-        menu.findItem(CMD_ABOUT).setVisible(true);
+        menu.findItem(R.id.action_save).setVisible(true);
+        menu.findItem(R.id.action_reset).setVisible(true);
+        menu.findItem(R.id.action_about).setVisible(true);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case CMD_SAVE:
+        case R.id.action_save:
             onSave();
             return true;
-        case CMD_RESET:
+        case R.id.action_reset:
             resetPositions();
             mOffsetGoal = 0;
             updateDisplay();
             return true;
-        case CMD_ABOUT:
+        case R.id.action_about:
             onAbout(this);
             return true;
         default:
@@ -459,6 +443,28 @@ public class RingdroidEditActivity extends Activity
         mOffsetGoal = mOffset;
         mFlingVelocity = (int)(-vx);
         updateDisplay();
+    }
+
+    public void waveformZoomIn() {
+	mWaveformView.zoomIn();
+	mStartPos = mWaveformView.getStart();
+	mEndPos = mWaveformView.getEnd();
+	mMaxPos = mWaveformView.maxPos();
+	mOffset = mWaveformView.getOffset();
+	mOffsetGoal = mOffset;
+	enableZoomButtons();
+	updateDisplay();
+    }
+
+    public void waveformZoomOut() {
+	mWaveformView.zoomOut();
+	mStartPos = mWaveformView.getStart();
+	mEndPos = mWaveformView.getEnd();
+	mMaxPos = mWaveformView.maxPos();
+	mOffset = mWaveformView.getOffset();
+	mOffsetGoal = mOffset;
+	enableZoomButtons();
+	updateDisplay();
     }
 
     //
@@ -620,12 +626,6 @@ public class RingdroidEditActivity extends Activity
         mRewindButton.setOnClickListener(mRewindListener);
         mFfwdButton = (ImageButton)findViewById(R.id.ffwd);
         mFfwdButton.setOnClickListener(mFfwdListener);
-        mZoomInButton = (ImageButton)findViewById(R.id.zoom_in);
-        mZoomInButton.setOnClickListener(mZoomInListener);
-        mZoomOutButton = (ImageButton)findViewById(R.id.zoom_out);
-        mZoomOutButton.setOnClickListener(mZoomOutListener);
-        mSaveButton = (ImageButton)findViewById(R.id.save);
-        mSaveButton.setOnClickListener(mSaveListener);
 
         TextView markStartButton = (TextView) findViewById(R.id.mark_start);
         markStartButton.setOnClickListener(mMarkStartListener);
@@ -644,7 +644,7 @@ public class RingdroidEditActivity extends Activity
         mLastDisplayedStartPos = -1;
         mLastDisplayedEndPos = -1;
 
-        if (mSoundFile != null) {
+        if (mSoundFile != null && !mWaveformView.hasSoundFile()) {
             mWaveformView.setSoundFile(mSoundFile);
             mWaveformView.recomputeHeights(mDensity);
             mMaxPos = mWaveformView.maxPos();
@@ -1598,8 +1598,6 @@ public class RingdroidEditActivity extends Activity
     }
 
     private void enableZoomButtons() {
-        mZoomInButton.setEnabled(mWaveformView.canZoomIn());
-        mZoomOutButton.setEnabled(mWaveformView.canZoomOut());
     }
 
     private OnClickListener mSaveListener = new OnClickListener() {
@@ -1611,32 +1609,6 @@ public class RingdroidEditActivity extends Activity
     private OnClickListener mPlayListener = new OnClickListener() {
             public void onClick(View sender) {
                 onPlay(mStartPos);
-            }
-        };
-
-    private OnClickListener mZoomInListener = new OnClickListener() {
-            public void onClick(View sender) {
-                mWaveformView.zoomIn();
-                mStartPos = mWaveformView.getStart();
-                mEndPos = mWaveformView.getEnd();
-                mMaxPos = mWaveformView.maxPos();
-                mOffset = mWaveformView.getOffset();
-                mOffsetGoal = mOffset;
-                enableZoomButtons();
-                updateDisplay();
-            }
-        };
-
-    private OnClickListener mZoomOutListener = new OnClickListener() {
-            public void onClick(View sender) {
-                mWaveformView.zoomOut();
-                mStartPos = mWaveformView.getStart();
-                mEndPos = mWaveformView.getEnd();
-                mMaxPos = mWaveformView.maxPos();
-                mOffset = mWaveformView.getOffset();
-                mOffsetGoal = mOffset;
-                enableZoomButtons();
-                updateDisplay();
             }
         };
 

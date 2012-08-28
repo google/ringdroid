@@ -79,7 +79,7 @@
     <LinearLayout style="@style/VerticalDividerForList" />
 
     <ImageView android:id="@+id/row_options_button"
-        android:src="@drawable/button_options" 
+        android:src="@drawable/navigation_expand"
         android:background="@drawable/button_options_bkgnd" 
         android:gravity="center_vertical"
         android:scaleType="center"

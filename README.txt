@@ -36,7 +36,7 @@ in your path.  Then run:
 
 rm build.xml
 rm -rf bin/ 
-android update project -n ringdroid -t android-4 -p .
+android update project -n ringdroid -t android-14 -p .
 
 Then, to build:
   ant debug
@@ -49,9 +49,15 @@ To install the debug version:
 http://code.google.com/android/intro/develop-and-debug.html
 
 ant release
-cp bin/ringdroid-unsigned.apk bin/ringdroid-signed.apk
-jarsigner -keystore ~/ringdroid.keystore bin/ringdroid-signed.apk ringdroid
-zipalign -f 4 bin/ringdroid-signed.apk bin/Ringdroid.apk
+cp bin/ringdroid-release-unsigned.apk bin/ringdroid-release-signed.apk
+jarsigner -keystore ~/ringdroid.keystore bin/ringdroid-release-signed.apk ringdroid
+zipalign -f 4 bin/ringdroid-release-signed.apk bin/Ringdroid.apk
+
+# Old:
+#ant release
+#cp bin/ringdroid-unsigned.apk bin/ringdroid-signed.apk
+#jarsigner -keystore ~/ringdroid.keystore bin/ringdroid-signed.apk ringdroid
+#zipalign -f 4 bin/ringdroid-signed.apk bin/Ringdroid.apk
 
 # Initial key generated with:
 # keytool -genkey -keystore ringdroid.keystore -alias ringdroid -validity 10000

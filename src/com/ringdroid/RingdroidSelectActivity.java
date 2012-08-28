@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -40,6 +41,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,9 +58,8 @@ import java.util.ArrayList;
  */
 public class RingdroidSelectActivity
     extends ListActivity
-    implements TextWatcher
 {
-    private TextView mFilter;
+    private SearchView mFilter;
     private SimpleCursorAdapter mAdapter;
     private boolean mWasGetContentIntent;
     private boolean mShowAll;
@@ -66,11 +67,6 @@ public class RingdroidSelectActivity
     // Result codes
     private static final int REQUEST_CODE_EDIT = 1;
     private static final int REQUEST_CODE_CHOOSE_CONTACT = 2;
-
-    // Menu commands
-    private static final int CMD_ABOUT = 1;
-    private static final int CMD_PRIVACY = 2;
-    private static final int CMD_SHOW_ALL = 3;
 
     // Context menu
     private static final int CMD_EDIT = 4;
@@ -111,13 +107,6 @@ public class RingdroidSelectActivity
 
         // Inflate our UI from its XML layout description.
         setContentView(R.layout.media_select);
-
-        Button recordButton = (Button) findViewById(R.id.record);
-        recordButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View clickedButton) {
-                onRecord();
-            }
-        });
 
         try {
             mAdapter = new SimpleCursorAdapter(
@@ -191,11 +180,6 @@ public class RingdroidSelectActivity
 
         // Long-press opens a context menu
         registerForContextMenu(getListView());
-
-        mFilter = (TextView) findViewById(R.id.search_filter);
-        if (mFilter != null) {
-            mFilter.addTextChangedListener(this);
-        }
     }
 
     private void setSoundIconFromCursor(ImageView view, Cursor cursor) {
@@ -247,41 +231,50 @@ public class RingdroidSelectActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuItem item;
+        MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.select_options, menu);
 
-        item = menu.add(0, CMD_ABOUT, 0, R.string.menu_about);
-        item.setIcon(R.drawable.menu_about);
+        mFilter = (SearchView) menu.findItem(R.id.action_search_filter).getActionView();
+        if (mFilter != null) {
+            mFilter.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+		public boolean onQueryTextChange(String newText) {
+		    refreshListView();
+                    return true;
+		}
+		public boolean onQueryTextSubmit(String query) {
+		    refreshListView();
+                    return true;
+		}
+	    });
+        }
 
-        item = menu.add(0, CMD_PRIVACY, 0, R.string.menu_privacy);
-        item.setIcon(android.R.drawable.ic_menu_share);
-
-        item = menu.add(0, CMD_SHOW_ALL, 0, R.string.menu_show_all_audio);
-        item.setIcon(R.drawable.menu_show_all_audio);
-
-        return true;
+	return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(CMD_ABOUT).setVisible(true);
-        menu.findItem(CMD_PRIVACY).setVisible(true);
-        menu.findItem(CMD_SHOW_ALL).setVisible(true);
-        menu.findItem(CMD_SHOW_ALL).setEnabled(!mShowAll);
+        menu.findItem(R.id.action_about).setVisible(true);
+        menu.findItem(R.id.action_record).setVisible(true);
+        menu.findItem(R.id.action_privacy).setVisible(true);
+        menu.findItem(R.id.action_show_all_audio).setVisible(true);
+        menu.findItem(R.id.action_show_all_audio).setEnabled(!mShowAll);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case CMD_ABOUT:
+        case R.id.action_about:
             RingdroidEditActivity.onAbout(this);
             return true;
-	case CMD_PRIVACY:
+        case R.id.action_record:
+            onRecord();
+            return true;
+	case R.id.action_privacy:
 	    showPrivacyDialog();
 	    return true;
-        case CMD_SHOW_ALL:
+        case R.id.action_show_all_audio:
             mShowAll = true;
             refreshListView();
             return true;
@@ -602,20 +595,8 @@ public class RingdroidSelectActivity
         return c;
     }
 
-    public void beforeTextChanged(CharSequence s, int start,
-            int count, int after) {
-    }
-
-    public void onTextChanged(CharSequence s,
-            int start, int before, int count) {
-    }
-
-    public void afterTextChanged(Editable s) {
-        refreshListView();
-    }
-
     private void refreshListView() {
-        String filterStr = mFilter.getText().toString();
+        String filterStr = mFilter.getQuery().toString();
         mAdapter.changeCursor(createCursor(filterStr));
     }
 

@@ -21,10 +21,12 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ringdroid"
-          android:versionName="2.5"
-          android:versionCode="20500">
+          android:versionName="2.6"
+          android:versionCode="20600">
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="11"
+              android:targetSdkVersion="14"
+              android:maxSdkVersion="20" />
 
     <uses-permission android:name="android.permission.INTERNET" /> 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -32,8 +34,12 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <supports-screens android:anyDensity="true" />
+
     <application android:label="@string/ringdroid_app_name"
-                 android:icon="@drawable/ringdroidlogo">
+                 android:icon="@drawable/ringdroidlogo"
+                 android:theme="@android:style/Theme.Holo">
+
 
         <!-- Main activity that's launched when the user opens Ringdroid. -->
         <activity android:name="RingdroidSelectActivity"
@@ -58,7 +64,9 @@
              positions, playback, and triggering saving of the output
              file. -->
         <activity android:name="RingdroidEditActivity"
-                  android:configChanges="orientation|keyboardHidden">
+                  android:configChanges="orientation|keyboardHidden"
+                  android:windowSoftInputMode="adjustResize"
+                  android:hardwareAccelerated="true">
             <intent-filter android:label="@string/edit_intent">
                 <action android:name="android.intent.action.EDIT" />
                 <data android:mimeType="audio/*" />
