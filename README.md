@@ -1,6 +1,6 @@
 ![](https://github.com/google/ringdroid/wiki/images/header.png)
 
-The version of Ringdroid on the Market now requires Android 1.6! If you have Android 1.5 and can't find Ringdroid on the Market, download [Ringdroid 2.3](http://ringdroid.googlecode.com/files/Ringdroid-2.3.apk), which will work great on your phone.
+The version of Ringdroid on the Market now requires Android 1.6! If you have Android 1.5 and can't find Ringdroid on the Market, download [Ringdroid 2.3](https://github.com/google/ringdroid/wiki/apks/Ringdroid-2.3.apk), which will work great on your phone.
 
 **26 July 2010: Ringdroid 2.4 fixes problems with assigning a ringtone to a contact on Eclair and improves accessibility with improved keyboard access and content descriptions. The minimum Android version is now 1.6.**
 
@@ -21,6 +21,7 @@ If you have an Android phone, just click on "Market" and search for "Ringdroid" 
   * [FAQ](https://github.com/google/ringdroid/wiki/FAQ)
   * [User Guide](https://github.com/google/ringdroid/wiki/Using-Ringdroid)
   * [Screenshots](https://github.com/google/ringdroid/wiki/Screenshots)
+  * [APKs](https://github.com/google/ringdroid/wiki/APKs)
   * [Survey](http://spreadsheets.google.com/viewform?key=pjClfOcMDHuckMdw44cfgNA)
 
 For developers:
