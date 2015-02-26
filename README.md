@@ -23,6 +23,7 @@ If you have an Android phone, just click on "Market" and search for "Ringdroid" 
   * [Screenshots](https://github.com/google/ringdroid/wiki/Screenshots)
   * [APKs](https://github.com/google/ringdroid/wiki/APKs)
   * [Survey](http://spreadsheets.google.com/viewform?key=pjClfOcMDHuckMdw44cfgNA)
+  * [Ringdroid Discuss Group](http://groups.google.com/group/ringdroid-discuss)
 
 For developers:
 
