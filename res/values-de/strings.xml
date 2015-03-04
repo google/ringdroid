@@ -33,9 +33,12 @@
     <string name="choose_contact_ringtone_button">Einem Kontakt zuweisen</string>
     <string name="do_nothing_with_ringtone_button">Schließen</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Laden...</string>
-    <string name="progress_dialog_saving">Wird gespeichert...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Laden…</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Wird gespeichert…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--      Menu items      -->
 
@@ -97,8 +100,7 @@
     <string name="default_ringtone_success_message">Standardrufzeichen geändert</string>
     <string name="play_error">Mediendatei kann nicht wiedergegeben werden</string>
     <string name="no_unique_filename">Eindeutiger Dateiname nicht gefunden</string>
-    <string name="delete_tmp_error">Fehler beim Löschen der temporären Datei</string>
-    <string name="record_error">Fehler beim Starten des Tonrekorders</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Eine so kleine Datei kann nicht gespeichert werden.</string>
     <string name="write_error">Fehler beim Schreiben der Datei</string>
     <string name="read_error">Fehler beim Lesen der Datei</string>

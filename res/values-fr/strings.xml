@@ -54,9 +54,12 @@
     <string name="choose_contact_ringtone_button">Utiliser pour un Contact</string>
     <string name="do_nothing_with_ringtone_button">Fermer</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Chargement...</string>
-    <string name="progress_dialog_saving">Sauvegarde...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Chargement…</string>
+    <string name="progress_dialog_recording">Enregistrement…</string>
+    <string name="progress_dialog_saving">Sauvegarde…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--
      Menu items
@@ -129,8 +132,7 @@
     <string name="default_ringtone_success_message">Sonnerie par défaut modifiée</string>
     <string name="play_error">Impossible de jouer ce fichier</string>
     <string name="no_unique_filename">Impossible de trouver un nom unique</string>
-    <string name="delete_tmp_error">Erreur d\'effacement de fichier temporaire</string>
-    <string name="record_error">Erreur au démarrage de l\'enregistrement sonore</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Impossible de sauver un fichier si court, essayez de le faire plus long.</string>
     <string name="write_error">Erreur d\'écriture fichier</string>
     <string name="read_error">Erreur lecture fichier</string>

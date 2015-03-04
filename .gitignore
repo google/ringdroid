@@ -4,4 +4,7 @@ gen
 default.properties
 local.properties
 proguard.cfg
+.classpath
+.project
+project.properties
 

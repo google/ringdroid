@@ -33,9 +33,12 @@
     <string name="choose_contact_ringtone_button">Przypisz do kontaktu</string>
     <string name="do_nothing_with_ringtone_button">Zamknij</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Wczytywanie...</string>
-    <string name="progress_dialog_saving">Zapisywanie...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Wczytywanie…</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Zapisywanie…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--      Menu items      -->
 
@@ -97,8 +100,7 @@
     <string name="default_ringtone_success_message">Zmieniono dzwonek dom.</string>
     <string name="play_error">Nie można odtworzyć tego pliku</string>
     <string name="no_unique_filename">Nie można znaleźć unikalnej nazwy</string>
-    <string name="delete_tmp_error">Błąd podczas usuw. pliku tymcz.</string>
-    <string name="record_error">Błąd podczas uruch. dyktafonu</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Nie można zapisać tak małego pliku, nagraj dłuższy plik.</string>
     <string name="write_error">Błąd zapisu pliku</string>
     <string name="read_error">Błąd odczytu pliku</string>

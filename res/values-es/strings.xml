@@ -40,9 +40,12 @@
   <string name="make_default_ringtone_button">Por defecto</string>
   <string name="choose_contact_ringtone_button">Asignar a contacto</string>
   <string name="do_nothing_with_ringtone_button">Cerrar</string>
-  <!-- Cuadro de progreso de carga o guardado... -->
-  <string name="progress_dialog_loading">Cargando...</string>
-  <string name="progress_dialog_saving">Guardando...</string>
+  <!-- Cuadro de progreso de carga, grabacion, o guardado... -->
+  <string name="progress_dialog_loading">Cargando…</string>
+  <string name="progress_dialog_recording">Recording…</string>
+  <string name="progress_dialog_saving">Guardando…</string>
+  <string name="progress_dialog_cancel">Cancel</string>
+  <string name="progress_dialog_stop">Stop</string>
   <!--
      Elementos de menu
      -->
@@ -96,8 +99,7 @@
   <string name="default_ringtone_success_message">Tono por defecto cambiado</string>
   <string name="play_error">Imposible reproducir este archivo multimedia</string>
   <string name="no_unique_filename">Imposible encontrar un nombre de archivo único</string>
-  <string name="delete_tmp_error">Error al eliminar el archivo temporal</string>
-  <string name="record_error">Error al iniciar el grabador de sonido</string>
+  <string name="record_error">Error recording audio</string>
   <string name="too_small_error">Imposible guardar un archivo tan corto, amplíalo.</string>
   <string name="write_error">Error al escribir archivo</string>
   <string name="read_error">Error al leer archivo</string>

@@ -35,7 +35,10 @@
 
     <!-- Progress dialog text for loading or saving... -->
     <string name="progress_dialog_loading">Загрузка…</string>
+    <string name="progress_dialog_recording">Recording…</string>
     <string name="progress_dialog_saving">Сохранение…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--      Menu items      -->
 
@@ -97,8 +100,7 @@
     <string name="default_ringtone_success_message">Сигнал звонка по умолчанию изменен</string>
     <string name="play_error">Невозможно воспроизвести файл мультимедиа</string>
     <string name="no_unique_filename">Не удается найти уникальное имя файла</string>
-    <string name="delete_tmp_error">Ошибка при удалении временного файла</string>
-    <string name="record_error">Ошибка при запуске диктофона</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Файл слишком короткий для сохранения, удлините его.</string>
     <string name="write_error">Ошибка записи файла</string>
     <string name="read_error">Ошибка чтения файла</string>

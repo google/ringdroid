@@ -41,9 +41,12 @@
   <string name="make_default_ringtone_button">设为默认</string>
   <string name="choose_contact_ringtone_button">分配到联系人</string>
   <string name="do_nothing_with_ringtone_button">关闭</string>
-  <!-- Progress dialog text for loading or saving... -->
-  <string name="progress_dialog_loading">载入中...</string>
-  <string name="progress_dialog_saving">保持中...</string>
+  <!-- Progress dialog text for loading, recording, or saving... -->
+  <string name="progress_dialog_loading">载入中…</string>
+  <string name="progress_dialog_recording">Recording…</string>
+  <string name="progress_dialog_saving">保持中…</string>
+  <string name="progress_dialog_cancel">Cancel</string>
+  <string name="progress_dialog_stop">Stop</string>
   <!--
      Menu items
      -->
@@ -98,8 +101,7 @@
   <string name="default_ringtone_success_message">默认铃声已更改</string>
   <string name="play_error">无法播放此媒体文件</string>
   <string name="no_unique_filename">无法找到专属文件名</string>
-  <string name="delete_tmp_error">删除临时文件时出错</string>
-  <string name="record_error">启动录音机时出错</string>
+  <string name="record_error">Error recording audio</string>
   <string name="too_small_error">无法保存过小的文件，请尝试使其更长。</string>
   <string name="write_error">写文件时出错</string>
   <string name="read_error">读文件时出错</string>

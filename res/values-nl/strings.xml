@@ -54,9 +54,12 @@
     <string name="choose_contact_ringtone_button">Toewijzen aan contact</string>
     <string name="do_nothing_with_ringtone_button">Sluiten</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Laden...</string>
-    <string name="progress_dialog_saving">Opslaan...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Laden…</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Opslaan…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--
      Menu items
@@ -128,8 +131,7 @@
     <string name="default_ringtone_success_message">Standaardbeltoon gewijzigd</string>
     <string name="play_error">Kan dit mediabestand niet afspelen</string>
     <string name="no_unique_filename">Kan unieke bestandsnaam niet vinden</string>
-    <string name="delete_tmp_error">Fout bij verwijderen van tijdelijk bestand</string>
-    <string name="record_error">Fout bij starten van geluidsrecorder</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Kan een bestand dat zo kort is, niet opslaan. Maak het langer.</string>
     <string name="write_error">Fout bij schrijven van bestand</string>
     <string name="read_error">Fout bij lezen van bestand</string>

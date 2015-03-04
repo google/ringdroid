@@ -58,9 +58,12 @@
     <string name="choose_contact_ringtone_button">Assign to Contact</string>
     <string name="do_nothing_with_ringtone_button">Close</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Loading...</string>
-    <string name="progress_dialog_saving">Saving...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Loading…</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Saving…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!-- Image button descriptions for accessibility -->
 
@@ -147,8 +150,7 @@
     <string name="default_notification_success_message">Changed default notification sound</string>
     <string name="play_error">Unable to play this media file</string>
     <string name="no_unique_filename">Unable to find unique filename</string>
-    <string name="delete_tmp_error">Error deleting temporary file</string>
-    <string name="record_error">Error launching Sound Recorder</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Can\'t save a file that small, try making it longer.</string>
     <string name="write_error">Error writing file</string>
     <string name="read_error">Error reading file</string>
