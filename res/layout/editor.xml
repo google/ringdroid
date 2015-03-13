@@ -122,6 +122,7 @@
        android:textColor="#ffffffff"
        android:textSize="14sp"
        android:textStyle="bold"
+       android:labelFor="@+id/starttext"
        android:clickable="true"
        android:gravity="center"
        android:layout_width="wrap_content" 
@@ -135,8 +136,7 @@
        android:layout_marginRight="30dip"
        android:layout_width="70dip"
        android:layout_height="31dip"
-       android:gravity="center"
-       android:contentDescription="@string/start_label" />
+       android:gravity="center" />
 
       <TextView
        android:id="@+id/mark_end"
@@ -144,6 +144,7 @@
        android:textColor="#ffffffff"
        android:textSize="14sp"
        android:textStyle="bold"
+       android:labelFor="@+id/endtext"
        android:clickable="true"
        android:gravity="center"
        android:layout_width="wrap_content" 
@@ -156,8 +157,7 @@
        android:layout_width="70dip"
        android:layout_height="31dip"
        android:layout_marginLeft="10dip"
-       android:gravity="center"
-       android:contentDescription="@string/end_label" />
+       android:gravity="center" />
 
     </LinearLayout>
 

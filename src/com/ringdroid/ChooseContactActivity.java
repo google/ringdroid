@@ -164,12 +164,15 @@ public class ChooseContactActivity
         return;
     }
 
+    /* Implementation of TextWatcher.beforeTextChanged */
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
 
+    /* Implementation of TextWatcher.onTextChanged */
     public void onTextChanged(CharSequence s, int start, int before, int count) {
     }
 
+    /* Implementation of TextWatcher.afterTextChanged */
     public void afterTextChanged(Editable s) {
         //String filterStr = mFilter.getText().toString();
         //mAdapter.changeCursor(createCursor(filterStr));
@@ -178,6 +181,7 @@ public class ChooseContactActivity
         getLoaderManager().restartLoader(0,  args, this);
     }
 
+    /* Implementation of LoaderCallbacks.onCreateLoader */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String selection = null;
@@ -204,12 +208,14 @@ public class ChooseContactActivity
                 );
     }
 
+    /* Implementation of LoaderCallbacks.onLoadFinished */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.i("Ringdroid", data.getCount() + " contacts");
+        Log.v("Ringdroid", data.getCount() + " contacts");
         mAdapter.swapCursor(data);
     }
 
+    /* Implementation of LoaderCallbacks.onLoaderReset */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // This is called when the last Cursor provided to onLoadFinished()

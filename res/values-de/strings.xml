@@ -115,18 +115,9 @@
     <string name="choose_contact_title">Welchen Kontakt soll das Rufzeichen zugewiesen werden?</string>
     <string name="success_contact_ringtone">Rufzeichen erfolgreich zugewiesen an:</string>
 
-    <!--      Sending information to server      -->
-    <string name="server_title">Geben Sie Daten frei!</string>
-    <string name="server_prompt">Möchten Sie anonyme Daten zu den Rufzeichen und anderen erstellten Tönen an Ringdroid.com senden, damit wir Statistiken erfassen können?</string>
-    <string name="server_yes">Senden</string>
-    <string name="server_later">Später fragen</string>
-    <string name="server_never">Nie</string>
-
-    <string name="error_server_prompt">Möchten Sie anonyme Daten zu diesem Fehler an Ringdroid.com senden, damit wir das Problem künftig beheben können?</string>
-
     <!--      About      -->
 
     <string name="about_title">Info über Ringdroid</string>
-    <string name="about_text"><![CDATA[Verwenden Sie Ringdroid zum Bearbeiten von MP3-, WAV-, AAC- und AMR-Audiodateien und zum Erstellen von Rufzeichen, Weckern und Benachrichtigungen.\n\nTipp: Kopieren Sie Audiodateien mithilfe eines USB-Kabels auf Ihre SD-Karte oder rufen Sie MP3s mithilfe der Amazon-MP3-Anwendung ab.\n\nTipp: Drücken Sie auf dem Hauptbildschirm lange auf eine Audiodatei, um sie zu löschen.  Mehr Infos unten...\n\nTipp: Tippen Sie auf eine beliebige Stelle der Funktion, um die Wiedergabe an dieser Position zu starten.\n\nTipp: Tippen Sie während der Wiedergabe auf \"Start\" oder \"Ende\", um an der aktuellen Wiedergabezeit Start- und Ende-Markierungen zu setzen.\n\nTipp: Präzisere Einstellungen nehmen Sie mit dem Scrollrad vor.\n\nVersion 2.5\n\Entwickler: Dominic Mazzoni\nGrafik: Joseph Wain\nSupport und Evangelisten-Marketing: Eugene Koh\n\nRingdroid ist kostenlose Software, vertrieben unter der Lizenz Apache 2.0.  Den Quellcode finden Sie unter code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Verwenden Sie Ringdroid zum Bearbeiten von MP3-, WAV-, AAC- und AMR-Audiodateien und zum Erstellen von Rufzeichen, Weckern und Benachrichtigungen.\n\nTipp: Kopieren Sie Audiodateien mithilfe eines USB-Kabels auf Ihre SD-Karte oder rufen Sie MP3s mithilfe der Amazon-MP3-Anwendung ab.\n\nTipp: Drücken Sie auf dem Hauptbildschirm lange auf eine Audiodatei, um sie zu löschen.  Mehr Infos unten...\n\nTipp: Tippen Sie auf eine beliebige Stelle der Funktion, um die Wiedergabe an dieser Position zu starten.\n\nTipp: Tippen Sie während der Wiedergabe auf \"Start\" oder \"Ende\", um an der aktuellen Wiedergabezeit Start- und Ende-Markierungen zu setzen.\n\nTipp: Präzisere Einstellungen nehmen Sie mit dem Scrollrad vor.\n\nVersion 2.5\n\Entwickler: Dominic Mazzoni\nGrafik: Joseph Wain\nSupport und Evangelisten-Marketing: Eugene Koh\n\nRingdroid ist kostenlose Software, vertrieben unter der Lizenz Apache 2.0.  Den Quellcode finden Sie unter github.com/google/ringdroid\n]]></string>
 
 </resources>

@@ -56,7 +56,7 @@ public class SoundFile {
     private int[] mFrameGains;
     private int[] mFrameLens;
     private int[] mFrameOffsets;
-    
+
     // Progress listener interface.
     public interface ProgressListener {
         /**
@@ -286,11 +286,6 @@ public class SoundFile {
                         } catch (OutOfMemoryError oome) {
                             // setting android:largeHeap="true" in <application> seem to help not
                             // reaching this section.
-                            System.gc();
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException ie) {
-                            }
                             retry--;
                         }
                     }
@@ -580,42 +575,5 @@ public class SoundFile {
         } catch (IOException e) {
             // TODO(nfaralli): Should and exception be thrown here? At least log this error.
         }
-    }
-
-    private static final char[] HEX_CHARS = {
-        '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-    public static String bytesToHex (byte hash[]) {
-        char buf[] = new char[hash.length * 2];
-        for (int i = 0, x = 0; i < hash.length; i++) {
-            buf[x++] = HEX_CHARS[(hash[i] >>> 4) & 0xf];
-            buf[x++] = HEX_CHARS[hash[i] & 0xf];
-        }
-        return new String(buf);
-    }
-    public String computeMd5OfFirst10kB()
-            throws java.io.FileNotFoundException,
-            java.io.IOException,
-            java.security.NoSuchAlgorithmException {
-        if (mInputFile == null) {
-            return "";
-        }
-        MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-        FileInputStream in = new FileInputStream(mInputFile);
-        byte[] buffer = new byte[1024];
-        int pos = 0;
-        int len;
-        for (int i=0; i<10; i++) {
-            len = (mFileSize - pos < buffer.length) ? mFileSize - pos : buffer.length;
-            in.read(buffer, 0, len);
-            digest.update(buffer, 0, len);
-            if (len < buffer.length) {
-                break;
-            }
-            pos += len;
-        }
-        in.close();
-        byte[] hash = digest.digest();
-        return bytesToHex(hash);
     }
 }

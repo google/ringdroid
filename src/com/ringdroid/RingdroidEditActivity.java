@@ -20,41 +20,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Random;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -91,12 +73,8 @@ public class RingdroidEditActivity extends Activity
     private SoundFile mSoundFile;
     private File mFile;
     private String mFilename;
-    private String mDstFilename;
     private String mArtist;
-    private String mAlbum;
-    private String mGenre;
     private String mTitle;
-    private int mYear;
     private int mNewFileKind;
     private boolean mWasGetContentIntent;
     private WaveformView mWaveformView;
@@ -142,8 +120,6 @@ public class RingdroidEditActivity extends Activity
     private Thread mLoadSoundFileThread;
     private Thread mRecordAudioThread;
     private Thread mSaveSoundFileThread;
-    private Thread mSendStatsToServerThread;
-    private Thread mSendErrToServerThread;
 
     // Result codes
     private static final int REQUEST_CODE_CHOOSE_CONTACT = 1;
@@ -153,30 +129,6 @@ public class RingdroidEditActivity extends Activity
      */
     public static final String EDIT = "com.ringdroid.action.EDIT";
 
-    /**
-     * Preference names
-     */
-    public static final String PREF_SUCCESS_COUNT = "success_count";
-    public static final String PREF_STATS_SERVER_CHECK = "stats_server_check";
-    public static final String PREF_STATS_SERVER_ALLOWED = "stats_server_allowed";
-    public static final String PREF_ERROR_COUNT = "error_count";
-    public static final String PREF_ERR_SERVER_CHECK = "err_server_check";
-    public static final String PREF_ERR_SERVER_ALLOWED = "err_server_allowed";
-    public static final String PREF_UNIQUE_ID = "unique_id";
-
-    /**
-     * Possible codes for PREF_*_SERVER_ALLOWED
-     */
-    public static final int SERVER_ALLOWED_UNKNOWN = 0;
-    public static final int SERVER_ALLOWED_NO = 1;
-    public static final int SERVER_ALLOWED_YES = 2;
-
-    /**
-     * Server url
-     */
-    public static final String STATS_SERVER_URL = "http://ringdroid.appspot.com/add";
-    public static final String ERR_SERVER_URL = "http://ringdroid.appspot.com/err";
-
     //
     // Public methods and protected overrides
     //
@@ -184,7 +136,7 @@ public class RingdroidEditActivity extends Activity
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
-        Log.i("Ringdroid", "EditActivity OnCreate");
+        Log.v("Ringdroid", "EditActivity OnCreate");
         super.onCreate(icicle);
 
         mPlayer = null;
@@ -196,15 +148,8 @@ public class RingdroidEditActivity extends Activity
         mLoadSoundFileThread = null;
         mRecordAudioThread = null;
         mSaveSoundFileThread = null;
-        mSendStatsToServerThread = null;
-        mSendErrToServerThread = null;
 
         Intent intent = getIntent();
-
-        if (intent.getBooleanExtra("privacy", false)) {
-            showServerPrompt(true);
-            return;
-        }
 
         // If the Ringdroid media select activity was launched via a
         // GET_CONTENT intent, then we shouldn't display a "saved"
@@ -241,20 +186,16 @@ public class RingdroidEditActivity extends Activity
     /** Called when the activity is finally destroyed. */
     @Override
     protected void onDestroy() {
-        Log.i("Ringdroid", "EditActivity OnDestroy");
+        Log.v("Ringdroid", "EditActivity OnDestroy");
 
         mLoadingKeepGoing = false;
         mRecordingKeepGoing = false;
         closeThread(mLoadSoundFileThread);
         closeThread(mRecordAudioThread);
         closeThread(mSaveSoundFileThread);
-        closeThread(mSendStatsToServerThread);
-        closeThread(mSendErrToServerThread);
         mLoadSoundFileThread = null;
         mRecordAudioThread = null;
         mSaveSoundFileThread = null;
-        mSendStatsToServerThread = null;
-        mSendErrToServerThread = null;
         if(mProgressDialog != null) {
             mProgressDialog.dismiss();
             mProgressDialog = null;
@@ -280,12 +221,12 @@ public class RingdroidEditActivity extends Activity
     protected void onActivityResult(int requestCode,
                                     int resultCode,
                                     Intent dataIntent) {
-        Log.i("Ringdroid", "EditActivity onActivityResult");
+        Log.v("Ringdroid", "EditActivity onActivityResult");
         if (requestCode == REQUEST_CODE_CHOOSE_CONTACT) {
             // The user finished saving their ringtone and they're
             // just applying it to a contact.  When they return here,
             // they're done.
-            sendStatsToServerIfAllowedAndFinish();
+            finish();
             return;
         }
     }
@@ -297,12 +238,11 @@ public class RingdroidEditActivity extends Activity
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        Log.i("Ringdroid", "EditActivity onConfigurationChanged");
+        Log.v("Ringdroid", "EditActivity onConfigurationChanged");
         final int saveZoomLevel = mWaveformView.getZoomLevel();
         super.onConfigurationChanged(newConfig);
 
         loadGui();
-        enableZoomButtons();
 
         mHandler.postDelayed(new Runnable() {
                 public void run() {
@@ -387,7 +327,7 @@ public class RingdroidEditActivity extends Activity
         mTouchStart = x;
         mTouchInitialOffset = mOffset;
         mFlingVelocity = 0;
-        mWaveformTouchStartMsec = System.nanoTime()/1000000;
+        mWaveformTouchStartMsec = getCurrentTime();
     }
 
     public void waveformTouchMove(float x) {
@@ -399,8 +339,7 @@ public class RingdroidEditActivity extends Activity
         mTouchDragging = false;
         mOffsetGoal = mOffset;
 
-        long elapsedMsec = System.nanoTime()/1000000 -
-            mWaveformTouchStartMsec;
+        long elapsedMsec = getCurrentTime() - mWaveformTouchStartMsec;
         if (elapsedMsec < 300) {
             if (mIsPlaying) {
                 int seekMsec = mWaveformView.pixelsToMillisecs(
@@ -431,7 +370,6 @@ public class RingdroidEditActivity extends Activity
         mMaxPos = mWaveformView.maxPos();
         mOffset = mWaveformView.getOffset();
         mOffsetGoal = mOffset;
-        enableZoomButtons();
         updateDisplay();
     }
 
@@ -442,7 +380,6 @@ public class RingdroidEditActivity extends Activity
         mMaxPos = mWaveformView.maxPos();
         mOffset = mWaveformView.getOffset();
         mOffsetGoal = mOffset;
-        enableZoomButtons();
         updateDisplay();
     }
 
@@ -653,9 +590,6 @@ public class RingdroidEditActivity extends Activity
             this, mFilename);
         mTitle = metadataReader.mTitle;
         mArtist = metadataReader.mArtist;
-        mAlbum = metadataReader.mAlbum;
-        mYear = metadataReader.mYear;
-        mGenre = metadataReader.mGenre;
 
         String titleLabel = mTitle;
         if (mArtist != null && mArtist.length() > 0) {
@@ -663,7 +597,7 @@ public class RingdroidEditActivity extends Activity
         }
         setTitle(titleLabel);
 
-        mLoadingLastUpdateTime = System.nanoTime()/1000000;
+        mLoadingLastUpdateTime = getCurrentTime();
         mLoadingKeepGoing = true;
         mFinishActivity = false;
         mProgressDialog = new ProgressDialog(RingdroidEditActivity.this);
@@ -682,7 +616,7 @@ public class RingdroidEditActivity extends Activity
         final SoundFile.ProgressListener listener =
             new SoundFile.ProgressListener() {
                 public boolean reportProgress(double fractionComplete) {
-                    long now = System.nanoTime()/1000000;
+                    long now = getCurrentTime();
                     if (now - mLoadingLastUpdateTime > 100) {
                         mProgressDialog.setProgress(
                             (int)(mProgressDialog.getMax() *
@@ -716,10 +650,7 @@ public class RingdroidEditActivity extends Activity
                         final String finalErr = err;
                         Runnable runnable = new Runnable() {
                             public void run() {
-                                handleFatalError(
-                                  "UnsupportedExtension",
-                                  finalErr,
-                                  new Exception());
+                                showFinalAlert(new Exception(), finalErr);
                             }
                         };
                         mHandler.post(runnable);
@@ -738,10 +669,7 @@ public class RingdroidEditActivity extends Activity
 
                     Runnable runnable = new Runnable() {
                         public void run() {
-                            handleFatalError(
-                              "ReadError",
-                              getResources().getText(R.string.read_error),
-                              e);
+                            showFinalAlert(e, getResources().getText(R.string.read_error));
                         }
                     };
                     mHandler.post(runnable);
@@ -767,11 +695,8 @@ public class RingdroidEditActivity extends Activity
         mFile = null;
         mTitle = null;
         mArtist = null;
-        mAlbum = null;
-        mYear = 0;
-        mGenre = null;
 
-        mRecordingLastUpdateTime = System.nanoTime()/1000000;
+        mRecordingLastUpdateTime = getCurrentTime();
         mRecordingKeepGoing = true;
         mFinishActivity = false;
         AlertDialog.Builder adBuilder = new AlertDialog.Builder(RingdroidEditActivity.this);
@@ -802,7 +727,7 @@ public class RingdroidEditActivity extends Activity
         final SoundFile.ProgressListener listener =
             new SoundFile.ProgressListener() {
                 public boolean reportProgress(double elapsedTime) {
-                    long now = System.nanoTime()/1000000;
+                    long now = getCurrentTime();
                     if (now - mRecordingLastUpdateTime > 5) {
                         mRecordingTime = elapsedTime;
                         // Only UI thread can update Views such as TextViews.
@@ -828,10 +753,10 @@ public class RingdroidEditActivity extends Activity
                         mAlertDialog.dismiss();
                         Runnable runnable = new Runnable() {
                             public void run() {
-                                handleFatalError(
-                                  "MissingProgressListener",
-                                  getResources().getText(R.string.record_error),
-                                  new Exception());
+                                showFinalAlert(
+                                    new Exception(),
+                                    getResources().getText(R.string.record_error)
+                                );
                             }
                         };
                         mHandler.post(runnable);
@@ -850,10 +775,7 @@ public class RingdroidEditActivity extends Activity
 
                     Runnable runnable = new Runnable() {
                         public void run() {
-                            handleFatalError(
-                              "RecordError",
-                              getResources().getText(R.string.record_error),
-                              e);
+                            showFinalAlert(e, getResources().getText(R.string.record_error));
                         }
                     };
                     mHandler.post(runnable);
@@ -1189,7 +1111,7 @@ public class RingdroidEditActivity extends Activity
             title = getResources().getText(R.string.alert_title_failure);
             setResult(RESULT_CANCELED, new Intent());
         } else {
-            Log.i("Ringdroid", "Success: " + message);
+            Log.v("Ringdroid", "Success: " + message);
             title = getResources().getText(R.string.alert_title_success);
         }
 
@@ -1286,8 +1208,6 @@ public class RingdroidEditActivity extends Activity
             return;
         }
 
-        mDstFilename = outPath;
-
         double startTime = mWaveformView.pixelsToSeconds(mStartPos);
         double endTime = mWaveformView.pixelsToSeconds(mEndPos);
         final int startFrame = mWaveformView.secondsToFrames(startTime);
@@ -1341,10 +1261,7 @@ public class RingdroidEditActivity extends Activity
                     final Exception finalException = e;
                     Runnable runnable = new Runnable() {
                             public void run() {
-                                handleFatalError(
-                                  "WriteError",
-                                  finalErrorMessage,
-                                  finalException);
+                                showFinalAlert(finalException, finalErrorMessage);
                             }
                         };
                     mHandler.post(runnable);
@@ -1413,17 +1330,9 @@ public class RingdroidEditActivity extends Activity
         final Uri newUri = getContentResolver().insert(uri, values);
         setResult(RESULT_OK, new Intent().setData(newUri));
 
-        // Update a preference that counts how many times we've
-        // successfully saved a ringtone or other audio
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-        int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putInt(PREF_SUCCESS_COUNT, successCount + 1);
-        prefsEditor.commit();
-
         // If Ringdroid was launched to get content, just return
         if (mWasGetContentIntent) {
-            sendStatsToServerIfAllowedAndFinish();
+            finish();
             return;
         }
 
@@ -1435,7 +1344,7 @@ public class RingdroidEditActivity extends Activity
                            R.string.save_success_message,
                            Toast.LENGTH_SHORT)
                 .show();
-            sendStatsToServerIfAllowedAndFinish();
+            finish();
             return;
         }
 
@@ -1453,15 +1362,14 @@ public class RingdroidEditActivity extends Activity
                                 RingdroidEditActivity.this,
                                 RingtoneManager.TYPE_NOTIFICATION,
                                 newUri);
-                            sendStatsToServerIfAllowedAndFinish();
+                            finish();
                         }
                     })
                 .setNegativeButton(
                     R.string.alert_no_button,
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                            sendStatsToServerIfAllowedAndFinish();
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            finish();
                         }
                     })
                 .setCancelable(false)
@@ -1487,14 +1395,14 @@ public class RingdroidEditActivity extends Activity
                             R.string.default_ringtone_success_message,
                             Toast.LENGTH_SHORT)
                             .show();
-                        sendStatsToServerIfAllowedAndFinish();
+                        finish();
                         break;
                     case R.id.button_choose_contact:
                         chooseContactForRingtone(newUri);
                         break;
                     default:
                     case R.id.button_do_nothing:
-                        sendStatsToServerIfAllowedAndFinish();
+                        finish();
                         break;
                     }
                 }
@@ -1517,119 +1425,6 @@ public class RingdroidEditActivity extends Activity
         }
     }
 
-    private void handleFatalError(
-            final CharSequence errorInternalName,
-            final CharSequence errorString,
-            final Exception exception) {
-        Log.i("Ringdroid", "handleFatalError");
-
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-        int failureCount = prefs.getInt(PREF_ERROR_COUNT, 0);
-        final SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putInt(PREF_ERROR_COUNT, failureCount + 1);
-        prefsEditor.commit();
-
-        // Check if we already have a pref for whether or not we can
-        // contact the server.
-        int serverAllowed = prefs.getInt(PREF_ERR_SERVER_ALLOWED,
-                                         SERVER_ALLOWED_UNKNOWN);
-
-        if (serverAllowed == SERVER_ALLOWED_NO) {
-            Log.i("Ringdroid", "ERR: SERVER_ALLOWED_NO");
-
-            // Just show a simple "write error" message
-            showFinalAlert(exception, errorString);
-            return;
-        }
-
-        if (serverAllowed == SERVER_ALLOWED_YES) {
-            Log.i("Ringdroid", "SERVER_ALLOWED_YES");
-
-            new AlertDialog.Builder(RingdroidEditActivity.this)
-                .setTitle(R.string.alert_title_failure)
-                .setMessage(errorString)
-                .setPositiveButton(
-                    R.string.alert_ok_button,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,
-                                            int whichButton) {
-                            sendErrToServerAndFinish(errorInternalName,
-                                                     exception);
-                            return;
-                        }
-                    })
-                .setCancelable(false)
-                .show();
-            return;
-        }
-
-        // The number of times the user must have had a failure before
-        // we'll ask them.  Defaults to 1, and each time they click "Later"
-        // we double and add 1.
-        final int allowServerCheckIndex =
-            prefs.getInt(PREF_ERR_SERVER_CHECK, 1);
-        if (failureCount < allowServerCheckIndex) {
-            Log.i("Ringdroid", "failureCount " + failureCount +
-                  " is less than " + allowServerCheckIndex);
-            // Just show a simple "write error" message
-            showFinalAlert(exception, errorString);
-            return;
-        }
-
-        final SpannableString message = new SpannableString(
-                errorString + ". " +
-                getResources().getText(R.string.error_server_prompt));
-        Linkify.addLinks(message, Linkify.ALL);
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle(R.string.alert_title_failure)
-            .setMessage(message)
-            .setPositiveButton(
-                R.string.server_yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        prefsEditor.putInt(PREF_ERR_SERVER_ALLOWED,
-                                           SERVER_ALLOWED_YES);
-                        prefsEditor.commit();
-                        sendErrToServerAndFinish(errorInternalName,
-                                                 exception);
-                    }
-                })
-            .setNeutralButton(
-                R.string.server_later,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        prefsEditor.putInt(PREF_ERR_SERVER_CHECK,
-                                           1 + allowServerCheckIndex * 2);
-                        Log.i("Ringdroid",
-                              "Won't check again until " +
-                              (1 + allowServerCheckIndex * 2) +
-                              " errors.");
-                        prefsEditor.commit();
-                        finish();
-                    }
-                })
-            .setNegativeButton(
-                R.string.server_never,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        prefsEditor.putInt(PREF_ERR_SERVER_ALLOWED,
-                                           SERVER_ALLOWED_NO);
-                        prefsEditor.commit();
-                        finish();
-                    }
-                })
-            .setCancelable(false)
-            .show();
-
-        // Make links clicky
-        ((TextView)dialog.findViewById(android.R.id.message))
-                .setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
     private void onSave() {
         if (mIsPlaying) {
             handlePause();
@@ -1646,9 +1441,6 @@ public class RingdroidEditActivity extends Activity
         FileSaveDialog dlog = new FileSaveDialog(
             this, getResources(), mTitle, message);
         dlog.show();
-    }
-
-    private void enableZoomButtons() {
     }
 
     private OnClickListener mPlayListener = new OnClickListener() {
@@ -1737,323 +1529,14 @@ public class RingdroidEditActivity extends Activity
             }
         };
 
+    private long getCurrentTime() {
+        return System.nanoTime() / 1000000;
+    }
+
     private String getStackTrace(Exception e) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(stream, true);
         e.printStackTrace(writer);
         return stream.toString();
-    }
-
-    private void sendStatsToServerIfAllowedAndFinish() {
-        Log.i("Ringdroid", "sendStatsToServerIfAllowedAndFinish");
-
-        final SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-
-        // Check if we already have a pref for whether or not we can
-        // contact the server.
-        int serverAllowed = prefs.getInt(PREF_STATS_SERVER_ALLOWED,
-                                         SERVER_ALLOWED_UNKNOWN);
-        if (serverAllowed == SERVER_ALLOWED_NO) {
-            Log.i("Ringdroid", "SERVER_ALLOWED_NO");
-            finish();
-            return;
-        }
-
-        if (serverAllowed == SERVER_ALLOWED_YES) {
-            Log.i("Ringdroid", "SERVER_ALLOWED_YES");
-            sendStatsToServerAndFinish();
-            return;
-        }
-
-        // Number of times the user has successfully saved a sound.
-        int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
-
-        // The number of times the user must have successfully saved
-        // a sound before we'll ask them.  Defaults to 2, and doubles
-        // each time they click "Later".
-        final int allowServerCheckIndex =
-            prefs.getInt(PREF_STATS_SERVER_CHECK, 2);
-        if (successCount < allowServerCheckIndex) {
-            Log.i("Ringdroid", "successCount " + successCount +
-                  " is less than " + allowServerCheckIndex);
-            finish();
-            return;
-        }
-
-        showServerPrompt(false);
-    }
-
-    void showServerPrompt(final boolean userInitiated) {
-        final SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-
-        final SpannableString message = new SpannableString(
-                getResources().getText(R.string.server_prompt));
-        Linkify.addLinks(message, Linkify.ALL);
-
-        final AlertDialog dialog = new AlertDialog.Builder(RingdroidEditActivity.this)
-            .setTitle(R.string.server_title)
-            .setMessage(message)
-            .setPositiveButton(
-                R.string.server_yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        SharedPreferences.Editor prefsEditor = prefs.edit();
-                        prefsEditor.putInt(PREF_STATS_SERVER_ALLOWED,
-                                           SERVER_ALLOWED_YES);
-                        prefsEditor.commit();
-                        if (userInitiated) {
-                            finish();
-                        } else {
-                            sendStatsToServerAndFinish();
-                        }
-                    }
-                })
-            .setNeutralButton(
-                R.string.server_later,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        int allowServerCheckIndex =
-                            prefs.getInt(PREF_STATS_SERVER_CHECK, 2);
-                        int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
-                        SharedPreferences.Editor prefsEditor = prefs.edit();
-                        if (userInitiated) {
-                            prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
-                                               successCount + 2);
-
-                        } else {
-                            prefsEditor.putInt(PREF_STATS_SERVER_CHECK,
-                                               allowServerCheckIndex * 2);
-                        }
-                        prefsEditor.commit();
-                        finish();
-                    }
-                })
-            .setNegativeButton(
-                R.string.server_never,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        SharedPreferences.Editor prefsEditor = prefs.edit();
-                        prefsEditor.putInt(PREF_STATS_SERVER_ALLOWED,
-                                           SERVER_ALLOWED_NO);
-                        if (userInitiated) {
-                            // If the user initiated, err on the safe side and disable
-                            // sending crash reports too. There's no way to turn them
-                            // back on now aside from clearing data from this app, but
-                            // it doesn't matter, we don't need error reports from every
-                            // user ever.
-                            prefsEditor.putInt(PREF_ERR_SERVER_ALLOWED,
-                                               SERVER_ALLOWED_NO);
-                        }
-                        prefsEditor.commit();
-                        finish();
-                    }
-                })
-            .setCancelable(false)
-            .show();
-
-        // Make links clicky
-        ((TextView)dialog.findViewById(android.R.id.message))
-                .setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    void sendStatsToServerAndFinish() {
-        Log.i("Ringdroid", "sendStatsToServerAndFinish");
-        mSendStatsToServerThread = new Thread() {
-            public void run() {
-                sendToServer(STATS_SERVER_URL, null, null);
-            }
-        };
-        mSendStatsToServerThread.start();
-        Log.i("Ringdroid", "sendStatsToServerAndFinish calling finish");
-        finish();
-    }
-
-    void sendErrToServerAndFinish(final CharSequence errType,
-                                  final Exception exception) {
-        Log.i("Ringdroid", "sendErrToServerAndFinish");
-        mSendErrToServerThread = new Thread() {
-            public void run() {
-                sendToServer(ERR_SERVER_URL, errType, exception);
-            }
-        };
-        mSendErrToServerThread.start();
-        Log.i("Ringdroid", "sendErrToServerAndFinish calling finish");
-        finish();
-    }
-
-    /**
-     * Nothing nefarious about this; the purpose is just to
-     * uniquely identify each user so we don't double-count the same
-     * ringtone - without actually identifying the actual user.
-     */
-    long getUniqueId() {
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-        long uniqueId = prefs.getLong(PREF_UNIQUE_ID, 0);
-        if (uniqueId == 0) {
-            uniqueId = new Random().nextLong();
-
-            SharedPreferences.Editor prefsEditor = prefs.edit();
-            prefsEditor.putLong(PREF_UNIQUE_ID, uniqueId);
-            prefsEditor.commit();
-        }
-
-        return uniqueId;
-    }
-
-    /**
-     * If the exception is not null, will send the stack trace.
-     */
-    void sendToServer(String serverUrl,
-                      CharSequence errType,
-                      Exception exception) {
-        if (mTitle == null)
-            return;
-
-        Log.i("Ringdroid", "sendStatsToServer");
-
-        boolean isSuccess = (exception == null);
-
-        StringBuilder postMessage = new StringBuilder();
-        String ringdroidVersion = "unknown";
-        try {
-            ringdroidVersion =
-                getPackageManager().getPackageInfo(getPackageName(), -1)
-                .versionName;
-        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-        }
-        String charsetName = "UTF-8";
-        try {
-            postMessage.append("ringdroid_version=");
-            postMessage.append(URLEncoder.encode(ringdroidVersion, charsetName));
-    
-            postMessage.append("&android_version=");
-            postMessage.append(URLEncoder.encode(Build.VERSION.RELEASE, charsetName));
-    
-            postMessage.append("&unique_id=");
-            postMessage.append(getUniqueId());
-    
-            if (isSuccess) {
-                postMessage.append("&title=");
-                postMessage.append(URLEncoder.encode(mTitle, charsetName));
-                if (mArtist != null) {
-                    postMessage.append("&artist=");
-                    postMessage.append(URLEncoder.encode(mArtist, charsetName));
-                }
-                if (mAlbum != null) {
-                    postMessage.append("&album=");
-                    postMessage.append(URLEncoder.encode(mAlbum, charsetName));
-                }
-                if (mGenre != null) {
-                    postMessage.append("&genre=");
-                    postMessage.append(URLEncoder.encode(mGenre, charsetName));
-                }
-                postMessage.append("&year=");
-                postMessage.append(mYear);
-    
-                postMessage.append("&filename=");
-                postMessage.append(URLEncoder.encode(mFilename, charsetName));
-    
-                // The user's real location is not actually sent, this is just
-                // vestigial code from an old experiment.
-                double latitude = 0.0;
-                double longitude = 0.0;
-                postMessage.append("&user_lat=");
-                postMessage.append(URLEncoder.encode("" + latitude, charsetName));
-                postMessage.append("&user_lon=");
-                postMessage.append(URLEncoder.encode("" + longitude, charsetName));
-    
-                SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-                int successCount = prefs.getInt(PREF_SUCCESS_COUNT, 0);
-                postMessage.append("&success_count=");
-                postMessage.append(URLEncoder.encode("" + successCount, charsetName));
-    
-                postMessage.append("&bitrate=");
-                postMessage.append(URLEncoder.encode(
-                    "" + mSoundFile.getAvgBitrateKbps(), charsetName));
-    
-                postMessage.append("&channels=");
-                postMessage.append(URLEncoder.encode(
-                    "" + mSoundFile.getChannels(), charsetName));
-    
-                String md5;
-                try {
-                    md5 = mSoundFile.computeMd5OfFirst10kB();
-                } catch (Exception e) {
-                    md5 = "";
-                }
-                postMessage.append("&md5=");
-                postMessage.append(URLEncoder.encode(md5, charsetName));
-    
-            } else {
-                // Error case
-    
-                postMessage.append("&err_type=");
-                postMessage.append(errType);
-                postMessage.append("&err_str=");
-                postMessage.append(URLEncoder.encode(getStackTrace(exception), charsetName));
-    
-                postMessage.append("&src_filename=");
-                postMessage.append(URLEncoder.encode(mFilename, charsetName));
-    
-                if (mDstFilename != null) {
-                    postMessage.append("&dst_filename=");
-                    postMessage.append(URLEncoder.encode(mDstFilename, charsetName));
-                }
-            }
-    
-            if (mSoundFile != null) {
-                double framesToSecs = 0.0;
-                double sampleRate = mSoundFile.getSampleRate();
-                if (sampleRate > 0.0) {
-                    framesToSecs = mSoundFile.getSamplesPerFrame()
-                        * 1.0 / sampleRate;
-                }
-    
-                double songLen = framesToSecs * mSoundFile.getNumFrames();
-                postMessage.append("&songlen=");
-                postMessage.append(URLEncoder.encode("" + songLen, charsetName));
-    
-                postMessage.append("&sound_type=");
-                postMessage.append(URLEncoder.encode(mSoundFile.getFiletype(), charsetName));
-    
-                double clipStart = mStartPos * framesToSecs;
-                double clipLen = (mEndPos - mStartPos) * framesToSecs;
-                postMessage.append("&clip_start=");
-                postMessage.append(URLEncoder.encode("" + clipStart, charsetName));
-                postMessage.append("&clip_len=");
-                postMessage.append(URLEncoder.encode("" + clipLen, charsetName));
-            }
-    
-            String fileKindName = FileSaveDialog.KindToName(mNewFileKind);
-            postMessage.append("&clip_kind=");
-            postMessage.append(URLEncoder.encode(fileKindName, charsetName));
-        } catch (UnsupportedEncodingException e) {
-            Log.e("Ringdroid", "Error: unsupported Charset: " + charsetName);
-            e.printStackTrace();
-        }
-
-        Log.i("Ringdroid", postMessage.toString());
-
-        try {
-            int TIMEOUT_MILLISEC = 10000;  // = 10 seconds
-            HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
-            HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
-            HttpClient client = new DefaultHttpClient(httpParams);
-
-            HttpPost request = new HttpPost(serverUrl);
-            request.setEntity(new ByteArrayEntity(postMessage.toString().getBytes("UTF8")));
-
-            Log.i("Ringdroid", "Executing request");
-            HttpResponse response = client.execute(request);
-
-            Log.i("Ringdroid", "Response: " + response.toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

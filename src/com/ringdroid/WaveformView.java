@@ -139,13 +139,13 @@ public class WaveformView extends View {
             context,
             new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 public boolean onScaleBegin(ScaleGestureDetector d) {
-                    Log.i("Ringdroid", "ScaleBegin " + d.getCurrentSpanX());
+                    Log.v("Ringdroid", "ScaleBegin " + d.getCurrentSpanX());
                     mInitialScaleSpan = Math.abs(d.getCurrentSpanX());
                     return true;
                 }
                 public boolean onScale(ScaleGestureDetector d) {
                     float scale = Math.abs(d.getCurrentSpanX());
-                    Log.i("Ringdroid", "Scale " + (scale - mInitialScaleSpan));
+                    Log.v("Ringdroid", "Scale " + (scale - mInitialScaleSpan));
                     if (scale - mInitialScaleSpan > 40) {
                         mListener.waveformZoomIn();
                         mInitialScaleSpan = scale;
@@ -157,7 +157,7 @@ public class WaveformView extends View {
                     return true;
                 }
                 public void onScaleEnd(ScaleGestureDetector d) {
-                    Log.i("Ringdroid", "ScaleEnd " + d.getCurrentSpanX());
+                    Log.v("Ringdroid", "ScaleEnd " + d.getCurrentSpanX());
                 }
             }
         );

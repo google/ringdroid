@@ -18,7 +18,7 @@
  *
  *                                Ringdroid
  *
- *                     http://code.google.com/p/ringdroid/
+ *                     https://github.com/google/ringdroid/
  *                           ringdroid@google.com
  *
  ***************************************************************************
@@ -35,7 +35,7 @@ Download the Android SDK and put the path to the sdk "tools" directory
 in your path.  Then run:
 
 rm build.xml
-rm -rf bin/ 
+rm -rf bin/
 android update project -n ringdroid -t android-14 -p .
 
 Then, to build:

@@ -261,7 +261,7 @@ public class RingdroidSelectActivity
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_about).setVisible(true);
         menu.findItem(R.id.action_record).setVisible(true);
-        menu.findItem(R.id.action_privacy).setVisible(true);
+        // TODO(nfaralli): do we really need a "Show all audio" item now?
         menu.findItem(R.id.action_show_all_audio).setVisible(true);
         menu.findItem(R.id.action_show_all_audio).setEnabled(!mShowAll);
         return true;
@@ -275,9 +275,6 @@ public class RingdroidSelectActivity
             return true;
         case R.id.action_record:
             onRecord();
-            return true;
-        case R.id.action_privacy:
-            showPrivacyDialog();
             return true;
         case R.id.action_show_all_audio:
             mShowAll = true;
@@ -327,17 +324,6 @@ public class RingdroidSelectActivity
             return chooseContactForRingtone(item);
         default:
             return super.onContextItemSelected(item);
-        }
-    }
-
-    private void showPrivacyDialog() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_EDIT, Uri.parse(""));
-            intent.putExtra("privacy", true);
-            intent.setClassName("com.ringdroid", "com.ringdroid.RingdroidEditActivity");
-            startActivityForResult(intent, REQUEST_CODE_EDIT);
-        } catch (Exception e) {
-            Log.e("Ringdroid", "Couldn't show privacy dialog");
         }
     }
 
@@ -572,6 +558,7 @@ public class RingdroidSelectActivity
     private static final int INTERNAL_CURSOR_ID = 0;
     private static final int EXTERNAL_CURSOR_ID = 1;
 
+    /* Implementation of LoaderCallbacks.onCreateLoader */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ArrayList<String> selectionArgsList = new ArrayList<String>();
@@ -633,6 +620,7 @@ public class RingdroidSelectActivity
                 );
     }
 
+    /* Implementation of LoaderCallbacks.onLoadFinished */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
@@ -652,6 +640,7 @@ public class RingdroidSelectActivity
         }
     }
 
+    /* Implementation of LoaderCallbacks.onLoaderReset */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // This is called when the last Cursor provided to onLoadFinished()
