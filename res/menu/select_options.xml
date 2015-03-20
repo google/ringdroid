@@ -15,10 +15,6 @@
           android:title="@string/menu_about"
           android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/action_privacy"
-          android:title="@string/menu_privacy"
-          android:showAsAction="ifRoom" />
-
     <item android:id="@+id/action_show_all_audio"
           android:title="@string/menu_show_all_audio"
           android:showAsAction="ifRoom" />

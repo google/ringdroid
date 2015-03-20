@@ -16,11 +16,12 @@
 
 package com.ringdroid;
 
+import java.util.ArrayList;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -28,9 +29,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FileSaveDialog extends Dialog {
 
@@ -100,13 +98,13 @@ public class FileSaveDialog extends Dialog {
         setFilenameEditBoxFromName(false);
 
         mTypeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-                public void onItemSelected(AdapterView parent,
+                public void onItemSelected(AdapterView<?> parent,
                                            View v,
                                            int position,
                                            long id) {
                     setFilenameEditBoxFromName(true);
                 }
-                public void onNothingSelected(AdapterView parent) {
+                public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
 

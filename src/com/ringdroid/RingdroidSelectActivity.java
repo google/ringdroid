@@ -16,10 +16,17 @@
 
 package com.ringdroid;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.media.RingtoneManager;
@@ -27,8 +34,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -36,33 +41,30 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ringdroid.soundfile.CheapSoundFile;
-
-import java.io.File;
-import java.util.ArrayList;
+import com.ringdroid.soundfile.SoundFile;
 
 /**
- * Main screen that shows up when you launch Ringdroid.  Handles selecting
+ * Main screen that shows up when you launch Ringdroid. Handles selecting
  * an audio file or using an intent to record a new one, and then
  * launches RingdroidEditActivity from here.
  */
 public class RingdroidSelectActivity
     extends ListActivity
+    implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private SearchView mFilter;
     private SimpleCursorAdapter mAdapter;
     private boolean mWasGetContentIntent;
     private boolean mShowAll;
+    private Cursor mInternalCursor;
+    private Cursor mExternalCursor;
 
     // Result codes
     private static final int REQUEST_CODE_EDIT = 1;
@@ -113,8 +115,7 @@ public class RingdroidSelectActivity
                     this,
                     // Use a template that displays a text view
                     R.layout.media_select_row,
-                    // Give the cursor to the list adatper
-                    createCursor(""),
+                    null,
                     // Map from database columns...
                     new String[] {
                         MediaStore.Audio.Media.ARTIST,
@@ -123,12 +124,13 @@ public class RingdroidSelectActivity
                         MediaStore.Audio.Media._ID,
                         MediaStore.Audio.Media._ID},
                         // To widget ids in the row layout...
-                        new int[] {
+                    new int[] {
                         R.id.row_artist,
                         R.id.row_album,
                         R.id.row_title,
                         R.id.row_icon,
-                        R.id.row_options_button});
+                        R.id.row_options_button},
+                    0);
 
             setListAdapter(mAdapter);
 
@@ -136,32 +138,35 @@ public class RingdroidSelectActivity
 
             // Normal click - open the editor
             getListView().setOnItemClickListener(new OnItemClickListener() {
-                public void onItemClick(AdapterView parent,
+                public void onItemClick(AdapterView<?> parent,
                         View view,
                         int position,
                         long id) {
                     startRingdroidEditor();
-                }                         
+                }
             });
+
+            mInternalCursor = null;
+            mExternalCursor = null;
+            getLoaderManager().initLoader(INTERNAL_CURSOR_ID,  null, this);
+            getLoaderManager().initLoader(EXTERNAL_CURSOR_ID,  null, this);
 
         } catch (SecurityException e) {
             // No permission to retrieve audio?
             Log.e("Ringdroid", e.toString());
 
-            // todo error 1
+            // TODO error 1
         } catch (IllegalArgumentException e) {
             // No permission to retrieve audio?
             Log.e("Ringdroid", e.toString());
 
-            // todo error 2
+            // TODO error 2
         }
 
         mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            public boolean setViewValue(View view,
-                    Cursor cursor,
-                    int columnIndex) {
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (view.getId() == R.id.row_options_button){
-                    // Get the arrow image view and set the onClickListener to open the context menu.
+                    // Get the arrow ImageView and set the onClickListener to open the context menu.
                     ImageView iv = (ImageView)view;
                     iv.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
@@ -207,7 +212,7 @@ public class RingdroidSelectActivity
 
         String filename = cursor.getString(cursor.getColumnIndexOrThrow(
                 MediaStore.Audio.Media.DATA));
-        if (!CheapSoundFile.isFilenameSupported(filename)) {
+        if (!SoundFile.isFilenameSupported(filename)) {
             ((View) view.getParent()).setBackgroundColor(
                     getResources().getColor(R.drawable.type_bkgnd_unsupported));
         }
@@ -226,29 +231,29 @@ public class RingdroidSelectActivity
         }
 
         setResult(RESULT_OK, dataIntent);
-        finish();
+        //finish();  // TODO(nfaralli): why would we want to quit the app here?
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-	inflater.inflate(R.menu.select_options, menu);
+        inflater.inflate(R.menu.select_options, menu);
 
         mFilter = (SearchView) menu.findItem(R.id.action_search_filter).getActionView();
         if (mFilter != null) {
             mFilter.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-		public boolean onQueryTextChange(String newText) {
-		    refreshListView();
+                public boolean onQueryTextChange(String newText) {
+                    refreshListView();
                     return true;
-		}
-		public boolean onQueryTextSubmit(String query) {
-		    refreshListView();
+                }
+                public boolean onQueryTextSubmit(String query) {
+                    refreshListView();
                     return true;
-		}
-	    });
+                }
+            });
         }
 
-	return true;
+        return true;
     }
 
     @Override
@@ -256,7 +261,7 @@ public class RingdroidSelectActivity
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_about).setVisible(true);
         menu.findItem(R.id.action_record).setVisible(true);
-        menu.findItem(R.id.action_privacy).setVisible(true);
+        // TODO(nfaralli): do we really need a "Show all audio" item now?
         menu.findItem(R.id.action_show_all_audio).setVisible(true);
         menu.findItem(R.id.action_show_all_audio).setEnabled(!mShowAll);
         return true;
@@ -271,9 +276,6 @@ public class RingdroidSelectActivity
         case R.id.action_record:
             onRecord();
             return true;
-	case R.id.action_privacy:
-	    showPrivacyDialog();
-	    return true;
         case R.id.action_show_all_audio:
             mShowAll = true;
             refreshListView();
@@ -290,8 +292,7 @@ public class RingdroidSelectActivity
         super.onCreateContextMenu(menu, v, menuInfo);
 
         Cursor c = mAdapter.getCursor();
-        String title = c.getString(c.getColumnIndexOrThrow(
-                MediaStore.Audio.Media.TITLE));
+        String title = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
 
         menu.setHeaderTitle(title);
 
@@ -299,20 +300,16 @@ public class RingdroidSelectActivity
         menu.add(0, CMD_DELETE, 0, R.string.context_menu_delete);
 
         // Add items to the context menu item based on file type
-        if (0 != c.getInt(c.getColumnIndexOrThrow(
-                MediaStore.Audio.Media.IS_RINGTONE))) {
+        if (0 != c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_RINGTONE))) {
             menu.add(0, CMD_SET_AS_DEFAULT, 0, R.string.context_menu_default_ringtone);
             menu.add(0, CMD_SET_AS_CONTACT, 0, R.string.context_menu_contact);
-        } else if (0 != c.getInt(c.getColumnIndexOrThrow(
-                MediaStore.Audio.Media.IS_NOTIFICATION))) {
+        } else if (0 != c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_NOTIFICATION))) {
             menu.add(0, CMD_SET_AS_DEFAULT, 0, R.string.context_menu_default_notification);
-	}
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info =
-            (AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
         case CMD_EDIT:
             startRingdroidEditor();
@@ -330,22 +327,10 @@ public class RingdroidSelectActivity
         }
     }
 
-    private void showPrivacyDialog() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_EDIT, Uri.parse(""));
-            intent.putExtra("privacy", true);
-            intent.setClassName("com.ringdroid",
-				"com.ringdroid.RingdroidEditActivity");
-            startActivityForResult(intent, REQUEST_CODE_EDIT);
-        } catch (Exception e) {
-            Log.e("Ringdroid", "Couldn't show privacy dialog");
-        }
-    }
-
     private void setAsDefaultRingtoneOrNotification(){
         Cursor c = mAdapter.getCursor();
 
-        // If the item is a ringtone then set the default ringtone, 
+        // If the item is a ringtone then set the default ringtone,
         // otherwise it has to be a notification so set the default notification sound
         if (0 != c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_RINGTONE))){
             RingtoneManager.setActualDefaultRingtoneUri(
@@ -370,14 +355,33 @@ public class RingdroidSelectActivity
         }
     }
 
+    private int getUriIndex(Cursor c) {
+        int uriIndex;
+        String[] columnNames = {
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI.toString(),
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString()
+        };
+
+        for (String columnName : Arrays.asList(columnNames)) {
+            uriIndex = c.getColumnIndex(columnName);
+            if (uriIndex >= 0) {
+                return uriIndex;
+            }
+            // On some phones and/or Android versions, the column name includes the double quotes.
+            uriIndex = c.getColumnIndex("\"" + columnName + "\"");
+            if (uriIndex >= 0) {
+                return uriIndex;
+            }
+        }
+        return -1;
+    }
+
     private Uri getUri(){
         //Get the uri of the item that is in the row
         Cursor c = mAdapter.getCursor();
-        int uriIndex = c.getColumnIndex(
-                "\"" + MediaStore.Audio.Media.INTERNAL_CONTENT_URI + "\"");
+        int uriIndex = getUriIndex(c);
         if (uriIndex == -1) {
-            uriIndex = c.getColumnIndex(
-                    "\"" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "\"");
+            return null;
         }
         String itemUri = c.getString(uriIndex) + "/" +
         c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
@@ -402,8 +406,6 @@ public class RingdroidSelectActivity
         // See if the selected list item was created by Ringdroid to
         // determine which alert message to show
         Cursor c = mAdapter.getCursor();
-        int artistIndex = c.getColumnIndexOrThrow(
-                MediaStore.Audio.Media.ARTIST);
         String artist = c.getString(c.getColumnIndexOrThrow(
                 MediaStore.Audio.Media.ARTIST));
         CharSequence ringdroidArtist =
@@ -462,12 +464,7 @@ public class RingdroidSelectActivity
         int dataIndex = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
         String filename = c.getString(dataIndex);
 
-        int uriIndex = c.getColumnIndex(
-                "\"" + MediaStore.Audio.Media.INTERNAL_CONTENT_URI + "\"");
-        if (uriIndex == -1) {
-            uriIndex = c.getColumnIndex(
-                    "\"" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "\"");
-        }
+        int uriIndex = getUriIndex(c);
         if (uriIndex == -1) {
             showFinalAlert(getResources().getText(R.string.delete_failed));
             return;
@@ -500,13 +497,9 @@ public class RingdroidSelectActivity
 
     private void onRecord() {
         try {
-            Intent intent = new Intent(Intent.ACTION_EDIT,
-                    Uri.parse("record"));
-            intent.putExtra("was_get_content_intent",
-                    mWasGetContentIntent);
-            intent.setClassName(
-                    "com.ringdroid",
-            "com.ringdroid.RingdroidEditActivity");
+            Intent intent = new Intent(Intent.ACTION_EDIT, Uri.parse("record"));
+            intent.putExtra("was_get_content_intent", mWasGetContentIntent);
+            intent.setClassName( "com.ringdroid", "com.ringdroid.RingdroidEditActivity");
             startActivityForResult(intent, REQUEST_CODE_EDIT);
         } catch (Exception e) {
             Log.e("Ringdroid", "Couldn't start editor");
@@ -518,86 +511,22 @@ public class RingdroidSelectActivity
         int dataIndex = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
         String filename = c.getString(dataIndex);
         try {
-            Intent intent = new Intent(Intent.ACTION_EDIT,
-                    Uri.parse(filename));
-            intent.putExtra("was_get_content_intent",
-                    mWasGetContentIntent);
-            intent.setClassName(
-                    "com.ringdroid",
-            "com.ringdroid.RingdroidEditActivity");
+            Intent intent = new Intent(Intent.ACTION_EDIT, Uri.parse(filename));
+            intent.putExtra("was_get_content_intent", mWasGetContentIntent);
+            intent.setClassName( "com.ringdroid", "com.ringdroid.RingdroidEditActivity");
             startActivityForResult(intent, REQUEST_CODE_EDIT);
         } catch (Exception e) {
             Log.e("Ringdroid", "Couldn't start editor");
         }
     }
 
-    private Cursor getInternalAudioCursor(String selection,
-            String[] selectionArgs) {
-        return managedQuery(
-                MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                INTERNAL_COLUMNS,
-                selection,
-                selectionArgs,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-    }
-
-    private Cursor getExternalAudioCursor(String selection,
-            String[] selectionArgs) {
-        return managedQuery(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                EXTERNAL_COLUMNS,
-                selection,
-                selectionArgs,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-    }
-
-    Cursor createCursor(String filter) {
-        ArrayList<String> args = new ArrayList<String>();
-        String selection;
-
-        if (mShowAll) {
-            selection = "(_DATA LIKE ?)";
-            args.add("%");
-        } else {
-            selection = "(";
-            for (String extension : CheapSoundFile.getSupportedExtensions()) {
-                args.add("%." + extension);
-                if (selection.length() > 1) {
-                    selection += " OR ";
-                }
-                selection += "(_DATA LIKE ?)";
-            }
-            selection += ")";
-
-            selection = "(" + selection + ") AND (_DATA NOT LIKE ?)";
-            args.add("%espeak-data/scratch%");
-        }
-
-        if (filter != null && filter.length() > 0) {
-            filter = "%" + filter + "%";
-            selection =
-                "(" + selection + " AND " +
-                "((TITLE LIKE ?) OR (ARTIST LIKE ?) OR (ALBUM LIKE ?)))";
-            args.add(filter);
-            args.add(filter);
-            args.add(filter);
-        }
-
-        String[] argsArray = args.toArray(new String[args.size()]);
-
-        Cursor external = getExternalAudioCursor(selection, argsArray);
-        Cursor internal = getInternalAudioCursor(selection, argsArray);
-
-        Cursor c = new MergeCursor(new Cursor[] {
-                getExternalAudioCursor(selection, argsArray),
-                getInternalAudioCursor(selection, argsArray)});
-        startManagingCursor(c);
-        return c;
-    }
-
     private void refreshListView() {
-        String filterStr = mFilter.getQuery().toString();
-        mAdapter.changeCursor(createCursor(filterStr));
+        mInternalCursor = null;
+        mExternalCursor = null;
+        Bundle args = new Bundle();
+        args.putString("filter", mFilter.getQuery().toString());
+        getLoaderManager().restartLoader(INTERNAL_CURSOR_ID,  args, this);
+        getLoaderManager().restartLoader(EXTERNAL_CURSOR_ID,  args, this);
     }
 
     private static final String[] INTERNAL_COLUMNS = new String[] {
@@ -625,4 +554,98 @@ public class RingdroidSelectActivity
         MediaStore.Audio.Media.IS_MUSIC,
         "\"" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "\""
     };
+
+    private static final int INTERNAL_CURSOR_ID = 0;
+    private static final int EXTERNAL_CURSOR_ID = 1;
+
+    /* Implementation of LoaderCallbacks.onCreateLoader */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        ArrayList<String> selectionArgsList = new ArrayList<String>();
+        String selection;
+        Uri baseUri;
+        String[] projection;
+
+        switch (id) {
+        case INTERNAL_CURSOR_ID:
+            baseUri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
+            projection = INTERNAL_COLUMNS;
+            break;
+        case EXTERNAL_CURSOR_ID:
+            baseUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            projection = EXTERNAL_COLUMNS;
+            break;
+        default:
+            return null;
+        }
+
+        if (mShowAll) {
+            selection = "(_DATA LIKE ?)";
+            selectionArgsList.add("%");
+        } else {
+            selection = "(";
+            for (String extension : SoundFile.getSupportedExtensions()) {
+                selectionArgsList.add("%." + extension);
+                if (selection.length() > 1) {
+                    selection += " OR ";
+                }
+                selection += "(_DATA LIKE ?)";
+            }
+            selection += ")";
+
+            selection = "(" + selection + ") AND (_DATA NOT LIKE ?)";
+            selectionArgsList.add("%espeak-data/scratch%");
+        }
+
+        String filter = args != null ? args.getString("filter") : null;
+        if (filter != null && filter.length() > 0) {
+            filter = "%" + filter + "%";
+            selection =
+                "(" + selection + " AND " +
+                "((TITLE LIKE ?) OR (ARTIST LIKE ?) OR (ALBUM LIKE ?)))";
+            selectionArgsList.add(filter);
+            selectionArgsList.add(filter);
+            selectionArgsList.add(filter);
+        }
+
+        String[] selectionArgs =
+                selectionArgsList.toArray(new String[selectionArgsList.size()]);
+        return new CursorLoader(
+                this,
+                baseUri,
+                projection,
+                selection,
+                selectionArgs,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER
+                );
+    }
+
+    /* Implementation of LoaderCallbacks.onLoadFinished */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()) {
+        case INTERNAL_CURSOR_ID:
+            mInternalCursor = data;
+            break;
+        case EXTERNAL_CURSOR_ID:
+            mExternalCursor = data;
+            break;
+        default:
+            return;
+        }
+        // TODO: should I use a mutex/synchronized block here?
+        if (mInternalCursor != null && mExternalCursor != null) {
+            Cursor mergeCursor = new MergeCursor(new Cursor[] {mInternalCursor, mExternalCursor});
+            mAdapter.swapCursor(mergeCursor);
+        }
+    }
+
+    /* Implementation of LoaderCallbacks.onLoaderReset */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // This is called when the last Cursor provided to onLoadFinished()
+        // above is about to be closed.  We need to make sure we are no
+        // longer using it.
+        mAdapter.swapCursor(null);
+    }
 }

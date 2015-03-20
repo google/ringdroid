@@ -16,12 +16,12 @@
 
 package com.ringdroid;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-
-import java.util.HashMap;
 
 public class SongMetadataReader {
     public Uri GENRES_URI = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
@@ -44,22 +44,21 @@ public class SongMetadataReader {
     }
 
     private void ReadMetadata() {
-        String GENRE_ID = MediaStore.Audio.Genres._ID;
-        String GENRE_NAME = MediaStore.Audio.Genres.NAME;
-        String AUDIO_ID = MediaStore.Audio.Media._ID;
-
         // Get a map from genre ids to names
         HashMap<String, String> genreIdMap = new HashMap<String, String>();
-        Cursor c = mActivity.managedQuery(
+        Cursor c = mActivity.getContentResolver().query(
             GENRES_URI,
-            new String[] { GENRE_ID, GENRE_NAME },
+            new String[] {
+                    MediaStore.Audio.Genres._ID,
+                    MediaStore.Audio.Genres.NAME },
             null, null, null);
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             genreIdMap.put(c.getString(0), c.getString(1));
         }
+        c.close();
         mGenre = "";
         for (String genreId : genreIdMap.keySet()) {
-            c = mActivity.managedQuery(
+            c = mActivity.getContentResolver().query(
                 makeGenreUri(genreId),
                 new String[] { MediaStore.Audio.Media.DATA },
                 MediaStore.Audio.Media.DATA + " LIKE \"" + mFilename + "\"",
@@ -68,11 +67,12 @@ public class SongMetadataReader {
                 mGenre = genreIdMap.get(genreId);
                 break;
             }
+            c.close();
             c = null;
         }
 
         Uri uri = MediaStore.Audio.Media.getContentUriForPath(mFilename);
-        c = mActivity.managedQuery(
+        c = mActivity.getContentResolver().query(
             uri,
             new String[] {
                 MediaStore.Audio.Media._ID,
@@ -98,6 +98,7 @@ public class SongMetadataReader {
         mArtist = getStringFromColumn(c, MediaStore.Audio.Media.ARTIST);
         mAlbum = getStringFromColumn(c, MediaStore.Audio.Media.ALBUM);
         mYear = getIntegerFromColumn(c, MediaStore.Audio.Media.YEAR);
+        c.close();
     }
 
     private Uri makeGenreUri(String genreId) {

@@ -26,7 +26,7 @@
         android:textColor="#ffffff"
         android:textSize="14sp"
         android:singleLine="true"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1"/>
 

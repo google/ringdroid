@@ -54,9 +54,12 @@
     <string name="choose_contact_ringtone_button">連絡先着信音に設定する</string>
     <string name="do_nothing_with_ringtone_button">閉じる</string>
 
-    <!-- Progress dialog while loading a sound -->
+    <!-- Progress dialog text for loading, recording, or saving... -->
     <string name="progress_dialog_loading">ロード中…</string>
-    <string name="progress_dialog_saving">Saving...</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Saving…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--
      Menu items
@@ -129,8 +132,7 @@
     <string name="default_ringtone_success_message">通常の着信音に設定しました</string>
     <string name="play_error">メディアファイルを再生できません</string>
     <string name="no_unique_filename">ユニーク</string>
-    <string name="delete_tmp_error">一時ファイルの削除に失敗しました</string>
-    <string name="record_error">サウンド レコーダーを起動中にエラーが発生しました</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">ファイルが容量が小さすぎるため保存できません。もう少し長く録音してみてください。</string>
     <string name="write_error">ファイル書き込みエラー</string>
     <string name="read_error">Error reading file</string>
@@ -146,21 +148,10 @@
     <string name="success_contact_ringtone">この連絡先の着信音に設定しました:</string>
 
     <!--
-     Sending information to server
-     -->
-    <string name="server_title">使用情報をお知らせください</string>
-    <string name="server_prompt">あなたが作成した着信音や効果音についての情報を統計するために、 Ringdroid.com に送信してもよろしいですか？個人が特定される情報は送信されません。</string>
-    <string name="server_yes">了承して送信する</string>
-    <string name="server_later">後で通知</string>
-    <string name="server_never">送信しない</string>
-
-    <string name="error_server_prompt">Okay to send anonymous data about this error to Ringdroid.com so we can try to fix this problem in the future?</string>
-
-    <!--
      About
      -->
 
     <string name="about_title">Ringdroid について</string>
-    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, AAC, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 2.5\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport and evangelizing: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Use Ringdroid to edit MP3, WAV, AAC, and AMR audio files and create ringtones, alarms, and notifications from them.\n\nTip: copy audio files to your SD card using a USB cable, or get MP3s using the Amazon MP3 application.\n\nTip: long-press on an audio file from the main screen to delete it.  More below...\n\nTip: tap anywhere on the waveform to start playing at that position.\n\nTip: while playing, tap the word Start or End to quickly set the start and end markers to the current playback time.\n\nTip: Use the jog wheel for more precise adjustments.\n\nVersion 2.5\n\nDeveloper: Dominic Mazzoni\nGraphics: Joseph Wain\nSupport and evangelizing: Eugene Koh\n\nRingdroid is free software, distributed under the Apache 2.0 license.  Source code is on github.com/google/ringdroid\n]]></string>
 
 </resources>

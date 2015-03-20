@@ -41,11 +41,13 @@
        android:text="@string/ringtone_name_label"
        android:textColor="#ffffffff"
        android:textSize="12sp"
+       android:labelFor="@+id/filename"
        android:layout_marginLeft="15dip"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content" />
 
     <EditText android:id="@+id/filename"
+       android:inputType="text"
        android:layout_marginLeft="10dip"
        android:layout_width="280sp" 
        android:layout_height="wrap_content" />

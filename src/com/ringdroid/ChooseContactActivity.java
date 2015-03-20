@@ -16,41 +16,25 @@
 
 package com.ringdroid;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.LoaderManager;
 import android.content.ContentValues;
-import android.content.ContentResolver;
-import android.content.DialogInterface;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.database.MergeCursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Contacts;
-import android.provider.Contacts.People;
+import android.provider.ContactsContract.Contacts;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * After a ringtone has been saved, this activity lets you pick a contact
@@ -58,7 +42,7 @@ import java.util.Arrays;
  */
 public class ChooseContactActivity
     extends ListActivity
-    implements TextWatcher
+    implements TextWatcher, LoaderManager.LoaderCallbacks<Cursor>
 {
     private TextView mFilter;
     private SimpleCursorAdapter mAdapter;
@@ -87,18 +71,19 @@ public class ChooseContactActivity
                 this,
                 // Use a template that displays a text view
                 R.layout.contact_row,
-                // Give the cursor to the list adatper
-                createCursor(""),
+                // Set an empty cursor right now. Will be set in onLoadFinished()
+                null,
                 // Map from database columns...
                 new String[] {
-                    People.CUSTOM_RINGTONE,
-                    People.STARRED,
-                    People.DISPLAY_NAME },
+                    Contacts.CUSTOM_RINGTONE,
+                    Contacts.STARRED,
+                    Contacts.DISPLAY_NAME },
                 // To widget ids in the row layout...
                 new int[] {
                     R.id.row_ringtone,
                     R.id.row_starred,
-                    R.id.row_display_name });
+                    R.id.row_display_name },
+                0);
 
             mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                     public boolean setViewValue(View view,
@@ -106,7 +91,7 @@ public class ChooseContactActivity
                                                 int columnIndex) {
                         String name = cursor.getColumnName(columnIndex);
                         String value = cursor.getString(columnIndex);
-                        if (name.equals(People.CUSTOM_RINGTONE)) {
+                        if (name.equals(Contacts.CUSTOM_RINGTONE)) {
                             if (value != null && value.length() > 0) {
                                 view.setVisibility(View.VISIBLE);
                             } else  {
@@ -114,7 +99,7 @@ public class ChooseContactActivity
                             }
                             return true;
                         }
-                        if (name.equals(People.STARRED)) {
+                        if (name.equals(Contacts.STARRED)) {
                             if (value != null && value.equals("1")) {
                                 view.setVisibility(View.VISIBLE);
                             } else  {
@@ -130,14 +115,18 @@ public class ChooseContactActivity
             setListAdapter(mAdapter);
 
             // On click, assign ringtone to contact
-            getListView().setOnItemClickListener(new OnItemClickListener() {
-                    public void onItemClick(AdapterView parent,
+            getListView().setOnItemClickListener(
+                new OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent,
                                             View view,
                                             int position,
                                             long id) {
                         assignRingtoneToContact();
                     }
-                });
+                }
+            );
+
+            getLoaderManager().initLoader(0,  null, this);
 
         } catch (SecurityException e) {
             // No permission to retrieve contacts?
@@ -150,31 +139,18 @@ public class ChooseContactActivity
         }
     }
 
-    private boolean isEclairOrLater() {
-	return Build.VERSION.SDK_INT >= 5;
-    }
-
-    private Uri getContactContentUri() {
-	if (isEclairOrLater()) {
-	    // ContactsContract.Contacts.CONTENT_URI
-	    return Uri.parse("content://com.android.contacts/contacts");
-	} else {
-	    return Contacts.People.CONTENT_URI;
-	}
-    }
-
     private void assignRingtoneToContact() {
         Cursor c = mAdapter.getCursor();
-        int dataIndex = c.getColumnIndexOrThrow(People._ID);
+        int dataIndex = c.getColumnIndexOrThrow(Contacts._ID);
         String contactId = c.getString(dataIndex);
 
-        dataIndex = c.getColumnIndexOrThrow(People.DISPLAY_NAME);
+        dataIndex = c.getColumnIndexOrThrow(Contacts.DISPLAY_NAME);
         String displayName = c.getString(dataIndex);
 
-        Uri uri = Uri.withAppendedPath(getContactContentUri(), contactId);
+        Uri uri = Uri.withAppendedPath(Contacts.CONTENT_URI, contactId);
 
         ContentValues values = new ContentValues();
-        values.put(People.CUSTOM_RINGTONE, mRingtoneUri.toString());
+        values.put(Contacts.CUSTOM_RINGTONE, mRingtoneUri.toString());
         getContentResolver().update(uri, values, null, null);
 
         String message =
@@ -188,44 +164,63 @@ public class ChooseContactActivity
         return;
     }
 
-    private Cursor createCursor(String filter) {
-        String selection;
+    /* Implementation of TextWatcher.beforeTextChanged */
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    /* Implementation of TextWatcher.onTextChanged */
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    /* Implementation of TextWatcher.afterTextChanged */
+    public void afterTextChanged(Editable s) {
+        //String filterStr = mFilter.getText().toString();
+        //mAdapter.changeCursor(createCursor(filterStr));
+        Bundle args = new Bundle();
+        args.putString("filter", mFilter.getText().toString());
+        getLoaderManager().restartLoader(0,  args, this);
+    }
+
+    /* Implementation of LoaderCallbacks.onCreateLoader */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection = null;
+        String filter = args != null ? args.getString("filter") : null;
         if (filter != null && filter.length() > 0) {
             selection = "(DISPLAY_NAME LIKE \"%" + filter + "%\")";
-        } else {
-            selection = null;
         }
-        Cursor cursor = managedQuery(
-            getContactContentUri(),
-            new String[] {
-                People._ID,
-                People.CUSTOM_RINGTONE,
-                People.DISPLAY_NAME,
-                People.LAST_TIME_CONTACTED,
-                People.STARRED,
-                People.TIMES_CONTACTED },
-            selection,
-            null,
-            "STARRED DESC, " +
-	    "TIMES_CONTACTED DESC, " +
-	    "LAST_TIME_CONTACTED DESC, " +
-	    "DISPLAY_NAME ASC");
-
-        Log.i("Ringdroid", cursor.getCount() + " contacts");
-
-        return cursor;
+        return new CursorLoader(
+                this,
+                Contacts.CONTENT_URI,
+                new String[] {
+                        Contacts._ID,
+                        Contacts.CUSTOM_RINGTONE,
+                        Contacts.DISPLAY_NAME,
+                        Contacts.LAST_TIME_CONTACTED,
+                        Contacts.STARRED,
+                        Contacts.TIMES_CONTACTED },
+                selection,
+                null,
+                "STARRED DESC, " +
+                "TIMES_CONTACTED DESC, " +
+                "LAST_TIME_CONTACTED DESC, " +
+                "DISPLAY_NAME ASC"
+                );
     }
 
-    public void beforeTextChanged(CharSequence s, int start,
-                                  int count, int after) {
+    /* Implementation of LoaderCallbacks.onLoadFinished */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.v("Ringdroid", data.getCount() + " contacts");
+        mAdapter.swapCursor(data);
     }
 
-    public void onTextChanged(CharSequence s,
-                              int start, int before, int count) {
-    }
-
-    public void afterTextChanged(Editable s) {
-        String filterStr = mFilter.getText().toString();
-        mAdapter.changeCursor(createCursor(filterStr));
+    /* Implementation of LoaderCallbacks.onLoaderReset */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // This is called when the last Cursor provided to onLoadFinished()
+        // above is about to be closed.  We need to make sure we are no
+        // longer using it.
+        mAdapter.swapCursor(null);
     }
 }

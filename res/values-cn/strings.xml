@@ -41,9 +41,12 @@
   <string name="make_default_ringtone_button">设为默认</string>
   <string name="choose_contact_ringtone_button">分配到联系人</string>
   <string name="do_nothing_with_ringtone_button">关闭</string>
-  <!-- Progress dialog text for loading or saving... -->
-  <string name="progress_dialog_loading">载入中...</string>
-  <string name="progress_dialog_saving">保持中...</string>
+  <!-- Progress dialog text for loading, recording, or saving... -->
+  <string name="progress_dialog_loading">载入中…</string>
+  <string name="progress_dialog_recording">Recording…</string>
+  <string name="progress_dialog_saving">保持中…</string>
+  <string name="progress_dialog_cancel">Cancel</string>
+  <string name="progress_dialog_stop">Stop</string>
   <!--
      Menu items
      -->
@@ -98,8 +101,7 @@
   <string name="default_ringtone_success_message">默认铃声已更改</string>
   <string name="play_error">无法播放此媒体文件</string>
   <string name="no_unique_filename">无法找到专属文件名</string>
-  <string name="delete_tmp_error">删除临时文件时出错</string>
-  <string name="record_error">启动录音机时出错</string>
+  <string name="record_error">Error recording audio</string>
   <string name="too_small_error">无法保存过小的文件，请尝试使其更长。</string>
   <string name="write_error">写文件时出错</string>
   <string name="read_error">读文件时出错</string>
@@ -112,17 +114,8 @@
   <string name="choose_contact_title">分配铃声到哪个联系人？</string>
   <string name="success_contact_ringtone">铃声成功分配到：</string>
   <!--
-     Sending information to server
-     -->
-  <string name="server_title">分享您的数据！</string>
-  <string name="server_prompt">可以向Ringdroid.com发送您创建的铃声及其他声音的数据，允许我们收集统计资料吗？</string>
-  <string name="server_yes">可发送</string>
-  <string name="server_later">以后询问</string>
-  <string name="server_never">从不</string>
-  <string name="error_server_prompt">可以向Ringdroid.com发送有关此错误的匿名数据，我们将努力修复此问题。</string>
-  <!--
      About
      -->
   <string name="about_title">关于Ringdroid</string>
-  <string name="about_text"><![CDATA[使用Ringdroid来编辑MP3、WAV、AAC和AMR音频文件，创建铃声，闹铃及通知。\n\n贴士：使用USB缆线将音频文件复制到您的SD卡，或通过Amazon MP3程序来获取MP3。\n\n贴士：长按主屏幕上的一个音频文件可以删除此文件。  更多如下...\n\n贴士：轻触波形上的任意位置来使播放由此位置开始。\n\n贴士：播放时，您可以轻触[播放]或[结束]文字来快速为当前回放时间标记开始和结束位置。\n\n贴士：精调请使用三维方向式操作按键。\n\n2.5版\n\n开发: Dominic Mazzoni\n图形：Joseph Wain\n支持及宣传：Eugene Koh\n\nRingdroid是免费软件，在Apache 2.0许可下分发。源代码位于code.google.com\n]]></string>
+  <string name="about_text"><![CDATA[使用Ringdroid来编辑MP3、WAV、AAC和AMR音频文件，创建铃声，闹铃及通知。\n\n贴士：使用USB缆线将音频文件复制到您的SD卡，或通过Amazon MP3程序来获取MP3。\n\n贴士：长按主屏幕上的一个音频文件可以删除此文件。  更多如下...\n\n贴士：轻触波形上的任意位置来使播放由此位置开始。\n\n贴士：播放时，您可以轻触[播放]或[结束]文字来快速为当前回放时间标记开始和结束位置。\n\n贴士：精调请使用三维方向式操作按键。\n\n2.5版\n\n开发: Dominic Mazzoni\n图形：Joseph Wain\n支持及宣传：Eugene Koh\n\nRingdroid是免费软件，在Apache 2.0许可下分发。源代码位于github.com/google/ringdroid\n]]></string>
 </resources>

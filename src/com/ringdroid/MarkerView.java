@@ -18,13 +18,10 @@ package com.ringdroid;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 
 /**
@@ -53,8 +50,6 @@ public class MarkerView extends ImageView {
 
     private int mVelocity;
     private MarkerListener mListener;
-    private float mTouchStart;
-    private int mTouchLast;
 
     public MarkerView(Context context, AttributeSet attrs) {
         super(context, attrs);

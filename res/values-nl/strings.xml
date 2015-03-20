@@ -54,9 +54,12 @@
     <string name="choose_contact_ringtone_button">Toewijzen aan contact</string>
     <string name="do_nothing_with_ringtone_button">Sluiten</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Laden...</string>
-    <string name="progress_dialog_saving">Opslaan...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Laden…</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Opslaan…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--
      Menu items
@@ -128,8 +131,7 @@
     <string name="default_ringtone_success_message">Standaardbeltoon gewijzigd</string>
     <string name="play_error">Kan dit mediabestand niet afspelen</string>
     <string name="no_unique_filename">Kan unieke bestandsnaam niet vinden</string>
-    <string name="delete_tmp_error">Fout bij verwijderen van tijdelijk bestand</string>
-    <string name="record_error">Fout bij starten van geluidsrecorder</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Kan een bestand dat zo kort is, niet opslaan. Maak het langer.</string>
     <string name="write_error">Fout bij schrijven van bestand</string>
     <string name="read_error">Fout bij lezen van bestand</string>
@@ -147,21 +149,10 @@
     <string name="success_contact_ringtone">Beltoon toegewezen aan:</string>
 
     <!--
-     Sending information to server
-     -->
-    <string name="server_title">Deel uw gegevens.</string>
-    <string name="server_prompt">Mogen anonieme gegevens over de beltonen en andere geluiden die u maakt, worden verzonden naar Ringdroid.com zodat we statistieken kunnen verzamelen?</string>
-    <string name="server_yes">Verzenden is toegestaan</string>
-    <string name="server_later">Later vragen</string>
-    <string name="server_never">Nooit</string>
-
-    <string name="error_server_prompt">Mogen anonieme gegevens over deze fout worden verzonden naar Ringdroid.com zodat we dit probleem kunnen oplossen?</string>
-
-    <!--
      About
      -->
 
     <string name="about_title">Over Ringdroid</string>
-    <string name="about_text"><![CDATA[Met Ringdroid kunt u MP3-, WAV-, AAC- en AMR-audiobestanden bewerken en beltonen, alarmen en meldingen van deze bestanden maken.\n\nTip: kopieer audiobestanden naar uw SD-kaart met een USB-kabel of download MP3\'s met de Amazon MP3-toepassing.\n\nTip: druk lang op een audiobestand in het hoofdscherm om het te verwijderen. Meer hieronder...\n\nTip: tik ergens op de golfvorm om het afspelen te starten vanaf die positie.\n\nTip: tik tijdens het afspelen op het woord Start of Eind om snel de start- en eindmarkeringen in te stellen op de huidige afspeeltijd.\n\nTip: gebruik de draaiknop voor nauwkeurigere aanpassingen.\n\nVersie 2.5\n\nOntwikkelaar: Dominic Mazzoni\nGraphics: Joseph Wain\nOndersteuning en evangelisatie: Eugene Koh\n\nRingdroid is gratis software, gedistribueerd onder de Apache 2.0-licentie. Broncode is beschikbaar op code.google.com\n]]></string>
+    <string name="about_text"><![CDATA[Met Ringdroid kunt u MP3-, WAV-, AAC- en AMR-audiobestanden bewerken en beltonen, alarmen en meldingen van deze bestanden maken.\n\nTip: kopieer audiobestanden naar uw SD-kaart met een USB-kabel of download MP3\'s met de Amazon MP3-toepassing.\n\nTip: druk lang op een audiobestand in het hoofdscherm om het te verwijderen. Meer hieronder...\n\nTip: tik ergens op de golfvorm om het afspelen te starten vanaf die positie.\n\nTip: tik tijdens het afspelen op het woord Start of Eind om snel de start- en eindmarkeringen in te stellen op de huidige afspeeltijd.\n\nTip: gebruik de draaiknop voor nauwkeurigere aanpassingen.\n\nVersie 2.5\n\nOntwikkelaar: Dominic Mazzoni\nGraphics: Joseph Wain\nOndersteuning en evangelisatie: Eugene Koh\n\nRingdroid is gratis software, gedistribueerd onder de Apache 2.0-licentie. Broncode is beschikbaar op github.com/google/ringdroid\n]]></string>
 
 </resources>

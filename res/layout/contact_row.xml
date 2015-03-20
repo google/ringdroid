@@ -44,7 +44,7 @@
        android:layout_width="wrap_content"
        android:layout_height="fill_parent" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -59,7 +59,7 @@
            android:shadowDx="1"
            android:shadowDy="1"
            android:shadowRadius="1"
-           android:layout_width="wrap_content"
+           android:layout_width="0dip"
            android:layout_height="fill_parent"
            android:layout_weight="1"/>
 

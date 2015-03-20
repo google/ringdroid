@@ -33,9 +33,12 @@
     <string name="choose_contact_ringtone_button">Assegna a contatto</string>
     <string name="do_nothing_with_ringtone_button">Chiudi</string>
 
-    <!-- Progress dialog text for loading or saving... -->
-    <string name="progress_dialog_loading">Caricamento...</string>
-    <string name="progress_dialog_saving">Salvataggio...</string>
+    <!-- Progress dialog text for loading, recording, or saving... -->
+    <string name="progress_dialog_loading">Caricamento…</string>
+    <string name="progress_dialog_recording">Recording…</string>
+    <string name="progress_dialog_saving">Salvataggio…</string>
+    <string name="progress_dialog_cancel">Cancel</string>
+    <string name="progress_dialog_stop">Stop</string>
 
     <!--      Menu items      -->
 
@@ -97,8 +100,7 @@
     <string name="default_ringtone_success_message">Suoneria predefinita cambiata</string>
     <string name="play_error">Impossibile riprodurre file multimediale</string>
     <string name="no_unique_filename">Impossibile trovare nome file univoco</string>
-    <string name="delete_tmp_error">Errore eliminazione file temporaneo</string>
-    <string name="record_error">Errore avvio registratore audio</string>
+    <string name="record_error">Error recording audio</string>
     <string name="too_small_error">Impossibile salvare file troppo piccolo. Renderlo più lungo.</string>
     <string name="write_error">Errore scrittura file</string>
     <string name="read_error">Errore lettura file</string>
@@ -113,18 +115,9 @@
     <string name="choose_contact_title">A quale contatto assegnare la suoneria?</string>
     <string name="success_contact_ringtone">Suoneria assegnata a:</string>
 
-    <!--      Sending information to server      -->
-    <string name="server_title">Condivisione dati</string>
-    <string name="server_prompt">L\&apos;utente accetta di inviare dati anonimi sulle suonerie e su altri suoni creati a Ringdroid.com per fini statistici?</string>
-    <string name="server_yes">Sì</string>
-    <string name="server_later">Chiedi in seguito</string>
-    <string name="server_never">Mai</string>
-
-    <string name="error_server_prompt">L\&apos;utente accetta di inviare dati anonimi su questo errore a Ringdroid.com per aiutarci a trovare una soluzione al problema?</string>
-
     <!--      About      -->
 
     <string name="about_title">Info su Ringdroid</string>
-    <string name="about_text"><![CDATA[Ringdroid permette di modificare file audio MP3, WAV, AAC e AMR, creando con essi suonerie, allarmi e notifiche.\n\nSuggerimento: copiare i file audio nella scheda SD in uso mediante un cavo USB oppure ottenere gli MP3 con l\'applicazione Amazon MP3.\n\nSuggerimento: una pressione prolungata su un file audio nella schermata principale permette di eliminare tale file.  Altre info di seguito...\n\nSuggerimento: toccare un punto qualsiasi sulla forma d\'onda per avviare la riproduzione da tale posizione.\n\nSuggerimento: durante la riproduzione, toccare Inizio o Fine per impostare rapidamente i marcatori di inizio e fine sul punto di riproduzione corrente.\n\nSuggerimento: utilizzare la manopola jog per regolazioni più precise.\n\nVersione 2.3\n\nSviluppatore: Dominic Mazzoni\nGrafica: Joseph Wain\nSupporto e promozione: Eugene Koh\n\nRingdroid è un software gratuito, distribuito con la licenza Apache 2.0.  Il codice sorgente è reperibile all\'indirizzo code.google.com.\n]]></string>
+    <string name="about_text"><![CDATA[Ringdroid permette di modificare file audio MP3, WAV, AAC e AMR, creando con essi suonerie, allarmi e notifiche.\n\nSuggerimento: copiare i file audio nella scheda SD in uso mediante un cavo USB oppure ottenere gli MP3 con l\'applicazione Amazon MP3.\n\nSuggerimento: una pressione prolungata su un file audio nella schermata principale permette di eliminare tale file.  Altre info di seguito...\n\nSuggerimento: toccare un punto qualsiasi sulla forma d\'onda per avviare la riproduzione da tale posizione.\n\nSuggerimento: durante la riproduzione, toccare Inizio o Fine per impostare rapidamente i marcatori di inizio e fine sul punto di riproduzione corrente.\n\nSuggerimento: utilizzare la manopola jog per regolazioni più precise.\n\nVersione 2.3\n\nSviluppatore: Dominic Mazzoni\nGrafica: Joseph Wain\nSupporto e promozione: Eugene Koh\n\nRingdroid è un software gratuito, distribuito con la licenza Apache 2.0.  Il codice sorgente è reperibile all\'indirizzo github.com/google/ringdroid.\n]]></string>
 
 </resources>
