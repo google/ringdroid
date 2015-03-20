@@ -203,13 +203,17 @@ public class MP4Header {
     private byte[] mDurationMS;  // duration of stream in milliseconds.
     private byte[] mNumSamples;  // number of samples in the stream.
     private byte[] mHeader;      // the complete header.
+    private int mSampleRate;     // sampling frequency in Hz (e.g. 44100).
+    private int mChannels;       // number of channels.
 
     // Creates a new MP4Header object that should be used to generate an .m4a file header.
-    public MP4Header(int[] frame_size, int bitrate) {
+    public MP4Header(int sampleRate, int numChannels, int[] frame_size, int bitrate) {
         if (frame_size == null || frame_size.length < 2 || frame_size[0] != 2) {
             //TODO(nfaralli): log something here
             return;
         }
+        mSampleRate = sampleRate;
+        mChannels = numChannels;
         mFrameSize = frame_size;
         mBitrate = bitrate;
         mMaxFrameSize = mFrameSize[0];
@@ -228,7 +232,7 @@ public class MP4Header {
         mTime[2] = (byte)((time >> 8) & 0xFF);
         mTime[3] = (byte)(time & 0xFF);
         int numSamples = 1024 * (frame_size.length - 1);  // 1st frame does not contain samples.
-        int durationMS = (numSamples * 1000) / 44100;
+        int durationMS = (numSamples * 1000) / mSampleRate;
         if ((frame_size.length - 1) % 441 > 0) {  // round the duration up.
             durationMS++;
         }
@@ -251,8 +255,9 @@ public class MP4Header {
         return mHeader;
     }
 
-    public static byte[] getMP4Header(int[] frame_size, int bitrate) {
-        return new MP4Header(frame_size, bitrate).mHeader;
+    public static byte[] getMP4Header(
+            int sampleRate, int numChannels, int[] frame_size, int bitrate) {
+        return new MP4Header(sampleRate, numChannels, frame_size, bitrate).mHeader;
     }
 
     public String toString() {
@@ -517,14 +522,17 @@ public class MP4Header {
 
     // Returns an ES Descriptor for an ISO/IEC 14496-3 audio stream, AAC LC, 44100Hz, 2 channels,
     // 1024 samples per frame per channel. The decoder buffer size is set so that it can contain at
-    // least 2 frames.
+    // least 2 frames. (See section 7.2.6.5 of ISO/IEC 14496-1 for more details).
     private byte[] getESDescriptor() {
+        int[] samplingFrequencies = new int[] {96000, 88200, 64000, 48000, 44100, 32000, 24000,
+                22050, 16000, 12000, 11025, 8000, 7350};
         // First 5 bytes of the ES Descriptor.
         byte[] ESDescriptor_top = new byte[] {0x03, 0x19, 0x00, 0x00, 0x00};
         // First 4 bytes of Decoder Configuration Descriptor. Audio ISO/IEC 14496-3, AudioStream.
         byte[] decConfigDescr_top = new byte[] {0x04, 0x11, 0x40, 0x15};
-        // Audio Specific Configuration: AAC LC, 44100Hz, 2 channels, 1024 samples/frame/channel.
-        byte[] AudioSpecificConfig = new byte[] {0x05, 0x02, 0x12, 0x10};
+        // Audio Specific Configuration: AAC LC, 1024 samples/frame/channel.
+        // Sampling frequency and channels configuration are not set yet.
+        byte[] audioSpecificConfig = new byte[] {0x05, 0x02, 0x10, 0x00};
         byte[] slConfigDescr = new byte[] {0x06, 0x01, 0x02};  // specific for MP4 file.
         int offset;
         int bufferSize = 0x300;
@@ -549,8 +557,21 @@ public class MP4Header {
         decConfigDescr[offset++] = (byte)((mBitrate >> 16) & 0xFF);
         decConfigDescr[offset++] = (byte)((mBitrate >> 8) & 0xFF);
         decConfigDescr[offset++] = (byte)(mBitrate & 0xFF);
+        int index;
+        for (index=0; index<samplingFrequencies.length; index++) {
+            if (samplingFrequencies[index] == mSampleRate) {
+                break;
+            }
+        }
+        if (index == samplingFrequencies.length) {
+            // TODO(nfaralli): log something here.
+            // Invalid sampling frequency. Default to 44100Hz...
+            index = 4;
+        }
+        audioSpecificConfig[2] |= (byte)((index >> 1) & 0x07);
+        audioSpecificConfig[3] |= (byte)(((index & 1) << 7) | ((mChannels & 0x0F) << 3));
         System.arraycopy(
-                AudioSpecificConfig, 0, decConfigDescr, offset++, AudioSpecificConfig.length);
+                audioSpecificConfig, 0, decConfigDescr, offset, audioSpecificConfig.length);
 
         // create the ES Descriptor
         byte[] ESDescriptor = new byte[2 + ESDescriptor_top[1]];

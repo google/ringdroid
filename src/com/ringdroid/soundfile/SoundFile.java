@@ -458,7 +458,7 @@ public class SoundFile {
         String mime_type = "audio/mp4a-latm";
         int bitrate = 64000 * mChannels;
         MediaCodec codec = MediaCodec.createEncoderByType(mime_type);
-        MediaFormat format = MediaFormat.createAudioFormat(mime_type, 44100, mChannels);
+        MediaFormat format = MediaFormat.createAudioFormat(mime_type, mSampleRate, mChannels);
         format.setInteger(MediaFormat.KEY_BIT_RATE, bitrate);
         codec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         codec.start();
@@ -510,7 +510,7 @@ public class SoundFile {
                     }
                     num_samples_left -= frame_size;
                     inputBuffers[inputBufferIndex].put(buffer);
-                    presentation_time = (long) (((num_frames++) * frame_size * 1e6) / 44100);
+                    presentation_time = (long) (((num_frames++) * frame_size * 1e6) / mSampleRate);
                     codec.queueInputBuffer(
                             inputBufferIndex, 0, buffer.length, presentation_time, 0);
                 }
@@ -561,7 +561,8 @@ public class SoundFile {
         buffer = new byte[4096];
         try {
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(MP4Header.getMP4Header(frame_sizes, bitrate));
+            outputStream.write(
+                    MP4Header.getMP4Header(mSampleRate, mChannels, frame_sizes, bitrate));
             while (encoded_size - encodedBytes.position() > buffer.length) {
                 encodedBytes.get(buffer);
                 outputStream.write(buffer);
