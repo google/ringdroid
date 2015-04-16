@@ -25,8 +25,8 @@
           android:versionCode="20700">
 
     <uses-sdk android:minSdkVersion="16"
-              android:targetSdkVersion="21"
-              android:maxSdkVersion="21" />
+              android:targetSdkVersion="22"
+              android:maxSdkVersion="22" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
