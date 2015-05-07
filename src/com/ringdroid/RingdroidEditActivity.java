@@ -16,17 +16,13 @@
 
 package com.ringdroid;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -51,6 +47,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ringdroid.soundfile.SoundFile;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 
 /**
  * The activity for the Ringdroid main editor window.  Keeps track of
@@ -502,9 +503,17 @@ public class RingdroidEditActivity extends Activity
     //
 
     public static void onAbout(final Activity activity) {
+        String versionName = "";
+        try {
+            PackageManager packageManager = activity.getPackageManager();
+            String packageName = activity.getPackageName();
+            versionName = packageManager.getPackageInfo(packageName, 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            versionName = "unknown";
+        }
         new AlertDialog.Builder(activity)
             .setTitle(R.string.about_title)
-            .setMessage(R.string.about_text)
+            .setMessage(activity.getString(R.string.about_text, versionName))
             .setPositiveButton(R.string.alert_ok_button, null)
             .setCancelable(false)
             .show();
