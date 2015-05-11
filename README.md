@@ -2,19 +2,11 @@
 
 **Ringdroid is now on GitHub!**
 
-**The version of Ringdroid on the Market now requires Android 1.6! If you have Android 1.5 and can't find Ringdroid on the Market, download [Ringdroid 2.3](https://github.com/google/ringdroid/wiki/apks/Ringdroid-2.3.apk), which will work great on your phone.**
+**29 April 2015: Ringdroid 2.7 now supports 'Lollipop' (Android 5.x)! This version requests the audio recording permission in order to use the device's microphone. It also includes the ability to read OGG Vorbis audio files, and it now saves ringtones in AAC (.m4a) format. This is the recommended version for Android system versions 4.1 ('Jelly Bean') and newer.**
 
-**26 July 2010: Ringdroid 2.4 fixes problems with assigning a ringtone to a contact on Eclair and improves accessibility with improved keyboard access and content descriptions. The minimum Android version is now 1.6.**
+**23 August 2012: Ringdroid 2.6 is the recommended version for Android system versions 3.0 ('Honeycomb') to 4.0.4 ('Ice Cream Sandwich'). This version of Ringdroid requests full network communication, but solely for the purpose of sending anonymous usage statistics as described in the app's 'Privacy' menu.**
 
-**19 January 2010: Ringdroid 2.3 fixes incompatibilities with the Droid Eris.**
-
-**1 January 2010: Ringdroid 2.2 fixes several previously reported problems and improves support for phones running Donut or Eclair and phones with high-resolution screens.**
-
-**24 August 2009: Ringdroid 2.1 plays through the main audio channel rather than the ringtone channel, and fixes a problem with some AAC files.**
-
-**16 July 2009: Ringdroid 2.0 adds AAC support (iTunes music files), lets you assign ringtones directly to a contact, and includes more descriptive error messages when something goes wrong.**
-
-**26 April 2009: Ringdroid 1.1 adds compatibility with Android 1.5 (Cupcake) and phones with a soft keyboard, and makes it possible to delete sounds from within Ringdroid by long-pressing on a sound in the main list view.**
+**2 January 2011: Ringdroid 2.5 is the recommended version for Android system versions 1.6 ('Donut') to 2.3.7 ('Gingerbread'). New features include a drop-down menu in the select view to edit/delete/assign ringtones and notifications, flinging support to scroll the waveform, and MR475 AMR files support. This version of Ringdroid requests full network communication, but solely for the purpose of sending anonymous usage statistics as described in the app's 'Privacy' menu.**
 
 Ringdroid is an [Android](https://developers.google.com/android) application for recording and editing sounds, and creating ringtones, directly on the handset.
 
@@ -29,9 +21,9 @@ If you have an Android phone, just click on "Market" and search for "Ringdroid" 
 
 For developers:
 
-  * [Developers](https://github.com/google/ringdroid/Developers)
-  * [Building](https://github.com/google/ringdroid/Building)
-  * [Emulator](https://github.com/google/ringdroid/Emulator)
+  * [Developers](https://github.com/google/ringdroid/wiki/Developers)
+  * [Building](https://github.com/google/ringdroid/wiki/Building)
+  * [Emulator](https://github.com/google/ringdroid/wiki/Emulator)
 
 See also:
 
@@ -58,5 +50,6 @@ Supported file formats right now include:
 * AAC/MP4 (including unprotected iTunes music)
 * WAV
 * 3GPP/AMR (this is the format used when you record sounds directly on the handset)
+* OGG
 
 ![](https://github.com/google/ringdroid/wiki/images/ringdroid_screenshot_2_small.png)
