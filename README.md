@@ -2,6 +2,8 @@
 
 **Ringdroid is now on GitHub!**
 
+**11 May 2015: Ringdroid 2.7.2 does not require the full network communication permission anymore as the code in charge of gathering anonymous usage statistics has been removed.**
+
 **29 April 2015: Ringdroid 2.7 now supports 'Lollipop' (Android 5.x)! This version requests the audio recording permission in order to use the device's microphone. It also includes the ability to read OGG Vorbis audio files, and it now saves ringtones in AAC (.m4a) format. This is the recommended version for Android system versions 4.1 ('Jelly Bean') and newer.**
 
 **23 August 2012: Ringdroid 2.6 is the recommended version for Android system versions 3.0 ('Honeycomb') to 4.0.4 ('Ice Cream Sandwich'). This version of Ringdroid requests full network communication, but solely for the purpose of sending anonymous usage statistics as described in the app's 'Privacy' menu.**
