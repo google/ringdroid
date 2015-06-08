@@ -1,10 +1,12 @@
 build.xml
 bin
 gen
+out
 default.properties
 local.properties
 proguard.cfg
 .classpath
 .project
 project.properties
-
+.idea
+*.iml

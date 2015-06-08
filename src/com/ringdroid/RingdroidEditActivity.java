@@ -48,8 +48,8 @@ import android.widget.Toast;
 
 import com.ringdroid.soundfile.SoundFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 
@@ -628,8 +628,7 @@ public class RingdroidEditActivity extends Activity
                     long now = getCurrentTime();
                     if (now - mLoadingLastUpdateTime > 100) {
                         mProgressDialog.setProgress(
-                            (int)(mProgressDialog.getMax() *
-                                  fractionComplete));
+                                (int) (mProgressDialog.getMax() * fractionComplete));
                         mLoadingLastUpdateTime = now;
                     }
                     return mLoadingKeepGoing;
@@ -640,8 +639,7 @@ public class RingdroidEditActivity extends Activity
         mLoadSoundFileThread = new Thread() {
             public void run() {
                 try {
-                    mSoundFile = SoundFile.create(mFile.getAbsolutePath(),
-                                                       listener);
+                    mSoundFile = SoundFile.create(mFile.getAbsolutePath(), listener);
 
                     if (mSoundFile == null) {
                         mProgressDialog.dismiss();
@@ -1209,14 +1207,6 @@ public class RingdroidEditActivity extends Activity
     }
 
     private void saveRingtone(final CharSequence title) {
-        // SoundFile will only encode in MPEG 4.
-        final String outPath = makeRingtoneFilename(title, ".m4a");
-
-        if (outPath == null) {
-            showFinalAlert(new Exception(), R.string.no_unique_filename);
-            return;
-        }
-
         double startTime = mWaveformView.pixelsToSeconds(mStartPos);
         double endTime = mWaveformView.pixelsToSeconds(mEndPos);
         final int startFrame = mWaveformView.secondsToFrames(startTime);
@@ -1234,14 +1224,86 @@ public class RingdroidEditActivity extends Activity
         // Save the sound file in a background thread
         mSaveSoundFileThread = new Thread() {
             public void run() {
-                final File outFile = new File(outPath);
+                // Try AAC first.
+                String outPath = makeRingtoneFilename(title, ".m4a");
+                if (outPath == null) {
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            showFinalAlert(new Exception(), R.string.no_unique_filename);
+                        }
+                    };
+                    mHandler.post(runnable);
+                    return;
+                }
+                File outFile = new File(outPath);
+                Boolean fallbackToWAV = false;
                 try {
                     // Write the new file
-                    mSoundFile.WriteFile(outFile,
-                                         startFrame,
-                                         endFrame - startFrame);
+                    mSoundFile.WriteFile(outFile,  startFrame, endFrame - startFrame);
+                } catch (Exception e) {
+                    // log the error and try to create a .wav file instead
+                    if (outFile.exists()) {
+                        outFile.delete();
+                    }
+                    StringWriter writer = new StringWriter();
+                    e.printStackTrace(new PrintWriter(writer));
+                    Log.e("Ringdroid", "Error: Failed to create " + outPath);
+                    Log.e("Ringdroid", writer.toString());
+                    fallbackToWAV = true;
+                }
 
-                    // Try to load the new file to make sure it worked
+                // Try to create a .wav file if creating a .m4a file failed.
+                if (fallbackToWAV) {
+                    outPath = makeRingtoneFilename(title, ".wav");
+                    if (outPath == null) {
+                        Runnable runnable = new Runnable() {
+                            public void run() {
+                                showFinalAlert(new Exception(), R.string.no_unique_filename);
+                            }
+                        };
+                        mHandler.post(runnable);
+                        return;
+                    }
+                    outFile = new File(outPath);
+                    try {
+                        // create the .wav file
+                        mSoundFile.WriteWAVFile(outFile, startFrame, endFrame - startFrame);
+                    } catch (Exception e) {
+                        // Creating the .wav file also failed. Stop the progress dialog, show an
+                        // error message and exit.
+                        mProgressDialog.dismiss();
+                        if (outFile.exists()) {
+                            outFile.delete();
+                        }
+                        mInfoContent = e.toString();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                mInfo.setText(mInfoContent);
+                            }
+                        });
+
+                        CharSequence errorMessage;
+                        if (e.getMessage() != null
+                                && e.getMessage().equals("No space left on device")) {
+                            errorMessage = getResources().getText(R.string.no_space_error);
+                            e = null;
+                        } else {
+                            errorMessage = getResources().getText(R.string.write_error);
+                        }
+                        final CharSequence finalErrorMessage = errorMessage;
+                        final Exception finalException = e;
+                        Runnable runnable = new Runnable() {
+                            public void run() {
+                                showFinalAlert(finalException, finalErrorMessage);
+                            }
+                        };
+                        mHandler.post(runnable);
+                        return;
+                    }
+                }
+
+                // Try to load the new file to make sure it worked
+                try {
                     final SoundFile.ProgressListener listener =
                         new SoundFile.ProgressListener() {
                             public boolean reportProgress(double frac) {
@@ -1253,37 +1315,32 @@ public class RingdroidEditActivity extends Activity
                             }
                         };
                     SoundFile.create(outPath, listener);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     mProgressDialog.dismiss();
+                    e.printStackTrace();
+                    mInfoContent = e.toString();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            mInfo.setText(mInfoContent);
+                        }
+                    });
 
-                    CharSequence errorMessage;
-                    if (e.getMessage().equals("No space left on device")) {
-                        errorMessage = getResources().getText(
-                            R.string.no_space_error);
-                        e = null;
-                    } else {
-                        errorMessage = getResources().getText(
-                            R.string.write_error);
-                    }
-
-                    final CharSequence finalErrorMessage = errorMessage;
-                    final Exception finalException = e;
                     Runnable runnable = new Runnable() {
-                            public void run() {
-                                showFinalAlert(finalException, finalErrorMessage);
-                            }
-                        };
+                        public void run() {
+                            showFinalAlert(e, getResources().getText(R.string.write_error));
+                        }
+                    };
                     mHandler.post(runnable);
                     return;
                 }
 
                 mProgressDialog.dismiss();
 
+                final String finalOutPath = outPath;
                 Runnable runnable = new Runnable() {
                         public void run() {
                             afterSavingRingtone(title,
-                                                outPath,
-                                                outFile,
+                                                finalOutPath,
                                                 duration);
                         }
                     };
@@ -1295,10 +1352,10 @@ public class RingdroidEditActivity extends Activity
 
     private void afterSavingRingtone(CharSequence title,
                                      String outPath,
-                                     File outFile,
                                      int duration) {
-        long length = outFile.length();
-        if (length <= 512) {
+        File outFile = new File(outPath);
+        long fileSize = outFile.length();
+        if (fileSize <= 512) {
             outFile.delete();
             new AlertDialog.Builder(this)
                 .setTitle(R.string.alert_title_failure)
@@ -1310,9 +1367,15 @@ public class RingdroidEditActivity extends Activity
         }
 
         // Create the database record, pointing to the existing file path
-
-        long fileSize = outFile.length();
-        String mimeType = "audio/mpeg";
+        String mimeType;
+        if (outPath.endsWith(".m4a")) {
+            mimeType = "audio/mp4a-latm";
+        } else if (outPath.endsWith(".wav")) {
+            mimeType = "audio/wav";
+        } else {
+            // This should never happen.
+            mimeType = "audio/mpeg";
+        }
 
         String artist = "" + getResources().getText(R.string.artist_name);
 
@@ -1543,9 +1606,8 @@ public class RingdroidEditActivity extends Activity
     }
 
     private String getStackTrace(Exception e) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(stream, true);
-        e.printStackTrace(writer);
-        return stream.toString();
+        StringWriter writer = new StringWriter();
+        e.printStackTrace(new PrintWriter(writer));
+        return writer.toString();
     }
 }
