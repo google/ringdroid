@@ -233,7 +233,7 @@ public class MP4Header {
         mTime[3] = (byte)(time & 0xFF);
         int numSamples = 1024 * (frame_size.length - 1);  // 1st frame does not contain samples.
         int durationMS = (numSamples * 1000) / mSampleRate;
-        if ((frame_size.length - 1) % 441 > 0) {  // round the duration up.
+        if ((numSamples * 1000) % mSampleRate > 0) {  // round the duration up.
             durationMS++;
         }
         mNumSamples= new byte[] {
@@ -412,7 +412,8 @@ public class MP4Header {
         atom.setData(new byte[] {
                 mTime[0], mTime[1], mTime[2], mTime[3],  // creation time.
                 mTime[0], mTime[1], mTime[2], mTime[3],  // modification time.
-                0, 0, (byte)0xAC, 0x44,  // timescale = Fs => duration expressed in samples.
+                (byte)(mSampleRate >> 24), (byte)(mSampleRate >> 16),  // timescale = Fs =>
+                (byte)(mSampleRate >> 8), (byte)(mSampleRate),  // duration expressed in samples.
                 mNumSamples[0], mNumSamples[1], mNumSamples[2], mNumSamples[3],  // duration
                 0, 0,     // languages
                 0, 0      // pre-defined
@@ -493,6 +494,7 @@ public class MP4Header {
         return atom;
     }
 
+    // See also Part 14 section 5.6.1 of ISO/IEC 14496 for this atom.
     private Atom getMP4AAtom() {
         Atom atom = new Atom("mp4a");
         byte[] ase = new byte[] {  // Audio Sample Entry data
@@ -500,11 +502,11 @@ public class MP4Header {
                 0, 1,  // data reference index
                 0, 0, 0, 0,  // reserved
                 0, 0, 0, 0,  // reserved
-                0, 2,  // channel count
+                (byte)(mChannels >> 8), (byte)mChannels,  // channel count
                 0, 0x10, // sample size
                 0, 0,  // pre-defined
                 0, 0,  // reserved
-                (byte)0xAC, 0x44, 0, 0,  // sample rate (last field of the Audio Sample Entry atom
+                (byte)(mSampleRate >> 8), (byte)(mSampleRate), 0, 0,  // sample rate
         };
         byte[] esds = getESDSAtom().getBytes();
         byte[] data = new byte[ase.length + esds.length];
