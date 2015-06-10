@@ -21,8 +21,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ringdroid"
-          android:versionName="2.7.2"
-          android:versionCode="20702">
+          android:versionName="2.7.3"
+          android:versionCode="20703">
 
     <uses-sdk android:minSdkVersion="16"
               android:targetSdkVersion="22"/>
