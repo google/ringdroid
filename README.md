@@ -2,6 +2,8 @@
 
 **Ringdroid is now on GitHub!**
 
+**22 June 2015: Ringdroid 2.7.3 contains fixes for several bugs reported by users of Ringdroid 2.7.2, and it uses WAV as a fall-back audio format for saving ringtones in case the default AAC (.m4a) encoding fails.**
+
 **11 May 2015: Ringdroid 2.7.2 does not require the full network communication permission anymore as the code in charge of gathering anonymous usage statistics has been removed.**
 
 **29 April 2015: Ringdroid 2.7 now supports 'Lollipop' (Android 5.x)! This version requests the audio recording permission in order to use the device's microphone. It also includes the ability to read OGG Vorbis audio files, and it now saves ringtones in AAC (.m4a) format. This is the recommended version for Android system versions 4.1 ('Jelly Bean') and newer.**
