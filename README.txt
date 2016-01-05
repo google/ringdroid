@@ -27,37 +27,40 @@ A sound editor and ringtone creator for the Android operating system.
 
 Questions, comments, feedback?  Email ringdroid@google.com
 
-Build instructions:
+### Build instructions when using Android Studio:
 
-You will need Apache Ant installed.
+Import the project using "Import project (Eclipse ADT, Gradle, etc.)"
+or File -> New -> Import Project...
+Select build.gradle (the one in the root directory, not app/build.gradle).
+Run the app (using the Run icon, or Run -> Run 'app'). This will build and install Ringdroid on the
+connected device.
 
-Download the Android SDK and put the path to the sdk "tools" directory
-in your path.  Then run:
+### Build instructions when using a terminal:
 
-rm build.xml
-rm -rf bin/
-android update project -n ringdroid -t android-14 -p .
+You need to have an environment variable JAVA_HOME pointing to your Java SDK.
+You also need to have an environment variable ANDROID_HOME pointing to your Android SDK.
+Then run:
 
-Then, to build:
-  ant debug
+  ./gradlew build
 
-To install the debug version:
-  adb install -r bin/ringdroid-debug.apk
+This will download gradle if you don't have it already.
+The APKs are generated in ./app/build/outputs/apk/.
+
+To install the debug version just run:
+
+  adb install ./app/build/outputs/apk/app-debug.apk
 
 ### Release mode
 
-http://code.google.com/android/intro/develop-and-debug.html
+http://developer.android.com/tools/publishing/app-signing.html
 
-ant release
-cp bin/ringdroid-release-unsigned.apk bin/ringdroid-release-signed.apk
-jarsigner -keystore ~/ringdroid.keystore bin/ringdroid-release-signed.apk ringdroid
-zipalign -f 4 bin/ringdroid-release-signed.apk bin/Ringdroid.apk
+On Android Studio:
+Build -> Generate Signed APK...
+Select the app module, enter the path to the keystore and the passwords, and then choose the
+destination folder before clicking on Finish.
 
-# Old:
-#ant release
-#cp bin/ringdroid-unsigned.apk bin/ringdroid-signed.apk
-#jarsigner -keystore ~/ringdroid.keystore bin/ringdroid-signed.apk ringdroid
-#zipalign -f 4 bin/ringdroid-signed.apk bin/Ringdroid.apk
+You can also directly modify the app/build.gradle to include a signing config as explained on
+http://developer.android.com/tools/publishing/app-signing.html#release-mode
 
 # Initial key generated with:
 # keytool -genkey -keystore ringdroid.keystore -alias ringdroid -validity 10000

@@ -10,3 +10,9 @@ proguard.cfg
 project.properties
 .idea
 *.iml
+*.apk
+.gradle
+build
+app/build
+.DS_Store
+

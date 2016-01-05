@@ -17,6 +17,7 @@
 package com.ringdroid;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -88,42 +89,32 @@ public class WaveformView extends View {
         // We don't want keys, the markers get these
         setFocusable(false);
 
+        Resources res = getResources();
         mGridPaint = new Paint();
         mGridPaint.setAntiAlias(false);
-        mGridPaint.setColor(
-            getResources().getColor(R.drawable.grid_line));
+        mGridPaint.setColor(res.getColor(R.color.grid_line));
         mSelectedLinePaint = new Paint();
         mSelectedLinePaint.setAntiAlias(false);
-        mSelectedLinePaint.setColor(
-            getResources().getColor(R.drawable.waveform_selected));
+        mSelectedLinePaint.setColor(res.getColor(R.color.waveform_selected));
         mUnselectedLinePaint = new Paint();
         mUnselectedLinePaint.setAntiAlias(false);
-        mUnselectedLinePaint.setColor(
-            getResources().getColor(R.drawable.waveform_unselected));
+        mUnselectedLinePaint.setColor(res.getColor(R.color.waveform_unselected));
         mUnselectedBkgndLinePaint = new Paint();
         mUnselectedBkgndLinePaint.setAntiAlias(false);
-        mUnselectedBkgndLinePaint.setColor(
-            getResources().getColor(
-                R.drawable.waveform_unselected_bkgnd_overlay));
+        mUnselectedBkgndLinePaint.setColor(res.getColor(R.color.waveform_unselected_bkgnd_overlay));
         mBorderLinePaint = new Paint();
         mBorderLinePaint.setAntiAlias(true);
         mBorderLinePaint.setStrokeWidth(1.5f);
-        mBorderLinePaint.setPathEffect(
-            new DashPathEffect(new float[] { 3.0f, 2.0f }, 0.0f));
-        mBorderLinePaint.setColor(
-            getResources().getColor(R.drawable.selection_border));
+        mBorderLinePaint.setPathEffect(new DashPathEffect(new float[] { 3.0f, 2.0f }, 0.0f));
+        mBorderLinePaint.setColor(res.getColor(R.color.selection_border));
         mPlaybackLinePaint = new Paint();
         mPlaybackLinePaint.setAntiAlias(false);
-        mPlaybackLinePaint.setColor(
-            getResources().getColor(R.drawable.playback_indicator));
+        mPlaybackLinePaint.setColor(res.getColor(R.color.playback_indicator));
         mTimecodePaint = new Paint();
         mTimecodePaint.setTextSize(12);
         mTimecodePaint.setAntiAlias(true);
-        mTimecodePaint.setColor(
-            getResources().getColor(R.drawable.timecode));
-        mTimecodePaint.setShadowLayer(
-            2, 1, 1,
-            getResources().getColor(R.drawable.timecode_shadow));
+        mTimecodePaint.setColor(res.getColor(R.color.timecode));
+        mTimecodePaint.setShadowLayer(2, 1, 1, res.getColor(R.color.timecode_shadow));
 
         mGestureDetector = new GestureDetector(
             context,

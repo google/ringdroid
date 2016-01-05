@@ -192,29 +192,29 @@ public class RingdroidSelectActivity
                 MediaStore.Audio.Media.IS_RINGTONE))) {
             view.setImageResource(R.drawable.type_ringtone);
             ((View) view.getParent()).setBackgroundColor(
-                    getResources().getColor(R.drawable.type_bkgnd_ringtone));
+                    getResources().getColor(R.color.type_bkgnd_ringtone));
         } else if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
                 MediaStore.Audio.Media.IS_ALARM))) {
             view.setImageResource(R.drawable.type_alarm);
             ((View) view.getParent()).setBackgroundColor(
-                    getResources().getColor(R.drawable.type_bkgnd_alarm));
+                    getResources().getColor(R.color.type_bkgnd_alarm));
         } else if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
                 MediaStore.Audio.Media.IS_NOTIFICATION))) {
             view.setImageResource(R.drawable.type_notification);
             ((View) view.getParent()).setBackgroundColor(
-                    getResources().getColor(R.drawable.type_bkgnd_notification));
+                    getResources().getColor(R.color.type_bkgnd_notification));
         } else if (0 != cursor.getInt(cursor.getColumnIndexOrThrow(
                 MediaStore.Audio.Media.IS_MUSIC))) {
             view.setImageResource(R.drawable.type_music);
             ((View) view.getParent()).setBackgroundColor(
-                    getResources().getColor(R.drawable.type_bkgnd_music));
+                    getResources().getColor(R.color.type_bkgnd_music));
         }
 
         String filename = cursor.getString(cursor.getColumnIndexOrThrow(
                 MediaStore.Audio.Media.DATA));
         if (!SoundFile.isFilenameSupported(filename)) {
             ((View) view.getParent()).setBackgroundColor(
-                    getResources().getColor(R.drawable.type_bkgnd_unsupported));
+                    getResources().getColor(R.color.type_bkgnd_unsupported));
         }
     }
 

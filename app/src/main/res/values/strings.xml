@@ -17,7 +17,9 @@
  */
 -->
 
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <string name="ringdroid_app_name">Ringdroid</string>
 
