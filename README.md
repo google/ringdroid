@@ -2,6 +2,8 @@
 
 **Ringdroid is now on GitHub!**
 
+**2 December 2016: Ringdroid 2.7.4 contains a fix for an [audio bug](https://github.com/google/ringdroid/issues/20) reported by users using 'Nougat' (Android 7.x).**
+
 **22 June 2015: Ringdroid 2.7.3 contains fixes for several bugs reported by users of Ringdroid 2.7.2, and it uses WAV as a fall-back audio format for saving ringtones in case the default AAC (.m4a) encoding fails.**
 
 **11 May 2015: Ringdroid 2.7.2 does not require the full network communication permission anymore as the code in charge of gathering anonymous usage statistics has been removed.**

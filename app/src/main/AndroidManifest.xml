@@ -21,11 +21,11 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ringdroid"
-          android:versionName="2.7.3"
-          android:versionCode="20703">
+          android:versionName="2.7.4"
+          android:versionCode="20704">
 
     <uses-sdk android:minSdkVersion="16"
-              android:targetSdkVersion="22"/>
+              android:targetSdkVersion="25"/>
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
